@@ -1,72 +1,53 @@
-# SinkedIn
+# Fail U Forward
 
-SinkedIn is a platform for celebrating failures. It’s like LinkedIn, but instead of boasting about success stories and achievements, SinkedIn is all about sharing your epic fails. Missed deadlines, terrible pitches, or other mishaps? SinkedIn is the place to showcase your raw, glorious disasters—no achievements allowed!
+**Fail U Forward** is a community driven platform where failure is not something to hide but something to celebrate. It’s designed to share honest stories of setbacks, rejections and lessons learned: all the stuff LinkedIn filters out. 
 
----
+## About 
 
-## Why SinkedIn?
+The idea for Fail U Forward came from scrolling through LinkedIn where everyone’s success stories looked flawless but in reality real growth happens through failure. 
+This platform brings those unfiltered, messy journeys to light. 
+Whether it’s a failed startup, a rejected interview or a project that just didn’t work out: every post here is a badge of resilience. 
+Fail U Forward encourages users to reflect, learn and grow by normalizing failure and building a culture of transparency. 
 
-The world is full of success stories, but what about the lessons learned from failure? SinkedIn was created to:
+## Features 
 
-- **Celebrate Failure:** Share your mishaps and laugh together.
-- **Learn Together:** Discover the valuable lessons hidden in each failure.
-- **Stay Authentic:** A space free from “#humblebrags” and disguised wins.
+- Post your rejections, failures and real lessons learned
+- Browse stories by category: Startup Crashes, Interview Wrecks, Project Chaos and more
+- No judgment, just growth 
 
----
+## Tech Stack 
 
-## Key Features
+- Frontend: Next.js and TypeScript
+- Backend: Next.js
+-  Database: Firebase
+-  AI Validation: Gemini 
 
-- **Failure Stories Only:** An AI-powered content filter ensures only authentic failure stories are allowed. Any “I failed but turned it into a million-dollar empire” posts? Rejected.
-- **User-Friendly Interface:** Simple and intuitive design for sharing your stories.
-- **Built for Fun:** Designed during a 24-hour IEDC hackathon to embrace the lighter side of life.
+## Setup 
 
----
+- Clone the repository:
+  ```bash
+  git clone https://github.com/mansiruhil/Fail-U-Forward.git
+  
+- Navigate to the project directory:
+  ```bash
+  cd Fail-U-Forward
+  
+- Install dependencies:
+  ```bash
+  npm install 
 
-## Contribute
-Check out the [Contributing.md](Contributing.md) to contribute and setup this project locally.
+- Run the development server: 
+  ```bash
+  npm run dev 
 
----
+- Open in your browser:
+  ```arduino
+  http://localhost:3000  
 
-## Tech Stack
+## Contributing 
 
-- **Frontend:** Next.js and TypeScript
-- **Backend:** Next.js
-- **Database:** Firebase
-- **AI Validation:** Gemini
+Pull requests are welcome. If you’d like to contribute, fork the repo and use a feature branch. Contributions should follow the standard GitHub flow. 
 
----
+# License 
 
-
-## How to Run Locally
-
-### Clone the repository:
-```bash
-git clone https://github.com/vaibhavgarg25/SinkedIn.git
-cd sinkedin
-
-npm install
-
-npm run dev
-```
-# Contributing
-
-We welcome contributions to SinkedIn! Here’s how you can help:
-
-1)Fork the repository.
-
-2)Create a feature branch:
-```bash
-git checkout -b feature-name
-```
-3)Commit your changes:
-```bash
-git commit -m 'Add feature-name'
-```
-4)Push to the branch:
-```bash
-git push origin feature-name
-```
-5)Open a pull request.
-
-# License
 This project is licensed under the [MIT License](LICENSE).
