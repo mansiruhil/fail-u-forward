@@ -65,17 +65,7 @@ const StoryPage = () => {
       <Instagram size={28} />
     </a>
   </div>
-  <p className="mt-4 text-sm text-gray-500">
-    Built with 💙 by{' '}
-    <a
-      href="https://www.linkedin.com/in/mansi-ruhil-7a00a0228/"
-      target="_blank"
-      rel="noopener noreferrer"
-      className="text-blue-600 hover:underline"
-    >
-      Mansi Ruhil
-    </a>
-  </p>
+ 
 </div>
 <br/>
 <br/>
