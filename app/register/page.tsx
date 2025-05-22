@@ -96,7 +96,7 @@ export default function Signup() {
             <Input 
               id="email" 
               type="email" 
-              placeholder="john@example.com"
+              placeholder="user@example.com"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
