@@ -36,7 +36,6 @@ const StoryPage = () => {
               key={index}
               className="flex flex-col items-center text-center bg-background border border-border shadow-md rounded-lg p-6"
             >
-              <h3 className="font-semibold text-lg">{dev.name}</h3>
               <p className="text-gray-600 mt-2">{dev.comment}</p>
             </div>
           ))}
