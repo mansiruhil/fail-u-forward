@@ -48,7 +48,7 @@ const StoryPage = () => {
       <section>
         <div className="max-w-4xl mx-auto mt-8 px-4 text-center">
   <p className="text-lg font-semibold mb-2 text-white-700">
-    Find more about Fail U Forward
+    Find more about Fail U Forward on
   </p>
   <div className="flex justify-center gap-6 text-2xl">
     <a href="https://twitter.com/username" target="_blank" rel="noopener noreferrer" className="hover:text-blue-500 transition-colors duration-200">
