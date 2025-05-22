@@ -67,9 +67,6 @@ export default function Signup() {
       >
         <div className="space-y-2 text-center">
           <h1 className="text-3xl font-bold">Welcome</h1>
-          <p className="text-muted-foreground">
-            Enter your credentials to create an account
-          </p>
         </div>
 
         {error && (
