@@ -87,7 +87,7 @@ const Chatbot = () => {
       {isChatOpen && (
         <div className="fixed bottom-0 right-0 w-80 h-96 bg-black text-white shadow-lg rounded-tl-lg z-40">
           <div className="flex justify-between items-center bg-black text-white p-3 rounded-tl-lg rounded-tr-lg">
-            <span>Sadbot</span>
+            <span>bot</span>
             <button
               onClick={toggleChat}
               className="p-1 bg-transparent text-white rounded-full"
