@@ -2,8 +2,8 @@
 
 ### Clone the repository:
 ```bash
-git clone https://github.com/your-username/sinkedin.git
-cd sinkedin
+git clone https://github.com/your-username/failuforward.git
+cd failuforward
 
 npm install
 
@@ -12,8 +12,6 @@ npm run dev
 ---
 
 ## Contributing
-
-We welcome contributions to SinkedIn! Here’s how you can help:
 
 1)Fork the repository.
 
@@ -30,14 +28,3 @@ git commit -m 'Add feature-name'
 git push origin feature-name
 ```
 5)Open a pull request.
-
----
-
-## Contributors
-
-- [**Ayush Singh**](https://github.com/ayush1009208)
-- [**Vaibhav Garg**](https://github.com/vaibhavgarg25)
-- [**Supreeth C**](https://github.com/ShinichiShi)
-- [**Rudraksha Singh**](https://github.com/rudrakshass)
-
----
