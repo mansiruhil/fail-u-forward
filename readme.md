@@ -42,7 +42,10 @@ Fail U Forward encourages users to reflect, learn and grow by normalizing failur
 
 - Open in your browser:
   ```arduino
-  http://localhost:3000  
+  http://localhost:3000
+
+## What's next for Fail U Forward
+I want to add anonymous posting, filters by topic (career, academics, personal) and maybe even voice/video storytelling. 
 
 ## Contributing 
 
