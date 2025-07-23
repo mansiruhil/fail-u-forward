@@ -83,38 +83,39 @@ const Chatbot = () => {
         </button>
       )}
 
-      {/* Chatbox */}
       {isChatOpen && (
-        <div className="fixed bottom-0 right-0 w-80 h-96 bg-black text-white shadow-lg rounded-tl-lg z-40">
-          <div className="flex justify-between items-center bg-black text-white p-3 rounded-tl-lg rounded-tr-lg">
-            <span>bot</span>
-            <button
-              onClick={toggleChat}
-              className="p-1 bg-transparent text-white rounded-full"
-            >
-              <X className="h-5 w-5" />
-            </button>
-          </div>
-          <div className="p-4 overflow-y-auto h-[calc(100%-170px)]">
-            <div className="flex flex-col space-y-2">
-              {chatHistory.map((msg, index) => (
-                <div
-                  key={index}
-                  className={`flex ${
-                    msg.sender === "user" ? "justify-end" : "justify-start"
-                  }`}
-                >
+        <div className="fixed bottom-0 right-0 w-80 h-96 bg-black text-white shadow-lg rounded-tl-lg z-40 border flex flex-col justify-between">
+          <div>
+            <div className="flex justify-between items-center bg-black text-white p-3 rounded-tl-lg rounded-tr-lg">
+              <span>Chatbot</span>
+              <button
+                onClick={toggleChat}
+                className="p-1 bg-transparent text-white rounded-full"
+              >
+                <X className="h-5 w-5" />
+              </button>
+            </div>
+            <div className="p-4 overflow-y-auto max-h-64">
+              <div className="flex flex-col justify-start space-y-2">
+                {chatHistory.map((msg, index) => (
                   <div
-                    className={`p-2 rounded-lg max-w-xs ${
-                      msg.sender === "user"
-                        ? "bg-white text-black"
-                        : "bg-gray-600 text-white"
+                    key={index}
+                    className={`flex ${
+                      msg.sender === "user" ? "justify-end" : "justify-start"
                     }`}
                   >
-                    {msg.text}
+                    <div
+                      className={`p-2 rounded-lg max-w-xs ${
+                        msg.sender === "user"
+                          ? "bg-white text-black"
+                          : "bg-gray-600 text-white"
+                      }`}
+                    >
+                      {msg.text}
+                    </div>
                   </div>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
           </div>
           <div className="p-3 bg-gray-700 flex items-center">
@@ -126,14 +127,11 @@ const Chatbot = () => {
               onChange={(e) => setMessage(e.target.value)}
             />
             <button
-              className="ml-2 p-2 bg-black text-white rounded-full"
+              className="ml-2 p-2 bg-black text-white rounded-xl"
               onClick={sendMessage}
             >
               Send
             </button>
-          </div>
-          <div className="p-3 bg-gray-800 flex items-center">
-            
           </div>
         </div>
       )}

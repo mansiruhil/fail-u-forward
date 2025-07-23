@@ -1,12 +1,21 @@
 # Fail U Forward
 
-**Fail U Forward** is a community driven platform where failure is not something to hide but something to celebrate. It’s designed to share honest stories of setbacks and rejections and lessons learned: all the stuff LinkedIn filters out. 
+**Fail U Forward** is a community driven platform where failure is not something to hide but something to celebrate. It’s designed to share honest stories of setbacks and rejections and lessons learned: all the stuff LinkedIn filters out.
 
-## About 
+## 📌 Table of Contents
+- [📖 About](#-about)
+- [🎯 Features](#-features)
+- [📂 Tech Stack](#-tech-stack)
+- [⚙️ Setup](#-setup)
+- [✌ What’s Next for Fail U Forward](#-whats-next-for-fail-u-forward)
+- [🤝 Contributing](#-contributing)
+- [📄 License](#-license)
+- [📫 Contact](#-contact)
 
-The idea for Fail U Forward came from scrolling through LinkedIn where everyone’s success stories looked flawless but in reality real growth happens through failure. 
+## 📖 About 
+
 This platform brings those unfiltered, messy journeys to light. 
-Whether it’s a failed startup, a rejected interview or a project that just didn’t work out: every post here is a badge of resilience. 
+Whether it’s a failed startup, a rejected interview or a project that just didn’t work out: every post here is a badge of resilience.
 Fail U Forward encourages users to reflect, learn and grow by normalizing failure and building a culture of transparency. 
 
 ## Features 
@@ -22,7 +31,14 @@ Fail U Forward encourages users to reflect, learn and grow by normalizing failur
 -  Database: Firebase
 -  AI Validation: Gemini 
 
-## Setup 
+<p float="left">
+  <img src="https://img.shields.io/badge/Next.js-000000?style=for-the-badge&logo=nextdotjs&logoColor=white" height="28"/>
+  <img src="https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white" height="28"/>
+  <img src="https://img.shields.io/badge/Firebase-FFCA28?style=for-the-badge&logo=firebase&logoColor=black" height="28"/>
+  <img src="https://img.shields.io/badge/Gemini_AI-ffffff?style=for-the-badge&logo=google&logoColor=blue" height="28"/>
+</p>
+
+## ⚙️ Setup 
 
 - Clone the repository:
   ```bash
@@ -47,10 +63,15 @@ Fail U Forward encourages users to reflect, learn and grow by normalizing failur
 ## What's next for Fail U Forward
 I want to add anonymous posting, filters by topic (career, academics, personal) and maybe even voice/video storytelling. 
 
-## Contributing 
+## 🤝 Contributing 
 
 Pull requests are welcome. If you’d like to contribute, fork the repo and use a feature branch. Contributions should follow the standard GitHub flow. 
 
-# License 
+## 📫 Contact  
+For any query, suggestions, or collaboration:  
+- GitHub: [@mansiruhil](https://github.com/mansiruhil)  
+- LinkedIn: [@mansiruhil](https://www.linkedin.com/in/mansi-ruhil-7a00a0228)  
+ 
+# 🧾 License 
 
-This project is licensed under the [MIT License](LICENSE).
+This project is licensed under the [MIT License](LICENSE)
