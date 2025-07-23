@@ -7,7 +7,6 @@ import { useRouter } from "next/navigation";
 import { firebaseApp } from "@/lib/firebase";
 import { getAuth } from "firebase/auth";
 import { HashLoader } from "react-spinners";
-import {Spinner} from "@heroui/spinner";
 import { toast } from "react-toastify";
 
 
