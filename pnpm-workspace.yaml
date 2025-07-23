@@ -1,0 +1,6 @@
+ignoredBuiltDependencies:
+  - '@firebase/util'
+  - '@heroui/shared-utils'
+  - '@vercel/speed-insights'
+  - protobufjs
+  - unrs-resolver
