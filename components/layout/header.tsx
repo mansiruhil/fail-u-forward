@@ -10,7 +10,7 @@ export function Header() {
         <div className="flex justify-between items-center h-16">
           <Link href="/" className="flex items-center">
             <Briefcase className="h-8 w-8 text-red-500" />
-            <span className="ml-2 text-xl font-bold dark:text-white">Fail U Forward</span>
+            <span className="ml-2 space-x-2 text-xl font-bold dark:text-white">Fail U Forward</span>
           </Link>
           
           <div className="flex-1 max-w-xl px-4">
