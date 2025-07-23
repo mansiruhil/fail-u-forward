@@ -77,11 +77,12 @@ export default function Signup() {
 
         <form onSubmit={handleSignup} className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="username">Username</Label>
+            <Label htmlFor="username" className="text-slate-700-font-mdeium">Username</Label>
             <Input 
               id="username" 
               type="text" 
               placeholder="Enter Username"
+              className="text-black placeholder:text-gray-500"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
               required
@@ -89,11 +90,12 @@ export default function Signup() {
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="email">Email</Label>
+            <Label htmlFor="email" className="text-slate-700 font-medium">Email</Label>
             <Input 
               id="email" 
               type="email" 
               placeholder="user@example.com"
+              className="text-black placeholder: text-gray-500"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
