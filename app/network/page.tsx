@@ -64,7 +64,7 @@ export default function NetworkPage() {
   if (loading)
     return (
       <div className="flex h-screen items-center justify-center">
-        <HashLoader color="white" />
+       
       </div>
     );
 

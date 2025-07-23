@@ -7,7 +7,12 @@ import { useRouter } from "next/navigation";
 import { firebaseApp } from "@/lib/firebase";
 import { getAuth } from "firebase/auth";
 import { HashLoader } from "react-spinners";
+import {Spinner} from "@heroui/spinner";
 import { toast } from "react-toastify";
+
+
+  
+
 export default function Feed() {
   const router =useRouter()
   const [loading, setLoading] = useState(true);
@@ -29,7 +34,7 @@ export default function Feed() {
   }, [router])
   if (loading) return (
     <div className="flex h-screen items-center justify-center">
-      <HashLoader color="white"/>
+      <Spinner />
     </div>
   );
 
