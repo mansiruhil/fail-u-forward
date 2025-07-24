@@ -23,7 +23,7 @@ export function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [loggedIn, setLoggedIn] = useState(false);
   const pathname = usePathname();
-  const router = useRouter()
+  const router = useRouter();
 
   useEffect(() => {
     const auth = getAuth(firebaseApp);
@@ -38,7 +38,7 @@ export function Navbar() {
     try {
       const auth = getAuth(firebaseApp);
       await signOut(auth);
-      router.push('/login')
+      router.push('/login');
     } catch (error) {
       console.error("Error signing out:", error);
     }
