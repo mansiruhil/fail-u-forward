@@ -5,7 +5,7 @@ import { ThemeToggle } from "@/components/theme-toggle";
 import { Button } from "@/components/ui/button";
 import { Home, MessageSquare, Bell, User, Briefcase, LogOut, Settings, HelpCircle, Plus } from "lucide-react";
 import { useState, useEffect } from "react";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
 import { firebaseApp } from "@/lib/firebase";
 import { motion } from "framer-motion";
@@ -23,6 +23,7 @@ export function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [loggedIn, setLoggedIn] = useState(false);
   const pathname = usePathname();
+  const router = useRouter()
 
   useEffect(() => {
     const auth = getAuth(firebaseApp);
@@ -37,6 +38,7 @@ export function Navbar() {
     try {
       const auth = getAuth(firebaseApp);
       await signOut(auth);
+      router.push('/login')
     } catch (error) {
       console.error("Error signing out:", error);
     }
