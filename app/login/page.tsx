@@ -1,7 +1,6 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { motion } from "framer-motion";
 import Link from "next/link";
@@ -16,6 +15,7 @@ import {
 import { doc, setDoc, getDoc } from "firebase/firestore";
 import { auth, db } from "@/lib/firebase";
 import { toast } from "react-toastify";
+import { InputWithIcon } from "@/components/ui/input";
 
 interface UserData {
   username: string;
@@ -114,10 +114,10 @@ export default function Login() {
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.3 }}
-        className="w-full max-w-md p-8 space-y-6 bg-card rounded-lg shadow-lg border"
+        className="w-full max-w-md p-6 space-y-4 bg-card rounded-lg shadow-lg border"
       >
-        <div className="space-y-2 text-center">
-          <h1 className="text-3xl font-bold">Welcome</h1>
+        <div className="text-center">
+          <h1 className="text-3xl font-bold">Login</h1>
         </div>
 
         {error && (
@@ -127,9 +127,10 @@ export default function Login() {
         )}
 
         <form onSubmit={handleLogin} className="space-y-4">
-          <div className="space-y-2">
+          <div className="space-y-1">
             <Label htmlFor="email">Email</Label>
-            <Input 
+            <InputWithIcon 
+              icon="user"
               id="email" 
               type="email" 
               placeholder="user@example.com"
@@ -139,9 +140,10 @@ export default function Login() {
             />
           </div>
           
-          <div className="space-y-2">
+          <div className="space-y-1">
             <Label htmlFor="password">Password</Label>
-            <Input 
+            <InputWithIcon 
+              icon="key"
               id="password" 
               type="password"
               value={password}
@@ -150,14 +152,14 @@ export default function Login() {
             />
           </div>
 
-          <Button type="submit" className="w-full" size="lg">
+          <Button type="submit" className="mt-20 w-full" size="lg">
             Sign In
           </Button>
         </form>
 
         <div className="text-center text-sm">
           <Link href="/forgot-password" className="text-primary hover:underline">
-            Forgot your password?
+            <strong>Forgot your password?</strong> 
           </Link>
         </div>
 
@@ -190,7 +192,7 @@ export default function Login() {
         <p className="text-center text-sm">
           Don&apos;t have an account?{" "}
           <Link href="/register" className="text-primary hover:underline">
-            Sign up
+            <strong>Sign up</strong>
           </Link>
         </p>
       </motion.div>
