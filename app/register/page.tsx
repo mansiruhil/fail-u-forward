@@ -6,21 +6,27 @@ import { motion } from "framer-motion";
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { 
-  createUserWithEmailAndPassword, 
-  signInWithPopup, 
-  GoogleAuthProvider, 
-  GithubAuthProvider 
+import {
+  createUserWithEmailAndPassword,
+  signInWithPopup,
+  GoogleAuthProvider,
+  GithubAuthProvider
 } from "firebase/auth";
 import { getAuth } from "firebase/auth";
 import { firebaseApp } from "@/lib/firebase";
 import { useAuth } from "@/contexts/AuthContext";
+
 import { InputWithIcon } from "@/components/ui/input/input-with-icon";
+import { Eye, EyeOff } from "lucide-react";
+
+type PasswordType = "" | "too short" | "weak" | "medium" | "strong" | "high" ;
 
 export default function Signup() {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [passwordStrength, setPasswordStrength] = useState<PasswordType>("");
   const [error, setError] = useState("");
   const { signup } = useAuth();
   const router = useRouter();
@@ -57,6 +63,24 @@ export default function Signup() {
     }
   };
 
+  const strengthColors: Record<typeof passwordStrength, string> = {
+    "":"",
+    "too short": "text-yellow-500",
+    "weak": "text-red-500",
+    "medium": "text-blue-500",
+    "strong": "text-orange-500",
+    "high": "text-green-500",
+  };
+
+  const validatePassword = (password: string) => {
+    const checks = [/[a-z]/,/[A-Z]/,/\d/,/[@.#$!%^&*.?]/];
+
+    const levels: PasswordType[] = ["too short", "weak", "medium", "strong", "high"];
+
+    let score = checks.reduce((acc, rgx) => acc + Number(rgx.test(password)), 0);
+    setPasswordStrength(levels[score])
+  }
+
   return (
     <div className="min-h-screen flex items-center justify-center">
       <motion.div
@@ -75,6 +99,7 @@ export default function Signup() {
           </div>
         )}
 
+
         <form onSubmit={handleSignup} className="space-y-2">
           <div className="space-y-1">
             <Label htmlFor="username">Username</Label>
@@ -82,12 +107,21 @@ export default function Signup() {
               id="username"
               icon="user" 
               type="text" 
+
+        <form onSubmit={handleSignup} className="space-y-4">
+          <div className="space-y-2">
+            <Label htmlFor="username" className="font-mdeium">Username</Label>
+            <Input
+              id="username"
+              type="text"
+
               placeholder="Enter Username"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
               required
             />
           </div>
+
 
           <div className="space-y-1">
             <Label htmlFor="email">Email</Label>
@@ -96,6 +130,15 @@ export default function Signup() {
               id="email" 
               type="email" 
               placeholder="user@example.com"
+
+          <div className="space-y-2">
+            <Label htmlFor="email" className="font-medium">Email</Label>
+            <Input
+              id="email"
+              type="email"
+              placeholder="user@example.com"
+              className="text-black placeholder:text-gray-500"
+
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
@@ -104,6 +147,7 @@ export default function Signup() {
 
           <div className="space-y-1">
             <Label htmlFor="password">Password</Label>
+
             <InputWithIcon
               icon="key"
               id="password" 
@@ -112,6 +156,31 @@ export default function Signup() {
               onChange={(e) => setPassword(e.target.value)}
               required
             />
+
+            <div className="relative">
+              <Input
+                id="password"
+                type={showPassword ? "text" : "password"}
+                value={password}
+                onChange={(e) => {
+                  setPassword(e.target.value);
+                  validatePassword(e.target.value);
+                }}
+                required
+                className="pr-10"
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-2 top-1/2 -translate-y-1/2 text-zinc-500 "
+              >
+                {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+              </button>
+            </div>
+            <div className={strengthColors[passwordStrength]}>
+              {passwordStrength}
+            </div>
+
           </div>
 
           <Button type="submit" className="!mt-4 w-full" size="lg">
@@ -140,14 +209,14 @@ export default function Signup() {
         </div>
 
         <div className="grid grid-cols-2 gap-4">
-          <Button 
+          <Button
             type="button"
-            variant="outline" 
+            variant="outline"
             onClick={signupWithGoogle}
           >
             Google
           </Button>
-          <Button 
+          <Button
             type="button"
             variant="outline"
             onClick={signupWithGitHub}
