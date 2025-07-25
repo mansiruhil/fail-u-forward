@@ -36,7 +36,12 @@ export function Feed() {
     <div className="max-w-2xl mx-auto pt-4">
       <CreatePost />
       {/* {SAMPLE_POSTS.map((post) => (
+<<<<<<< HEAD:components/feed/feed .tsx
         // <FailurePost key={post.id} {...post} />
+=======
+        <FailurePost key={post.id} {...post} />
+
+>>>>>>> 3d42456bb9cf27c1c660a59d26973fd55e3c65a3:components/feed/feed.tsx
       ))} */}
     </div>
   );
