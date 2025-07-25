@@ -15,7 +15,7 @@ import {
 import { doc, setDoc, getDoc } from "firebase/firestore";
 import { auth, db } from "@/lib/firebase";
 import { toast } from "react-toastify";
-import { InputWithIcon } from "@/components/ui/input";
+import { InputWithIcon } from "@/components/ui/input/input-with-icon";
 
 interface UserData {
   username: string;
@@ -117,7 +117,7 @@ export default function Login() {
         className="w-full max-w-md p-6 space-y-4 bg-card rounded-lg shadow-lg border"
       >
         <div className="text-center">
-          <h1 className="text-3xl font-bold">Login</h1>
+          <h1 className="text-3xl font-bold">Sign In</h1>
         </div>
 
         {error && (
@@ -126,7 +126,7 @@ export default function Login() {
           </div>
         )}
 
-        <form onSubmit={handleLogin} className="space-y-4">
+        <form onSubmit={handleLogin} className="space-y-2">
           <div className="space-y-1">
             <Label htmlFor="email">Email</Label>
             <InputWithIcon 
@@ -152,7 +152,7 @@ export default function Login() {
             />
           </div>
 
-          <Button type="submit" className="mt-20 w-full" size="lg">
+          <Button type="submit" className="!mt-4 w-full" size="lg">
             Sign In
           </Button>
         </form>

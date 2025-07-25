@@ -1,7 +1,6 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { motion } from "framer-motion";
 import { useState } from "react";
@@ -16,6 +15,7 @@ import {
 import { getAuth } from "firebase/auth";
 import { firebaseApp } from "@/lib/firebase";
 import { useAuth } from "@/contexts/AuthContext";
+import { InputWithIcon } from "@/components/ui/input/input-with-icon";
 
 export default function Signup() {
   const [username, setUsername] = useState("");
@@ -63,10 +63,10 @@ export default function Signup() {
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.3 }}
-        className="w-full max-w-md p-8 space-y-6 bg-card rounded-lg shadow-lg border"
+        className="w-full max-w-md p-6 space-y-4 bg-card rounded-lg shadow-lg border"
       >
-        <div className="space-y-2 text-center">
-          <h1 className="text-3xl font-bold">Welcome</h1>
+        <div className="space-y-1 text-center">
+          <h1 className="text-3xl font-bold">Sign Up</h1>
         </div>
 
         {error && (
@@ -75,36 +75,37 @@ export default function Signup() {
           </div>
         )}
 
-        <form onSubmit={handleSignup} className="space-y-4">
-          <div className="space-y-2">
-            <Label htmlFor="username" className="text-slate-700-font-mdeium">Username</Label>
-            <Input 
-              id="username" 
+        <form onSubmit={handleSignup} className="space-y-2">
+          <div className="space-y-1">
+            <Label htmlFor="username">Username</Label>
+            <InputWithIcon 
+              id="username"
+              icon="user" 
               type="text" 
               placeholder="Enter Username"
-              className="text-black placeholder:text-gray-500"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
               required
             />
           </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="email" className="text-slate-700 font-medium">Email</Label>
-            <Input 
+          <div className="space-y-1">
+            <Label htmlFor="email">Email</Label>
+            <InputWithIcon
+              icon="message"
               id="email" 
               type="email" 
               placeholder="user@example.com"
-              className="text-black placeholder: text-gray-500"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
             />
           </div>
 
-          <div className="space-y-2">
+          <div className="space-y-1">
             <Label htmlFor="password">Password</Label>
-            <Input 
+            <InputWithIcon
+              icon="key"
               id="password" 
               type="password"
               value={password}
@@ -113,7 +114,7 @@ export default function Signup() {
             />
           </div>
 
-          <Button type="submit" className="w-full" size="lg">
+          <Button type="submit" className="!mt-4 w-full" size="lg">
             Sign Up
           </Button>
         </form>
@@ -123,7 +124,7 @@ export default function Signup() {
             href="/forgot-password"
             className="text-primary hover:underline"
           >
-            Forgot your password?
+            <strong>Forgot your password?</strong> 
           </Link>
         </div>
 
@@ -158,7 +159,7 @@ export default function Signup() {
         <p className="text-center text-sm">
           Have an account?{" "}
           <Link href="/login" className="text-primary hover:underline">
-            Log In
+            <strong>Log In</strong>
           </Link>
         </p>
       </motion.div>
