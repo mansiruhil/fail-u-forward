@@ -14,7 +14,7 @@ export default function Home() {
   useEffect(() => {
     const vantaEffect = NET({
       el: "#vanta-bg",
-      THREE: THREE, 
+      THREE: THREE,
       mouseControls: true,
       touchControls: true,
       gyroControls: false,
@@ -32,56 +32,57 @@ export default function Home() {
     };
   }, []);
 
-  return (  
+  return (
     <div id="vanta-bg" className="min-h-screen w-full flex flex-col items-center justify-center">
       <div className="absolute inset-0 bg-black opacity-70"></div>
-        <main className="container mx-auto px-6 py-16">
-          <div 
-            className="text-center space-y-6"
-          >
-            <h1 className="text-3xl md:text-6xl font-bold tracking-tight">
+      <main className="container mx-auto px-6 py-16">
+        <div
+          className="text-center space-y-6"
+        >
+          <h1 className="text-3xl md:text-6xl font-bold tracking-tight">
             <TextGenerateEffect words={"Welcome To Fail U Forward"} />
-            </h1>
-          </div>
-          <motion.div 
-            initial={{ opacity: 0, y: -40 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay:1.5 , type: "tween" }}
-            className="text-center space-y-6"
-            >
-              <br />
-              <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto">
-                fail. learn. connect.
-              </p>
-            </motion.div>
-            <div className="flex gap-4 justify-center mt-8">
-              <motion.div 
-              whileHover={{scale:1.1}}
-              whileTap={{scale:0.8}}
-              initial={{ opacity: 0, x: 40 }}
-              animate={{ opacity: 1, x: 0, transition:{delay:2} }}
-              >
-                <Link href="/feed">
-                  <Button size="lg">
-                    <span className="md:text-sm text-xs"> Explore </span> <ArrowRight className="ml-2 h-4 w-4" />
-                  </Button>
-                </Link>
-              </motion.div>
-                <motion.div 
-                whileHover={{scale:1.1}}
-                whileTap={{scale:0.8}}
-                initial={{ opacity: 0, x: -40 }}
-                animate={{ opacity: 1, x: 0, transition:{delay:2} }}
-                >
-                <Link href="/about">
-                  <Button variant="outline" size="lg">
-                    About Fail U Forward
-                  </Button>
-                </Link>
-              </motion.div>
-            </div>
+          </h1>
+        </div>
+        <motion.div
+          initial={{ opacity: 0, y: -40 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 1.5, type: "tween" }}
+          className="text-center space-y-6"
+        >
+          <br />
+          <p className="text-lg md:text-xl text-muted-foreground text-neutral-200 max-w-2xl mx-auto">
+            fail. learn. connect.
+          </p>
+        </motion.div>
+        <div className="flex gap-4 justify-center mt-8">
+          <motion.div
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.8 }}
+            initial={{ opacity: 0, x: 40 }}
+            animate={{ opacity: 1, x: 0, transition: { delay: 2 } }}
+          >
+            <Link href="/feed">
+              <Button size="lg" className="group">
+                <span className="md:text-sm text-xs"> Explore </span>
+                  <ArrowRight className="h-4 w-4 ml-2 transform transition duration-300 ease-in-out group-hover:translate-x-[6px]" />
+              </Button>
+            </Link>
+          </motion.div>
+          <motion.div
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.8 }}
+            initial={{ opacity: 0, x: -40 }}
+            animate={{ opacity: 1, x: 0, transition: { delay: 2 } }}
+          >
+            <Link href="/about">
+              <Button variant="outline" size="lg">
+                About Fail U Forward
+              </Button>
+            </Link>
+          </motion.div>
+        </div>
 
-          {/* <motion.div 
+        {/* <motion.div 
             initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.2 }}
@@ -105,7 +106,7 @@ export default function Home() {
               <p className="text-muted-foreground">Share your daily struggles and workplace disasters</p>
             </div>
           </motion.div> */}
-        </main>
+      </main>
     </div>
   );
 }
