@@ -105,7 +105,7 @@ export default function Signup() {
               id="username"
               type="text"
               placeholder="Enter Username"
-              className="text-black placeholder:text-gray-500 dark:text-white"
+              className="text-black placeholder:text-gray-500"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
               required
@@ -118,7 +118,7 @@ export default function Signup() {
               id="email"
               type="email"
               placeholder="user@example.com"
-              className="text-black dark:text-white placeholder:text-gray-500"
+              className="text-black placeholder:text-gray-500"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
