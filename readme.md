@@ -65,7 +65,7 @@ I want to add anonymous posting, filters by topic (career, academics, personal) 
 
 ## 🤝 Contributing 
 
-Pull requests are welcome. If you’d like to contribute, fork the repo and use a feature branch. Contributions should follow the standard GitHub flow. 
+We welcome contributions from everyone! Please read our [Contributing Guidelines](Contributing.md) to get started.
 
 ## 📫 Contact  
 For any query, suggestions, or collaboration:  
