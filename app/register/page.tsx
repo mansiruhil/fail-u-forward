@@ -16,7 +16,8 @@ import {
 import { getAuth } from "firebase/auth";
 import { firebaseApp } from "@/lib/firebase";
 import { useAuth } from "@/contexts/AuthContext";
-import { Eye, EyeOff } from "lucide-react";
+import { Eye, EyeOff, Loader2 } from "lucide-react";
+import { checkUsername } from "../api/check-username/route";
 
 type PasswordType = "" | "too short" | "weak" | "medium" | "strong" | "high" ;
 
@@ -26,6 +27,8 @@ export default function Signup() {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [passwordStrength, setPasswordStrength] = useState<PasswordType>("");
+  const [uniqueUsername, setUniqueUsername] = useState(false)
+  const [loading, setLoading] = useState(false)
   const [error, setError] = useState("");
   const { signup } = useAuth();
   const router = useRouter();
@@ -105,11 +108,19 @@ export default function Signup() {
               id="username"
               type="text"
               placeholder="Enter Username"
-              className="text-black placeholder:text-gray-500"
+              className="placeholder:text-gray-500"
               value={username}
-              onChange={(e) => setUsername(e.target.value)}
+              onChange={async(e) => {
+                setUsername(e.target.value);
+                setLoading(true);
+                const result = await checkUsername(e.target.value);
+                setUniqueUsername(result);
+                setLoading(false);
+              }}
               required
             />
+            {loading ? <Loader2 className="w-5 h-5 animate-spin infinite"/> : null}
+            {uniqueUsername && !loading ? <div className="text-green-500 text-sm">Username is unique</div> : null}
           </div>
 
           <div className="space-y-2">
@@ -118,7 +129,7 @@ export default function Signup() {
               id="email"
               type="email"
               placeholder="user@example.com"
-              className="text-black placeholder:text-gray-500"
+              className="placeholder:text-gray-500"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
