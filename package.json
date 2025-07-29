@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "engines": {
-  "npm": ">=10.9.2"
+    "npm": ">=10.9.2"
   },
   "packageManager": "npm@10.9.2",
   "scripts": {
@@ -60,6 +60,7 @@
     "next": "14.2.30",
     "next-themes": "^0.3.0",
     "nodemon": "^3.1.7",
+    "openai": "^5.10.2",
     "react": "^18.2.0",
     "react-day-picker": "^8.10.1",
     "react-dom": "^18.2.0",
@@ -83,11 +84,11 @@
     "@types/react": "18.2.22",
     "@types/react-dom": "18.2.7",
     "@types/three": "^0.173.0",
+    "autoprefixer": "^10.4.15",
     "eslint": "8.49.0",
     "eslint-config-next": "14.1.0",
     "mini-css-extract-plugin": "^2.9.2",
     "postcss": "^8.4.31",
-    "autoprefixer": "^10.4.15",
     "tailwindcss": "^4.1.0",
     "typescript": "^5.7.3"
   }
