@@ -27,7 +27,7 @@ const StoryPage = () => {
         </p>
 
         {/* Testimonial */}
-        <div className="max-w-2xl mx-auto mt-20 p-6 border border-border rounded-lg shadow-md bg-black/30 backdrop-blur-sm animate-slide-up">
+        <div className="max-w-2xl mx-auto mt-32 p-6 border border-border rounded-lg shadow-md bg-black/30 backdrop-blur-sm animate-slide-up">
           <div className="flex items-center gap-4 mb-4">
             <div className="w-12 h-12 rounded-full bg-gray-500"></div>
             <div>
