@@ -289,7 +289,7 @@ export default function Profile() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.3 }}
         >
-          <Card className="relative bg-background border border-border/30 rounded-xl shadow-lg">
+          <Card className="relative bg-white border border-gray-200/30 rounded-xl shadow-lg">
             <div className="h-36 bg-gradient-to-r from-red-500 to-red-700 rounded-t-xl"></div>
             <div className="p-8">
               <div className="flex items-start mb-6">
@@ -300,16 +300,16 @@ export default function Profile() {
                     className="w-full h-full object-cover"
                     loading="lazy"
                   />
-                  <AvatarFallback className="w-full h-full flex items-center justify-center bg-muted text-2xl font-semibold text-muted-foreground">
+                  <AvatarFallback className="w-full h-full flex items-center justify-center bg-gray-100 text-2xl font-semibold text-gray-500">
                     {userData?.username?.[0] || 'U'}
                   </AvatarFallback>
                 </Avatar>
                 <div className="flex-1">
                   <div className="flex flex-col sm:flex-row justify-between items-start space-y-4 sm:space-y-0 sm:items-center">
                     <div>
-                      <h1 className="text-3xl font-bold text-foreground">{userData?.username || "User"}</h1>
-                      <p className="text-sm text-muted-foreground mt-1">{userData?.email}</p>
-                      <div className="flex items-center gap-2 mt-2 text-sm text-muted-foreground">
+                      <h1 className="text-3xl font-bold text-gray-900">{userData?.username || "User"}</h1>
+                      <p className="text-sm text-gray-500 mt-1">{userData?.email}</p>
+                      <div className="flex items-center gap-2 mt-2 text-sm text-gray-500">
                         <MapPin className="h-5 w-5" />
                         <span>{userData?.location || "Unknown location"}</span>
                       </div>
@@ -318,7 +318,7 @@ export default function Profile() {
                       <Button 
                         variant="outline" 
                         size="sm" 
-                        className="w-full sm:w-auto px-5 py-2.5 border border-border/50 rounded-lg text-sm font-medium text-foreground hover:bg-accent/50"
+                        className="w-full sm:w-auto px-5 py-2.5 border border-gray-200/50 rounded-lg text-sm font-medium text-gray-900 hover:bg-accent/50"
                         onClick={handleOpenModal}
                       >
                         <Pencil className="h-4 w-4 mr-2" />
@@ -327,7 +327,7 @@ export default function Profile() {
                       <Button 
                         variant="ghost" 
                         size="sm" 
-                        className="w-full sm:w-auto px-5 py-2.5 border border-border/50 rounded-lg text-sm font-medium text-destructive hover:bg-destructive/10"
+                        className="w-full sm:w-auto px-5 py-2.5 border border-gray-200/50 rounded-lg text-sm font-medium text-destructive hover:bg-destructive/10"
                         onClick={handleLogout}
                       >
                         <LogOut className="h-4 w-4 mr-2" />
@@ -336,32 +336,32 @@ export default function Profile() {
                     </div>
                   </div>
                   <div className="mt-6">
-                    <p className="text-sm text-muted-foreground leading-relaxed">{userData?.bio || "No bio available"}</p>
+                    <p className="text-sm text-gray-500 leading-relaxed">{userData?.bio || "No bio available"}</p>
                   </div>
                 </div>
               </div>
 
               <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-6">
-                <Card className="p-6 bg-background border border-border/30 rounded-lg">
+                <Card className="p-6 bg-white border border-gray-200/30 rounded-lg">
                   <h3 className="font-semibold text-lg flex items-center gap-2">
                     <Building2 className="h-5 w-5" />
                     Failed Experience
                   </h3>
                   <ul className="mt-3 space-y-2">
                     {userData?.failedExperience?.map((experience, index) => (
-                      <li key={index} className="text-sm text-muted-foreground">• {experience}</li>
+                      <li key={index} className="text-sm text-gray-500">• {experience}</li>
                     ))}
                   </ul>
                 </Card>
 
-                <Card className="p-6 bg-background border border-border/30 rounded-lg">
+                <Card className="p-6 bg-white border border-gray-200/30 rounded-lg">
                   <h3 className="font-semibold text-lg flex items-center gap-2">
                     <GraduationCap className="h-5 w-5" />
                     Mis-Education
                   </h3>
                   <ul className="mt-3 space-y-2">
                     {userData?.misEducation?.map((education, index) => (
-                      <li key={index} className="text-sm text-muted-foreground">• {education}</li>
+                      <li key={index} className="text-sm text-gray-500">• {education}</li>
                     ))}
                   </ul>
                 </Card>
@@ -374,7 +374,7 @@ export default function Profile() {
                 </h3>
                 <div className="flex gap-3 flex-wrap">
                   {userData?.failureHighlights?.map((highlight, index) => (
-                    <span key={index} className="px-4 py-1.5 bg-muted/50 rounded-full text-sm text-foreground">
+                    <span key={index} className="px-4 py-1.5 bg-gray-100/50 rounded-full text-sm text-gray-900">
                       {highlight}
                     </span>
                   ))}
@@ -385,12 +385,12 @@ export default function Profile() {
                 <h3 className="font-semibold text-lg mb-4">Your Posts</h3>
                 <div className="space-y-5">
                   {posts.length === 0 ? (
-                    <p className="text-sm text-muted-foreground">No posts yet</p>
+                    <p className="text-sm text-gray-500">No posts yet</p>
                   ) : (
                     posts.map((post) => (
-                      <Card key={post.id} className="p-6 bg-background border border-border/30 rounded-lg">
-                        <h4 className="font-semibold text-lg text-foreground">{post.title}</h4>
-                        <p className="text-sm text-muted-foreground mt-2">{post.content}</p>
+                      <Card key={post.id} className="p-6 bg-white border border-gray-200/30 rounded-lg">
+                        <h4 className="font-semibold text-lg text-gray-900">{post.title}</h4>
+                        <p className="text-sm text-gray-500 mt-2">{post.content}</p>
                       </Card>
                     ))
                   )}
@@ -411,7 +411,7 @@ export default function Profile() {
               style={{ margin: 0 }}
             >
               <motion.div
-                className="bg-background border border-border/30 rounded-xl w-full max-w-4xl shadow-xl max-h-[90vh] overflow-y-auto"
+                className="bg-white border border-gray-200/30 rounded-xl w-full max-w-4xl shadow-xl max-h-[90vh] overflow-y-auto"
                 initial={{ scale: 0.8, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
                 exit={{ scale: 0.8, opacity: 0 }}
@@ -419,10 +419,10 @@ export default function Profile() {
               >
                 <div className="p-8">
                   <div className="flex justify-between items-center mb-8">
-                    <h2 className="text-2xl font-bold text-foreground">Edit Profile</h2>
+                    <h2 className="text-2xl font-bold text-gray-900">Edit Profile</h2>
                     <button 
                       onClick={handleCloseModal}
-                      className="text-muted-foreground hover:text-foreground p-2 rounded-full hover:bg-accent/50"
+                      className="text-gray-500 hover:text-gray-900 p-2 rounded-full hover:bg-accent/50"
                     >
                       <X className="h-6 w-6" />
                     </button>
@@ -431,43 +431,43 @@ export default function Profile() {
                     <div className="grid md:grid-cols-2 gap-8">
                       <div className="space-y-6">
                         <div>
-                          <label htmlFor="username" className="block text-sm font-medium mb-2 text-foreground">
+                          <label htmlFor="username" className="block text-sm font-medium mb-2 text-gray-900">
                             Name
                           </label>
                           <input
                             type="text"
                             id="username"
-                            className="w-full px-4 py-2.5 border border-border/50 rounded-lg bg-background text-foreground focus:ring-2 focus:ring-primary/50 focus:border-primary outline-none"
+                            className="w-full px-4 py-2.5 border border-gray-200/50 rounded-lg bg-white text-gray-900 focus:ring-2 focus:ring-primary/50 focus:border-primary outline-none"
                             value={edit.username}
                             onChange={handleEditChange}
                           />
                         </div>
                         <div>
-                          <label htmlFor="location" className="block text-sm font-medium mb-2 text-foreground">
+                          <label htmlFor="location" className="block text-sm font-medium mb-2 text-gray-900">
                             Location
                           </label>
                           <input
                             id="location"
                             type="text"
-                            className="w-full px-4 py-2.5 border border-border/50 rounded-lg bg-background text-foreground focus:ring-2 focus:ring-primary/50 focus:border-primary outline-none"
+                            className="w-full px-4 py-2.5 border border-gray-200/50 rounded-lg bg-white text-gray-900 focus:ring-2 focus:ring-primary/50 focus:border-primary outline-none"
                             value={edit.location}
                             onChange={handleEditChange}
                           />
                         </div>
                         <div>
-                          <label htmlFor="bio" className="block text-sm font-medium mb-2 text-foreground">
+                          <label htmlFor="bio" className="block text-sm font-medium mb-2 text-gray-900">
                             Bio
                           </label>
                           <textarea
                             id="bio"
                             rows={4}
-                            className="w-full px-4 py-2.5 border border-border/50 rounded-lg bg-background text-foreground focus:ring-2 focus:ring-primary/50 focus:border-primary outline-none"
+                            className="w-full px-4 py-2.5 border border-gray-200/50 rounded-lg bg-white text-gray-900 focus:ring-2 focus:ring-primary/50 focus:border-primary outline-none"
                             value={edit.bio}
                             onChange={handleEditChange}
                           />
                         </div>
                         <div>
-                          <label htmlFor="profilepic" className="block text-sm font-medium mb-2 text-foreground">
+                          <label htmlFor="profilepic" className="block text-sm font-medium mb-2 text-gray-900">
                             Profile Picture
                           </label>
                           <div className="flex items-center gap-4">
@@ -478,11 +478,11 @@ export default function Profile() {
                                 width={80}
                                 height={80}
                                 loading="lazy"
-                                className="w-20 h-20 object-cover rounded-full border border-border/50"
+                                className="w-20 h-20 object-cover rounded-full border border-gray-200/50"
                               />
                             ) : (
-                              <div className="w-20 h-20 rounded-full bg-muted flex items-center justify-center border border-border/50">
-                                <User className="h-6 w-6 text-muted-foreground" />
+                              <div className="w-20 h-20 rounded-full bg-gray-100 flex items-center justify-center border border-gray-200/50">
+                                <User className="h-6 w-6 text-gray-500" />
                               </div>
                             )}
                             <div className="flex-1 space-y-2">
@@ -495,11 +495,11 @@ export default function Profile() {
                               />
                               <label
                                 htmlFor="profilepic"
-                                className="block text-sm px-4 py-2 border border-border/50 rounded-lg hover:bg-accent/50 cursor-pointer text-center"
+                                className="block text-sm px-4 py-2 border border-gray-200/50 rounded-lg hover:bg-accent/50 cursor-pointer text-center"
                               >
                                 Choose File
                               </label>
-                              <p className="text-xs text-muted-foreground truncate">
+                              <p className="text-xs text-gray-500 truncate">
                                 {file ? file.name : "No file selected"}
                               </p>
                               {file && (
@@ -521,7 +521,7 @@ export default function Profile() {
 
                       <div className="space-y-6">
                         <div>
-                          <label htmlFor="failedExperience" className="block text-sm font-medium mb-2 text-foreground">
+                          <label htmlFor="failedExperience" className="block text-sm font-medium mb-2 text-gray-900">
                             Failed Experience
                           </label>
                           <div className="space-y-3">
@@ -531,7 +531,7 @@ export default function Profile() {
                                   type="text"
                                   value={experience}
                                   onChange={(e) => handleArrayEdit('failedExperience', index, e.target.value)}
-                                  className="flex-1 px-4 py-2.5 border border-border/50 rounded-lg bg-background text-foreground focus:ring-2 focus:ring-primary/50 focus:border-primary outline-none"
+                                  className="flex-1 px-4 py-2.5 border border-gray-200/50 rounded-lg bg-white text-gray-900 focus:ring-2 focus:ring-primary/50 focus:border-primary outline-none"
                                 />
                                 <Button
                                   type="button"
@@ -548,7 +548,7 @@ export default function Profile() {
                               type="button"
                               variant="outline"
                               size="sm"
-                              className="w-full mt-3 px-4 py-2 border border-border/50 rounded-lg hover:bg-accent/50 text-sm font-medium"
+                              className="w-full mt-3 px-4 py-2 border border-gray-200/50 rounded-lg hover:bg-accent/50 text-sm font-medium"
                               onClick={() => handleAddArrayItem('failedExperience')}
                             >
                               Add Experience
@@ -557,7 +557,7 @@ export default function Profile() {
                         </div>
 
                         <div>
-                          <label htmlFor="misEducation" className="block text-sm font-medium mb-2 text-foreground">
+                          <label htmlFor="misEducation" className="block text-sm font-medium mb-2 text-gray-900">
                             Mis-Education
                           </label>
                           <div className="space-y-3">
@@ -567,7 +567,7 @@ export default function Profile() {
                                   type="text"
                                   value={education}
                                   onChange={(e) => handleArrayEdit('misEducation', index, e.target.value)}
-                                  className="flex-1 px-4 py-2.5 border border-border/50 rounded-lg bg-background text-foreground focus:ring-2 focus:ring-primary/50 focus:border-primary outline-none"
+                                  className="flex-1 px-4 py-2.5 border border-gray-200/50 rounded-lg bg-white text-gray-900 focus:ring-2 focus:ring-primary/50 focus:border-primary outline-none"
                                 />
                                 <Button
                                   type="button"
@@ -584,7 +584,7 @@ export default function Profile() {
                               type="button"
                               variant="outline"
                               size="sm"
-                              className="w-full mt-3 px-4 py-2 border border-border/50 rounded-lg hover:bg-accent/50 text-sm font-medium"
+                              className="w-full mt-3 px-4 py-2 border border-gray-200/50 rounded-lg hover:bg-accent/50 text-sm font-medium"
                               onClick={() => handleAddArrayItem('misEducation')}
                             >
                               Add Education
@@ -593,7 +593,7 @@ export default function Profile() {
                         </div>
 
                         <div>
-                          <label htmlFor="failureHighlights" className="block text-sm font-medium mb-2 text-foreground">
+                          <label htmlFor="failureHighlights" className="block text-sm font-medium mb-2 text-gray-900">
                             Failure Highlights
                           </label>
                           <div className="space-y-3">
@@ -603,7 +603,7 @@ export default function Profile() {
                                   type="text"
                                   value={highlight}
                                   onChange={(e) => handleArrayEdit('failureHighlights', index, e.target.value)}
-                                  className="flex-1 px-4 py-2.5 border border-border/50 rounded-lg bg-background text-foreground focus:ring-2 focus:ring-primary/50 focus:border-primary outline-none"
+                                  className="flex-1 px-4 py-2.5 border border-gray-200/50 rounded-lg bg-white text-gray-900 focus:ring-2 focus:ring-primary/50 focus:border-primary outline-none"
                                 />
                                 <Button
                                   type="button"
@@ -620,7 +620,7 @@ export default function Profile() {
                               type="button"
                               variant="outline"
                               size="sm"
-                              className="w-full mt-3 px-4 py-2 border border-border/50 rounded-lg hover:bg-accent/50 text-sm font-medium"
+                              className="w-full mt-3 px-4 py-2 border border-gray-200/50 rounded-lg hover:bg-accent/50 text-sm font-medium"
                               onClick={() => handleAddArrayItem('failureHighlights')}
                             >
                               Add Highlight
@@ -629,12 +629,12 @@ export default function Profile() {
                         </div>
                       </div>
                     </div>
-                    <div className="flex justify-end gap-4 pt-6 border-t border-border/30">
+                    <div className="flex justify-end gap-4 pt-6 border-t border-gray-200/30">
                       <Button
                         variant="outline"
                         type="button"
                         onClick={handleCloseModal}
-                        className="px-6 py-2 border border-border/50 rounded-lg text-sm font-medium text-foreground hover:bg-accent/50"
+                        className="px-6 py-2 border border-gray-200/50 rounded-lg text-sm font-medium text-gray-900 hover:bg-accent/50"
                       >
                         Cancel
                       </Button>

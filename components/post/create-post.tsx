@@ -441,7 +441,7 @@ export function CreatePost() {
                         className={`h-4 w-4 ${
                           dislikedPosts.includes(post.id)
                             ? "text-red-500"
-                            : "text-muted-foreground"
+                            : "text-gray-500"
                         }`}
                       />
                       {post.dislikes} Dislike
@@ -518,7 +518,7 @@ export function CreatePost() {
                         {post.comments.map((comment: any, index: any) => (
                           <div
                             key={index}
-                            className="flex items-center gap-2 mt-2 p-2 rounded-md bg-background"
+                            className="flex items-center gap-2 mt-2 p-2 rounded-md bg-white"
                           >
                             <Avatar className="w-8 h-8">
                               <Image

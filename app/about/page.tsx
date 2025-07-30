@@ -11,7 +11,7 @@ const StoryPage = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-background text-primary">
+    <div className="min-h-screen bg-white text-primary">
 
       <section className="py-20 px-8 text-base">
         <h2 className="text-2xl font-semibold mb-6 text-center">About Fail U Forward</h2>
@@ -28,13 +28,13 @@ const StoryPage = () => {
       <br/>
       <br/>
 
-      <section className="bg-background py-16 px-8">
+      <section className="bg-white py-16 px-8">
         <h2 className="text-2xl font-semibold mb-6 text-center">Features</h2>
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8 max-w-6xl mx-auto">
           {devComments.map((dev, index) => (
             <div
               key={index}
-              className="flex flex-col items-center text-center bg-background border border-border shadow-md rounded-lg p-6"
+              className="flex flex-col items-center text-center bg-white border border-gray-200 shadow-md rounded-lg p-6"
             >
               {/* <h3 className="font-semibold text-lg">{dev.name}</h3> */}
               <p className="text-gray-600 mt-2">{dev.comment}</p>

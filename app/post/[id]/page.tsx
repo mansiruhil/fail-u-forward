@@ -153,7 +153,7 @@ const PostPage = () => {
                   className={`h-4 w-4 ${
                     dislikedPosts.includes(post.id)
                       ? "text-red-500"
-                      : "text-muted-foreground"
+                      : "text-gray-500"
                   }`}
                 />
                 {post.dislikes} Dislike
