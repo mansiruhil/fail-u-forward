@@ -8,18 +8,16 @@ import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
-  createUserWithEmailAndPassword,
   signInWithPopup,
   GoogleAuthProvider,
-  GithubAuthProvider
+  GithubAuthProvider,
+  getAuth
 } from "firebase/auth";
-import { getAuth } from "firebase/auth";
 import { firebaseApp } from "@/lib/firebase";
 import { useAuth } from "@/contexts/AuthContext";
 import { Eye, EyeOff, Loader2 } from "lucide-react";
-import { checkUsername } from "../api/check-username/route";
 
-type PasswordType = "" | "short" | "weak" | "medium" | "strong" | "high" ;
+type PasswordType = "" | "short" | "weak" | "medium" | "strong" | "high";
 
 export default function Signup() {
   const [username, setUsername] = useState("");
@@ -27,8 +25,8 @@ export default function Signup() {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [passwordStrength, setPasswordStrength] = useState<PasswordType>("");
-  const [uniqueUsername, setUniqueUsername] = useState(false)
-  const [loading, setLoading] = useState(false)
+  const [uniqueUsername, setUniqueUsername] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const { signup } = useAuth();
   const router = useRouter();
@@ -66,7 +64,7 @@ export default function Signup() {
   };
 
   const textColors = {
-    "":"",
+    "": "",
     "short": "text-yellow-500",
     "weak": "text-red-500",
     "medium": "text-blue-500",
@@ -75,7 +73,7 @@ export default function Signup() {
   }[passwordStrength];
 
   const outlineColors = {
-    "":"",
+    "": "",
     "short": "!outline-yellow-500",
     "weak": "!outline-red-500",
     "medium": "!outline-blue-500",
@@ -83,15 +81,27 @@ export default function Signup() {
     "high": "!outline-green-500",
   }[passwordStrength];
 
-
   const validatePassword = (password: string) => {
-    const checks = [/[a-z]/,/[A-Z]/,/\d/,/[@.#$!%^&*.?]/];
-
+    const checks = [/[a-z]/, /[A-Z]/, /\d/, /[@.#$!%^&*.?]/];
     const levels: PasswordType[] = ["short", "weak", "medium", "strong", "high"];
+    const score = checks.reduce((acc, rgx) => acc + Number(rgx.test(password)), 0);
+    setPasswordStrength(levels[score]);
+  };
 
-    let score = checks.reduce((acc, rgx) => acc + Number(rgx.test(password)), 0);
-    setPasswordStrength(levels[score])
-  }
+  const checkUsernameAvailability = async (name: string) => {
+    try {
+      const res = await fetch("/api/check-username", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username: name }),
+      });
+      const data = await res.json();
+      return data.available;
+    } catch (err) {
+      console.error("Username check failed", err);
+      return false;
+    }
+  };
 
   return (
     <div className="min-h-screen flex items-center justify-center">
@@ -105,32 +115,29 @@ export default function Signup() {
           <h1 className="text-3xl font-bold">Welcome</h1>
         </div>
 
-        {error && (
-          <div className="text-red-500 text-center">
-            {error}
-          </div>
-        )}
+        {error && <div className="text-red-500 text-center">{error}</div>}
 
         <form onSubmit={handleSignup} className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="username" className="font-mdeium">Username</Label>
+            <Label htmlFor="username" className="font-medium">Username</Label>
             <Input
               id="username"
               type="text"
               placeholder="Enter Username"
               className="placeholder:text-gray-500"
               value={username}
-              onChange={async(e) => {
-                setUsername(e.target.value);
+              onChange={async (e) => {
+                const value = e.target.value;
+                setUsername(value);
                 setLoading(true);
-                const result = await checkUsername(e.target.value);
-                setUniqueUsername(result);
+                const isAvailable = await checkUsernameAvailability(value);
+                setUniqueUsername(isAvailable);
                 setLoading(false);
               }}
               required
             />
-            {loading ? <Loader2 className="w-5 h-5 animate-spin infinite"/> : null}
-            {uniqueUsername && !loading ? <div className="text-green-500 text-sm">Username is unique</div> : null}
+            {loading && <Loader2 className="w-5 h-5 animate-spin" />}
+            {!loading && uniqueUsername && <div className="text-green-500 text-sm">Username is unique</div>}
           </div>
 
           <div className="space-y-2">
@@ -163,7 +170,7 @@ export default function Signup() {
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-2 top-1/2 -translate-y-1/2 text-zinc-500 "
+                className="absolute right-2 top-1/2 -translate-y-1/2 text-zinc-500"
               >
                 {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
               </button>
@@ -179,10 +186,7 @@ export default function Signup() {
         </form>
 
         <div className="text-center text-sm">
-          <Link
-            href="/forgot-password"
-            className="text-primary hover:underline"
-          >
+          <Link href="/forgot-password" className="text-primary hover:underline">
             Forgot your password?
           </Link>
         </div>
@@ -192,25 +196,15 @@ export default function Signup() {
             <div className="w-full border-t"></div>
           </div>
           <div className="relative flex justify-center text-xs uppercase">
-            <span className="bg-background px-2 text-muted-foreground">
-              Or continue with
-            </span>
+            <span className="bg-background px-2 text-muted-foreground">Or continue with</span>
           </div>
         </div>
 
         <div className="grid grid-cols-2 gap-4">
-          <Button
-            type="button"
-            variant="outline"
-            onClick={signupWithGoogle}
-          >
+          <Button type="button" variant="outline" onClick={signupWithGoogle}>
             Google
           </Button>
-          <Button
-            type="button"
-            variant="outline"
-            onClick={signupWithGitHub}
-          >
+          <Button type="button" variant="outline" onClick={signupWithGitHub}>
             GitHub
           </Button>
         </div>
