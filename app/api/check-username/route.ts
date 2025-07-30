@@ -1,14 +1,16 @@
-import { NextResponse } from "next/server";
-import { checkUsername } from "@/lib/utils";
+import { getFirestore, collection, getDocs } from "firebase/firestore";
+import { firebaseApp } from "@/lib/firebase"; 
 
-export async function POST(req: Request) {
-  try {
-    const { username } = await req.json();
+const db = getFirestore(firebaseApp);
 
-    const isAvailable = await checkUsername(username);
-    return NextResponse.json({ available: isAvailable });
-  } catch (err) {
-    console.error("Username check failed:", err);
-    return NextResponse.json({ available: false }, { status: 500 });
-  }
+export async function checkUsername(username: string) {
+    if(username === "") return false;
+    
+    const usersRef = collection(db, "users");
+    const querySnapshot = await getDocs(usersRef);
+
+    const user = querySnapshot.docs.find(doc => doc.data().username === username);
+
+    if(user) return false;
+    return true;
 }
