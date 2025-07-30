@@ -12,12 +12,11 @@ export function cn(...inputs: ClassValue[]) {
 const db = getFirestore(firebaseApp);
 
 export async function checkUsername(username: string) {
-  if (username === "") return false;
+  if (!username || username.trim() === "") return false;
 
   const usersRef = collection(db, "users");
   const querySnapshot = await getDocs(usersRef);
 
   const user = querySnapshot.docs.find(doc => doc.data().username === username);
-
-  return !user;
+  return !user; // true if not found => available
 }
