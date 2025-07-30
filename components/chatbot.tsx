@@ -1,140 +1,297 @@
 "use client";
 
 import { usePathname } from "next/navigation";
-import { useState } from "react";
-import { MessageCircle, X } from "lucide-react";
+import { useState, useEffect, useRef } from "react";
+import { MessageCircle, X, Send, Bot, User } from "lucide-react";
 
 interface ChatMessage {
   sender: "user" | "bot";
   text: string;
+  timestamp: Date;
 }
 
 const Chatbot = () => {
   const pathname = usePathname();
-  const [isChatOpen, setIsChatOpen] = useState<boolean>(false);
-  const [message, setMessage] = useState<string>("");
+  const [isChatOpen, setIsChatOpen] = useState(false);
+  const [message, setMessage] = useState("");
   const [chatHistory, setChatHistory] = useState<ChatMessage[]>([]);
-  const [prompt, setPrompt] = useState<string>("You are Sadbot, a chatbot that empathizes with sadness and provides comforting advice. BUT DONT BE TOO CArried away while doing so...answer to the point while maintaining the empathy");
+  const [isLoading, setIsLoading] = useState(false);
+  const [prompt, setPrompt] = useState(
+    "You are Sadbot, a chatbot that empathizes with sadness and provides comforting advice. BUT DONT BE TOO CArried away while doing so...answer to the point while maintaining the empathy"
+  );
 
-  if (pathname!="/"){
-    return null;
-  }
-  const toggleChat = () => {
-    setIsChatOpen(!isChatOpen);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
+  const messagesContainerRef = useRef<HTMLDivElement>(null);
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({
+      behavior: "smooth",
+      block: "end",
+      inline: "nearest",
+    });
   };
+
+  useEffect(() => {
+    if (chatHistory.length > 0 || isLoading) {
+      setTimeout(scrollToBottom, 100);
+    }
+  }, [chatHistory, isLoading]);
+
+  useEffect(() => {
+    if (isChatOpen) {
+      setTimeout(scrollToBottom, 200);
+      inputRef.current?.focus();
+    }
+  }, [isChatOpen, chatHistory.length]);
+
+  if (pathname !== "/") return null;
+
+  const toggleChat = () => setIsChatOpen(!isChatOpen);
 
   const sendMessage = async () => {
-    if (!message.trim()) return; // Prevent sending empty messages
-  
-    const newMessage: ChatMessage = { sender: "user", text: message };
+    if (!message.trim() || isLoading) return;
+
+    const currentMessage = message;
+    const newMessage: ChatMessage = {
+      sender: "user",
+      text: currentMessage,
+      timestamp: new Date(),
+    };
+
     setChatHistory((prev) => [...prev, newMessage]);
-  
+    setIsLoading(true);
+    setMessage("");
+
     try {
-      console.log("Sending message:", message);
-      const response = await fetch("/api/chatbot", {
+      const res = await fetch("/api/chatbot", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ text: message, prompt }), // Send prompt with the message
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ text: currentMessage, prompt }),
       });
-  
-      console.log("Response status:", response.status);
-  
-      if (response.ok) {
-        const data = await response.json();
-  
-        if (data?.response) {
-          setChatHistory((prev) => [
-            ...prev,
-            { sender: "bot", text: data.response },
-          ]);
-        } else {
-          setChatHistory((prev) => [
-            ...prev,
-            { sender: "bot", text: "I didn't get that. Please try again." },
-          ]);
-        }
-      } else {
-        setChatHistory((prev) => [
-          ...prev,
-          { sender: "bot", text: "Error communicating with the server." },
-        ]);
-      }
-    } catch (error) {
-      console.error("Error in sendMessage:", error);
+
+      const data = await res.json();
       setChatHistory((prev) => [
         ...prev,
-        { sender: "bot", text: "Network error. Please try again later." },
+        {
+          sender: "bot",
+          text: data?.response || "Error connecting with the server",
+          timestamp: new Date(),
+        },
+      ]);
+    } catch (err) {
+      console.error("Error:", err);
+      setChatHistory((prev) => [
+        ...prev,
+        {
+          sender: "bot",
+          text: "Network error. Please try again later.",
+          timestamp: new Date(),
+        },
       ]);
     } finally {
-      setMessage(""); 
+      setIsLoading(false);
+      setTimeout(() => inputRef.current?.focus(), 100);
     }
   };
-  
+
+  const handleKeyPress = (e: React.KeyboardEvent) => {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      sendMessage();
+    }
+  };
+
+  const formatTime = (date: Date) =>
+    date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+
   return (
     <div>
+      {/* Floating Button */}
       {!isChatOpen && (
         <button
           onClick={toggleChat}
-          className="fixed bottom-5 right-5 p-3 bg-black text-white rounded-full shadow-lg z-50"
+          className="fixed bottom-6 right-6 p-4 bg-gradient-to-r from-gray-950 to-black text-white rounded-full shadow-2xl z-50 hover:scale-110 transition-all duration-300 hover:shadow-lg border border-gray-800"
+          style={{ animation: "bounce 2s infinite" }}
         >
           <MessageCircle className="h-6 w-6" />
         </button>
       )}
 
+      {/* Chat Window */}
       {isChatOpen && (
-        <div className="fixed bottom-0 right-0 w-80 h-96 bg-black text-white shadow-lg rounded-tl-lg z-40 border flex flex-col justify-between">
-          <div>
-            <div className="flex justify-between items-center bg-black text-white p-3 rounded-tl-lg rounded-tr-lg">
-              <span>Chatbot</span>
-              <button
-                onClick={toggleChat}
-                className="p-1 bg-transparent text-white rounded-full"
-              >
-                <X className="h-5 w-5" />
-              </button>
+        <div
+          className={`
+      z-50 bg-black shadow-2xl rounded-2xl border border-gray-800 
+      flex flex-col overflow-hidden backdrop-blur-sm bg-opacity-95
+      resize-none sm:resize sm:overflow-auto
+      fixed sm:absolute bottom-4 right-4 sm:bottom-6 sm:right-6
+      w-[90vw] h-[70vh] sm:w-[24rem] sm:h-[32rem]
+    `}
+          style={{
+            minWidth: "300px",
+            minHeight: "300px",
+            maxWidth: "100vw",
+            maxHeight: "100vh",
+          }}
+        >
+          {/* Header */}
+          <div className="flex justify-between items-center bg-gradient-to-r from-black to-gray-900 text-white p-4 rounded-t-2xl border-b border-gray-800">
+            <div className="flex items-center space-x-2">
+              <Bot className="h-5 w-5 text-gray-400" />
+              <span className="font-semibold text-gray-200">
+                SadBot Assistant
+              </span>
             </div>
-            <div className="p-4 overflow-y-auto max-h-64">
-              <div className="flex flex-col justify-start space-y-2">
-                {chatHistory.map((msg, index) => (
+            <button
+              onClick={toggleChat}
+              className="p-2 hover:bg-gray-900 rounded-full transition-colors"
+            >
+              <X className="h-5 w-5" />
+            </button>
+          </div>
+
+          {/* Messages */}
+          <div
+            ref={messagesContainerRef}
+            className="flex-1 p-3 overflow-y-auto bg-black scroll-smooth no-scrollbar"
+          >
+            {chatHistory.length === 0 && (
+              <div className="text-center text-gray-500 py-8">
+                <Bot className="h-10 w-10 mx-auto mb-2 text-gray-600" />
+                <p className="text-sm">
+                  Hello! I'm here to help you feel better. How are you doing
+                  today?
+                </p>
+              </div>
+            )}
+
+            <div className="space-y-4">
+              {chatHistory.map((msg, i) => (
+                <div
+                  key={i}
+                  className={`flex ${
+                    msg.sender === "user" ? "justify-end" : "justify-start"
+                  }`}
+                >
                   <div
-                    key={index}
-                    className={`flex ${
-                      msg.sender === "user" ? "justify-end" : "justify-start"
+                    className={`flex items-start space-x-2 max-w-[90%] ${
+                      msg.sender === "user"
+                        ? "flex-row-reverse space-x-reverse"
+                        : ""
                     }`}
                   >
                     <div
-                      className={`p-2 rounded-lg max-w-xs ${
+                      className={`w-8 h-8 rounded-full flex items-center justify-center ${
                         msg.sender === "user"
-                          ? "bg-white text-black"
-                          : "bg-gray-600 text-white"
+                          ? "bg-gray-800 text-white"
+                          : "bg-gray-900 text-gray-300"
                       }`}
                     >
-                      {msg.text}
+                      {msg.sender === "user" ? (
+                        <User className="h-4 w-4" />
+                      ) : (
+                        <Bot className="h-4 w-4" />
+                      )}
+                    </div>
+                    <div
+                      className={`flex flex-col ${
+                        msg.sender === "user" ? "items-end" : "items-start"
+                      }`}
+                    >
+                      <div
+                        className={`px-4 py-2 rounded-2xl text-sm sm:text-sm  ${
+                          msg.sender === "user"
+                            ? "bg-gray-800 text-white rounded-br-md border border-gray-700"
+                            : "bg-gray-900 text-gray-200 rounded-bl-md border border-gray-700"
+                        }`}
+                        style={{
+                          wordBreak: "break-word",
+                          overflowWrap: "anywhere",
+                          whiteSpace: "pre-wrap",
+                        }}
+                      >
+                        <p>{msg.text}</p>
+                      </div>
+                      <span className="text-xs text-gray-600 mt-1 px-2">
+                        {formatTime(msg.timestamp)}
+                      </span>
                     </div>
                   </div>
-                ))}
-              </div>
+                </div>
+              ))}
+
+              {isLoading && (
+                <div className="flex justify-start">
+                  <div className="flex items-start space-x-2 max-w-[90%]">
+                    <div className="w-8 h-8 rounded-full bg-gray-900 text-gray-300 flex items-center justify-center">
+                      <Bot className="h-4 w-4" />
+                    </div>
+                    <div className="bg-gray-900 rounded-2xl border border-gray-700 px-4 py-2">
+                      <div className="flex space-x-1">
+                        <div className="w-2 h-2 bg-gray-500 rounded-full animate-bounce"></div>
+                        <div className="w-2 h-2 bg-gray-500 rounded-full animate-bounce delay-100"></div>
+                        <div className="w-2 h-2 bg-gray-500 rounded-full animate-bounce delay-200"></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+            <div ref={messagesEndRef} className="h-0" />
+          </div>
+
+          {/* Input */}
+          <div className="p-3 bg-black border-t border-gray-800">
+            <div className="flex items-center space-x-2">
+              <input
+                ref={inputRef}
+                type="text"
+                placeholder="Type your message..."
+                className="flex-1 p-2 sm:p-3 rounded-xl bg-gray-900 text-gray-200 text-sm border border-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-600 focus:border-transparent placeholder-gray-500"
+                value={message}
+                onChange={(e) => setMessage(e.target.value)}
+                onKeyPress={handleKeyPress}
+                disabled={isLoading}
+              />
+              <button
+                onClick={sendMessage}
+                disabled={!message.trim() || isLoading}
+                className={`p-2 sm:p-3 rounded-xl transition-all ${
+                  message.trim() && !isLoading
+                    ? "bg-gray-800 text-white hover:bg-gray-700 border border-gray-700"
+                    : "bg-gray-900 text-gray-600 cursor-not-allowed border border-gray-800"
+                }`}
+              >
+                <Send className="h-5 w-5" />
+              </button>
             </div>
           </div>
-          <div className="p-3 bg-gray-700 flex items-center">
-            <input
-              type="text"
-              placeholder="Type your message..."
-              className="w-full p-2 rounded-md bg-gray-800 text-white border border-gray-500"
-              value={message}
-              onChange={(e) => setMessage(e.target.value)}
-            />
-            <button
-              className="ml-2 p-2 bg-black text-white rounded-xl"
-              onClick={sendMessage}
-            >
-              Send
-            </button>
+
+          <div className="hidden sm:flex justify-end pr-3 pb-1 text-xs text-gray-500 select-none">
+            ⤡ Drag to resize
           </div>
+
         </div>
       )}
+
+      <style jsx>{`
+        @keyframes bounce {
+          0%,
+          20%,
+          50%,
+          80%,
+          100% {
+            transform: translateY(0);
+          }
+          40% {
+            transform: translateY(-10px);
+          }
+          60% {
+            transform: translateY(-5px);
+          }
+        }
+      `}</style>
     </div>
   );
 };
