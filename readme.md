@@ -1,35 +1,14 @@
-# Fail U Forward
+It's a community driven platform where failure is not something to hide but something to celebrate . It’s designed to share honest stories of setbacks and rejections and lessons learned: all the stuff LinkedIn filters out .
 
-**Fail U Forward** is a community driven platform where failure is not something to hide but something to celebrate. It’s designed to share honest stories of setbacks and rejections and lessons learned: all the stuff LinkedIn filters out.
-
-## 📌 Table of Contents
-- [📖 About](#-about)
-- [🎯 Features](#-features)
-- [📂 Tech Stack](#-tech-stack)
-- [⚙️ Setup](#-setup)
-- [✌ What’s Next for Fail U Forward](#-whats-next-for-fail-u-forward)
-- [🤝 Contributing](#-contributing)
-- [📄 License](#-license)
-- [📫 Contact](#-contact)
-
-## 📖 About 
-
-This platform brings those unfiltered, messy journeys to light. 
-Whether it’s a failed startup, a rejected interview or a project that just didn’t work out: every post here is a badge of resilience.
-Fail U Forward encourages users to reflect, learn and grow by normalizing failure and building a culture of transparency. 
-
-## Features 
-
+**features**
 - Post your rejections, failures and real lessons learned
 - Browse stories by category: Startup Crashes, Interview Wrecks, Project Chaos and more
-- No judgment, just growth 
 
-## Tech Stack 
-
-- Frontend: Next.js and TypeScript
-- Backend: Next.js
--  Database: Firebase
--  AI Validation: Gemini 
+**tech stack**
+- frontend: Next.js and TypeScript
+- backend: Next.js
+- database: Firebase
+- AI Validation: Gemini 
 
 <p float="left">
   <img src="https://img.shields.io/badge/Next.js-000000?style=for-the-badge&logo=nextdotjs&logoColor=white" height="28"/>
@@ -38,40 +17,51 @@ Fail U Forward encourages users to reflect, learn and grow by normalizing failur
   <img src="https://img.shields.io/badge/Gemini_AI-ffffff?style=for-the-badge&logo=google&logoColor=blue" height="28"/>
 </p>
 
-## ⚙️ Setup 
+**setup**
 
-- Clone the repository:
+*scripts:*
+
+| command         | description                  |
+|---------------- |------------------------------|
+| `pnpm dev`      | Run dev server               |
+| `pnpm build`    | Build project for production |
+| `pnpm start`    | Start production build       |
+| `pnpm lint`     | Run lint checks              |
+
+<br>
+
+- clone the repository:
   ```bash
   git clone https://github.com/your-username/failuforward.git 
   
-- Navigate to the project directory:
+- navigate to the project directory:
   ```bash
   cd failuforward
   
-- Install dependencies:
+- install dependencies:
   ```bash
-  npm install 
+  pnpm install 
 
-- Run the development server: 
+- run the development server: 
   ```bash
-  npm run dev 
+  pnpm run dev 
 
-- Open in your browser:
+- open in your browser:
   ```arduino
   http://localhost:3000
 
-## What's next for Fail U Forward
-I want to add anonymous posting, filters by topic (career, academics, personal) and maybe even voice/video storytelling. 
+**what's next**
 
-## 🤝 Contributing 
+I want to add anonymous posting, filters by topic (career, academics, personal) and maybe even voice/video storytelling .
 
-Pull requests are welcome. If you’d like to contribute, fork the repo and use a feature branch. Contributions should follow the standard GitHub flow. 
+**contributing**
 
-## 📫 Contact  
-For any query, suggestions, or collaboration:  
+welcome contributions from everyone ! please read our [Contributing Guidelines](Contributing.md) to get started .
+
+**contact**
 - GitHub: [@mansiruhil](https://github.com/mansiruhil)  
 - LinkedIn: [@mansiruhil](https://www.linkedin.com/in/mansi-ruhil-7a00a0228)  
  
-# 🧾 License 
+**license**
 
-This project is licensed under the [MIT License](LICENSE)
+this project is licensed under the [MIT License](LICENSE)
