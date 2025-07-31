@@ -2,7 +2,7 @@
 
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { doc, getDoc, updateDoc, increment } from "firebase/firestore";
+import { doc, getDoc, updateDoc, increment, arrayUnion, arrayRemove } from "firebase/firestore";
 import { db, auth } from "@/lib/firebase";
 import { Avatar } from "@/components/ui/avatar";
 import { Card } from "@/components/ui/card";
@@ -23,6 +23,10 @@ const PostPage = () => {
   const [loading, setLoading] = useState(true);
   const [dislikedPosts, setDislikedPosts] = useState<string[]>([]);
   const [commentInput, setCommentInput] = useState<string>("");
+  const [showComments, setShowComments] = useState(true);
+  const [isDisliked, setIsDisliked] = useState(false);
+  const [dislikesCount, setDislikesCount] = useState(0);
+  const [sharesCount, setSharesCount] = useState(0);
 
   useEffect(() => {
     if (!id) return;
@@ -34,7 +38,16 @@ const PostPage = () => {
         const postDoc = await getDoc(postRef);
 
         if (postDoc.exists()) {
-          setPost({ id: postDoc.id, ...postDoc.data() });
+          const postData = { id: postDoc.id, ...postDoc.data() } as any;
+          setPost(postData);
+          
+          // Initialize state based on post data
+          const currentUser = auth.currentUser;
+          if (currentUser && postData.dislikedBy) {
+            setIsDisliked(postData.dislikedBy.includes(currentUser.uid));
+          }
+          setDislikesCount(postData.dislikes || 0);
+          setSharesCount(postData.shares || 0);
         } else {
           console.error("Post not found");
           router.push("/404");
@@ -48,15 +61,106 @@ const PostPage = () => {
 
     fetchPost();
   }, [id, router]);
-  const handleDislike = (post:any)=>{
-    console.log("nai kiya define")
-  }
-  const handleShare = (post:any)=>{
-    console.log("nai kiya define")
-  }
-  const toggleCommentBox = (post:any)=>{
-    console.log("nai kiya define")
-  }
+
+  // Reset comments when navigating to different posts
+  useEffect(() => {
+    return () => {
+      setShowComments(true);
+    };
+  }, [id]);
+  const handleDislike = async () => {
+    const currentUser = auth.currentUser;
+    
+    if (!currentUser) {
+      toast.error("Please log in to dislike posts");
+      return;
+    }
+
+    try {
+      const postRef = doc(db, "posts", id as string);
+      const newDislikedState = !isDisliked;
+      
+      // Optimistic UI update
+      setIsDisliked(newDislikedState);
+      setDislikesCount(prev => newDislikedState ? prev + 1 : prev - 1);
+
+      if (newDislikedState) {
+        // Add dislike
+        await updateDoc(postRef, {
+          dislikedBy: arrayUnion(currentUser.uid),
+          dislikes: increment(1)
+        });
+        toast.success("Post disliked");
+      } else {
+        // Remove dislike
+        await updateDoc(postRef, {
+          dislikedBy: arrayRemove(currentUser.uid),
+          dislikes: increment(-1)
+        });
+        toast.success("Dislike removed");
+      }
+    } catch (error) {
+      console.error("Error updating dislike:", error);
+      // Revert optimistic update on error
+      setIsDisliked(!isDisliked);
+      setDislikesCount(prev => isDisliked ? prev + 1 : prev - 1);
+      toast.error("Failed to update dislike");
+    }
+  };
+
+  const handleShare = async () => {
+    try {
+      const shareUrl = `${window.location.origin}/post/${id}`;
+      const shareData = {
+        title: post?.userName ? `Post by ${post.userName}` : 'Check out this post',
+        text: post?.content?.substring(0, 100) || 'Interesting post on Fail U Forward',
+        url: shareUrl
+      };
+
+      // Check if Web Share API is available
+      if (navigator.share && navigator.canShare && navigator.canShare(shareData)) {
+        await navigator.share(shareData);
+        
+        // Update shares count in database
+        const postRef = doc(db, "posts", id as string);
+        await updateDoc(postRef, {
+          shares: increment(1)
+        });
+        
+        // Optimistic UI update
+        setSharesCount(prev => prev + 1);
+        toast.success("Post shared successfully!");
+      } else {
+        // Fallback: Copy to clipboard
+        await navigator.clipboard.writeText(shareUrl);
+        
+        // Update shares count in database
+        const postRef = doc(db, "posts", id as string);
+        await updateDoc(postRef, {
+          shares: increment(1)
+        });
+        
+        // Optimistic UI update
+        setSharesCount(prev => prev + 1);
+        toast.success("Link copied to clipboard!");
+      }
+    } catch (error) {
+      console.error("Error sharing post:", error);
+      
+      // If sharing failed but we can still copy to clipboard
+      try {
+        const shareUrl = `${window.location.origin}/post/${id}`;
+        await navigator.clipboard.writeText(shareUrl);
+        toast.success("Link copied to clipboard!");
+      } catch (clipboardError) {
+        toast.error("Failed to share post");
+      }
+    }
+  };
+
+  const toggleCommentBox = () => {
+    setShowComments(prev => !prev);
+  };
   const handlePostComment = async () => {
     const currentUser = auth.currentUser;
 
@@ -146,84 +250,116 @@ const PostPage = () => {
               <Button
                 variant="ghost"
                 size="sm"
-                onClick={() => handleDislike(post.id)}
-                className="flex items-center gap-2"
+                onClick={handleDislike}
+                disabled={!auth.currentUser}
+                className={`flex items-center gap-2 ${
+                  isDisliked
+                    ? "text-red-500 bg-red-50 hover:bg-red-100"
+                    : "text-muted-foreground hover:bg-gray-100"
+                } ${!auth.currentUser ? "opacity-50 cursor-not-allowed" : ""}`}
+                title={!auth.currentUser ? "Please log in to dislike" : isDisliked ? "Remove dislike" : "Dislike post"}
               >
                 <ThumbsDown
+
                   className={`h-4 w-4 ${
                     dislikedPosts.includes(post.id)
                       ? "text-red-500"
                       : "text-gray-500"
                   }`}
+
+                  className={`h-4 w-4 ${isDisliked ? "fill-current" : ""}`}
+
                 />
-                {post.dislikes} Dislike
+                {dislikesCount} Dislike
               </Button>
             </motion.div>
 
             <Button
               variant="ghost"
               size="sm"
-              onClick={() => toggleCommentBox(post.id)}
-              className="flex items-center gap-2"
+              onClick={toggleCommentBox}
+              className={`flex items-center gap-2 ${
+                showComments
+                  ? "text-blue-500 bg-blue-50 hover:bg-blue-100"
+                  : "text-muted-foreground hover:bg-gray-100"
+              }`}
+              title={showComments ? "Hide comments" : "Show comments"}
             >
-              <MessageCircle className="h-4 w-4" />
+              <MessageCircle className={`h-4 w-4 ${showComments ? "fill-current" : ""}`} />
               Comment
             </Button>
+            
             <Button
               variant="ghost"
               size="sm"
-              onClick={() => handleShare(post.id)}
-              className="flex items-center gap-2"
+              onClick={handleShare}
+              className="flex items-center gap-2 text-muted-foreground hover:bg-gray-100 hover:text-green-600"
+              title="Share this post"
             >
               <Link2 className="h-4 w-4" />
-              {post.shares || 0} Shares
+              {sharesCount} Shares
             </Button>
           </div>
         </Card>
 
-        <Card className="p-4">
-          <h3 className="text-lg font-semibold mb-2">Comments</h3>
-          {post.comments && post.comments.length > 0 ? (
-            <div className="space-y-4">
-              {post.comments.map((comment: any, index: number) => (
-                <div key={index} className="flex gap-4">
-                  <Avatar className="w-10 h-10">
-                    <Image
-                      src={
-                        comment.profilePic ||
-                        "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
-                      }
-                      height={40}
-                      width={40}
-                      alt={`${comment.userName || "Anonymous"}'s avatar`}
-                      className="rounded-full"
-                    />
-                  </Avatar>
-                  <div>
-                    <p className="font-bold">{comment.userName || "Anonymous"}</p>
-                    <p className="text-sm text-gray-600">
-                      {new Date(comment.timestamp).toLocaleString()}
-                    </p>
-                    <p className="mt-1">{comment.text}</p>
+        {showComments && (
+          <Card className="p-4">
+            <h3 className="text-lg font-semibold mb-2">Comments</h3>
+            {post.comments && post.comments.length > 0 ? (
+              <div className="space-y-4">
+                {post.comments.map((comment: any, index: number) => (
+                  <div key={index} className="flex gap-4">
+                    <Avatar className="w-10 h-10">
+                      <Image
+                        src={
+                          comment.profilePic ||
+                          "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
+                        }
+                        height={40}
+                        width={40}
+                        alt={`${comment.userName || "Anonymous"}'s avatar`}
+                        className="rounded-full"
+                      />
+                    </Avatar>
+                    <div>
+                      <p className="font-bold">{comment.userName || "Anonymous"}</p>
+                      <p className="text-sm text-gray-600">
+                        {new Date(comment.timestamp).toLocaleString()}
+                      </p>
+                      <p className="mt-1">{comment.text}</p>
+                    </div>
                   </div>
-                </div>
-              ))}
-            </div>
-          ) : (
-            <p className="text-gray-500">No comments yet.</p>
-          )}
+                ))}
+              </div>
+            ) : (
+              <p className="text-gray-500">No comments yet.</p>
+            )}
 
-          <div className="mt-4">
-            <Textarea
-              value={commentInput}
-              onChange={(e) => setCommentInput(e.target.value)}
-              placeholder="Add a comment..."
-            />
-            <Button onClick={handlePostComment} className="mt-2">
-              Post Comment
-            </Button>
-          </div>
-        </Card>
+            <div className="mt-4">
+              {auth.currentUser ? (
+                <>
+                  <Textarea
+                    value={commentInput}
+                    onChange={(e) => setCommentInput(e.target.value)}
+                    placeholder="Add a comment..."
+                    className="mb-2"
+                  />
+                  <Button 
+                    onClick={handlePostComment} 
+                    disabled={!commentInput.trim()}
+                    className="w-full sm:w-auto"
+                  >
+                    Post Comment
+                  </Button>
+                </>
+              ) : (
+                <div className="p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
+                  <p className="text-yellow-800 text-sm">Please log in to post comments.</p>
+                </div>
+              )}
+            </div>
+          </Card>
+        )}
       </div>
       <RightSidebar/>
     </div>

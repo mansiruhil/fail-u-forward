@@ -8,10 +8,10 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
-  createUserWithEmailAndPassword,
   signInWithPopup,
   GoogleAuthProvider,
   GithubAuthProvider,
+
   updateProfile
 } from "firebase/auth";
 import { doc, setDoc } from "firebase/firestore";
@@ -39,15 +39,31 @@ interface ValidationErrors {
   general?: string;
 }
 
+  getAuth
+} from "firebase/auth";
+import { firebaseApp } from "@/lib/firebase";
+import { useAuth } from "@/contexts/AuthContext";
+import { Eye, EyeOff, Loader2 } from "lucide-react";
+
+type PasswordType = "" | "short" | "weak" | "medium" | "strong" | "high";
+
+
 export default function Signup() {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [passwordStrength, setPasswordStrength] = useState<PasswordType>("");
+
   const [errors, setErrors] = useState<ValidationErrors>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isFormValid, setIsFormValid] = useState(false);
+
+  const [uniqueUsername, setUniqueUsername] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const { signup } = useAuth();
+
   const router = useRouter();
 
   useEffect(() => {
@@ -168,6 +184,7 @@ export default function Signup() {
     }
   };
 
+
   const strengthColors: Record<typeof passwordStrength, string> = {
     "": "",
     "too short": "text-yellow-500",
@@ -189,6 +206,47 @@ export default function Signup() {
     setPasswordStrength(levels[score]);
   };
 
+  const textColors = {
+    "": "",
+    "short": "text-yellow-500",
+    "weak": "text-red-500",
+    "medium": "text-blue-500",
+    "strong": "text-orange-500",
+    "high": "text-green-500",
+  }[passwordStrength];
+
+  const outlineColors = {
+    "": "",
+    "short": "!outline-yellow-500",
+    "weak": "!outline-red-500",
+    "medium": "!outline-blue-500",
+    "strong": "!outline-orange-500",
+    "high": "!outline-green-500",
+  }[passwordStrength];
+
+  const validatePassword = (password: string) => {
+    const checks = [/[a-z]/, /[A-Z]/, /\d/, /[@.#$!%^&*.?]/];
+    const levels: PasswordType[] = ["short", "weak", "medium", "strong", "high"];
+    const score = checks.reduce((acc, rgx) => acc + Number(rgx.test(password)), 0);
+    setPasswordStrength(levels[score]);
+  };
+
+  const checkUsernameAvailability = async (name: string) => {
+    try {
+      const res = await fetch("/api/check-username", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username: name }),
+      });
+      const data = await res.json();
+      return data.available;
+    } catch (err) {
+      console.error("Username check failed", err);
+      return false;
+    }
+  };
+
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-background dark:bg-black">
       <motion.div
@@ -206,6 +264,7 @@ export default function Signup() {
           <p className="text-gray-600 dark:text-gray-300">Join the community and share your journey</p>
         </div>
 
+
         {errors.general && (
           <div className="flex items-center gap-2 p-3 text-red-700 bg-red-50 dark:bg-red-900/30 border border-red-200 dark:border-red-700 rounded-lg">
             <AlertCircle className="h-4 w-4 flex-shrink-0" />
@@ -213,8 +272,12 @@ export default function Signup() {
           </div>
         )}
 
+        {error && <div className="text-red-500 text-center">{error}</div>}
+
+
         <form onSubmit={handleSignup} className="space-y-4" noValidate>
           <div className="space-y-2">
+
             <Label htmlFor="username" className="font-medium text-gray-700 dark:text-gray-200">
               Username
             </Label>
@@ -278,6 +341,40 @@ export default function Signup() {
                 {errors.email}
               </p>
             )}
+
+            <Label htmlFor="username" className="font-medium">Username</Label>
+            <Input
+              id="username"
+              type="text"
+              placeholder="Enter Username"
+              className="placeholder:text-gray-500"
+              value={username}
+              onChange={async (e) => {
+                const value = e.target.value;
+                setUsername(value);
+                setLoading(true);
+                const isAvailable = await checkUsernameAvailability(value);
+                setUniqueUsername(isAvailable);
+                setLoading(false);
+              }}
+              required
+            />
+            {loading && <Loader2 className="w-5 h-5 animate-spin" />}
+            {!loading && uniqueUsername && <div className="text-green-500 text-sm">Username is unique</div>}
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="email" className="font-medium">Email</Label>
+            <Input
+              id="email"
+              type="email"
+              placeholder="user@example.com"
+              className="placeholder:text-gray-500"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+
           </div>
 
           <div className="space-y-2">
@@ -300,18 +397,27 @@ export default function Signup() {
                   validatePassword(e.target.value);
                 }}
                 required
+
                 disabled={isSubmitting}
                 autoComplete="new-password"
+
+                className={`pr-10 ${outlineColors}`}
+
               />
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
+
                 className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-500 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
                 tabIndex={-1}
+
+                className="absolute right-2 top-1/2 -translate-y-1/2 text-zinc-500"
+
               >
                 {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
               </button>
             </div>
+
             {password && (
               <div className="space-y-1">
                 <div className={`text-sm font-medium ${strengthColors[passwordStrength]}`}>
@@ -340,6 +446,11 @@ export default function Signup() {
                 {errors.password}
               </p>
             )}
+
+            <div className={`text-sm ${textColors}`}>
+              {passwordStrength}
+            </div>
+
           </div>
 
           <Button
@@ -366,16 +477,29 @@ export default function Signup() {
           </Button>
         </form>
 
+
+        <div className="text-center text-sm">
+          <Link href="/forgot-password" className="text-primary hover:underline">
+            Forgot your password?
+          </Link>
+        </div>
+
+
         <div className="relative">
           <div className="absolute inset-0 flex items-center">
             <div className="w-full border-t border-gray-300 dark:border-zinc-700"></div>
           </div>
           <div className="relative flex justify-center text-xs uppercase">
+
             <span className="bg-white dark:bg-zinc-900 px-2 text-gray-500 dark:text-zinc-400">Or continue with</span>
+
+            <span className="bg-background px-2 text-muted-foreground">Or continue with</span>
+
           </div>
         </div>
 
         <div className="grid grid-cols-2 gap-4">
+
           <Button
             type="button"
             variant="outline"
@@ -392,6 +516,12 @@ export default function Signup() {
             onClick={signupWithGitHub}
             disabled={isSubmitting}
           >
+
+          <Button type="button" variant="outline" onClick={signupWithGoogle}>
+            Google
+          </Button>
+          <Button type="button" variant="outline" onClick={signupWithGitHub}>
+
             GitHub
           </Button>
         </div>
