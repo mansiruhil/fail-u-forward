@@ -101,7 +101,7 @@ export default function Signup() {
     Boolean(email) &&
     Boolean(password)
   );
-
+};
 
   const createUserData = async (user: any, displayName?: string) => {
     const docRef = doc(db, "users", user.uid);
