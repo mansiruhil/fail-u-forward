@@ -67,3 +67,35 @@ pnpm install
 
 # 4. Start the dev server
 pnpm dev
+```
+
+---
+
+## 🛣️ What's Next
+
+We’re just getting started. Planned features include:
+
+- 🕵️ **Anonymous posting support**  
+- 🏷️ **Filters by topic** (e.g., Career, Academics, Personal)  
+- 🎙️ **Voice/video storytelling** support for deeper expression  
+
+---
+
+## 🤝 Contributing
+
+Welcome contributions from everyone!  
+Please read our [Contributing Guidelines](Contributing.md) to get started.
+
+---
+
+## 💬 Contact
+
+- **GitHub:** [@mansiruhil](https://github.com/mansiruhil)  
+- **LinkedIn:** [@mansiruhil](https://www.linkedin.com/in/mansi-ruhil-7a00a0228)
+
+---
+
+## 📄 License
+
+This project is licensed under the [MIT License](LICENSE).  
+Feel free to use, modify, and share it.
