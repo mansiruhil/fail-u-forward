@@ -799,17 +799,15 @@ export function CreatePost() {
                       className="flex items-center gap-2"
                     >
                       <ThumbsDown
-                        className={`h-4 w-4 ${
-                          dislikedPosts.includes(post.id)
+  className={`h-4 w-4 ${
+    dislikedPosts.includes(post.id)
+      ? "text-blue-500"
+      : likedPosts.includes(post.id)
+      ? "text-red-500"
+      : "text-gray-500"
+  }`}
+/>
 
-                            ? "text-blue-500"
-                            : "text-muted-foreground"
-
-                            ? "text-red-500"
-                            : "text-gray-500"
-
-                        }`}
-                      />
                       {post.dislikes || 0} Dislike
                     </Button>
                   </motion.div>
