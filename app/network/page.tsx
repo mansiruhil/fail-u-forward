@@ -111,7 +111,7 @@ export default function NetworkPage() {
                 <h2 className="text-lg font-semibold">
                   {user.username || "Anonymous"}
                 </h2>
-                <p className="text-sm text-muted-foreground">
+                <p className="text-sm text-gray-500">
                   {user.email || "No email available"}
                 </p>
               </div>
