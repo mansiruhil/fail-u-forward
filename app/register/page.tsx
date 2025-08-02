@@ -38,9 +38,6 @@ interface ValidationErrors {
   password?: string;
   general?: string;
 }
-
-  getAuth
-} from "firebase/auth";
 import { firebaseApp } from "@/lib/firebase";
 import { useAuth } from "@/contexts/AuthContext";
 import { Eye, EyeOff, Loader2 } from "lucide-react";
