@@ -14,8 +14,8 @@ export function ProfileHeader() {
           <div className="flex justify-between items-start">
             <div>
               <h1 className="text-2xl font-bold">John</h1>
-              <p className="text-muted-foreground">Professional Dream Chaser | Serial Job Rejectee</p>
-              <div className="flex items-center gap-2 mt-2 text-sm text-muted-foreground">
+              <p className="text-gray-500">Professional Dream Chaser | Serial Job Rejectee</p>
+              <div className="flex items-center gap-2 mt-2 text-sm text-gray-500">
                 <MapPin className="h-4 w-4" />
                 <span>Parents' Basement, Somewhere</span>
               </div>

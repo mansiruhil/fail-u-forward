@@ -81,14 +81,14 @@ export default function Notifications() {
                   <div className="flex-1">
                     <div className="flex items-center gap-2">
                       <p className="font-semibold">{notification.user}</p>
-                      <p className="text-muted-foreground">{notification.action}</p>
+                      <p className="text-gray-500">{notification.action}</p>
                     </div>
                     {notification.content && (
-                      <p className="text-sm text-muted-foreground">"{notification.content}"</p>
+                      <p className="text-sm text-gray-500">"{notification.content}"</p>
                     )}
-                    <p className="text-xs text-muted-foreground mt-1">{notification.time}</p>
+                    <p className="text-xs text-gray-500 mt-1">{notification.time}</p>
                   </div>
-                  <notification.icon className="h-5 w-5 text-muted-foreground" />
+                  <notification.icon className="h-5 w-5 text-gray-500" />
                 </div>
               </Card>
             </motion.div>

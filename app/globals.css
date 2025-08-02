@@ -1,6 +1,4 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
 
 html, body {
   margin: 0;
@@ -9,16 +7,16 @@ html, body {
 }
 
 :root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
+  --background: 255 255 255;
+  --foreground: 17 24 39;
+  /* ...rest of your light tokens */
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
+    --background: 17 24 39;
+    --foreground: 255 255 255;
+    /* ...rest of your dark tokens */
   }
 }
 
@@ -92,9 +90,10 @@ html, body {
 
 @layer base {
   * {
-    @apply border-border;
+    border-color: #e5e7eb; /* Tailwind's border-gray-200 */
   }
   body {
-    @apply bg-background text-foreground;
+    background-color: #ffffff;
+    color: #111827;
   }
 }
