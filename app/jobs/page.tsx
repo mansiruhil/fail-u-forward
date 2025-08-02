@@ -25,7 +25,7 @@ export default function FailedJobs() {
       {/* Job Fails Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {fails.map((fail) => (
-          <div key={fail.id} className="bg-background border border-border p-6 rounded-lg shadow-xl hover:shadow-2xl transition-all duration-200 flex flex-col justify-between">
+          <div key={fail.id} className="bg-white border border-gray-200 p-6 rounded-lg shadow-xl hover:shadow-2xl transition-all duration-200 flex flex-col justify-between">
             <img
               src={fail.image}
               alt={fail.title}
@@ -48,7 +48,7 @@ export default function FailedJobs() {
         <h2 className="text-3xl font-bold text-primary my-20">Top 3 Epic Fails</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {fails.slice(0, 3).map((fail) => (
-            <div key={fail.id} className="bg-background border border-border p-6 rounded-lg shadow-xl hover:shadow-2xl transition-all duration-200 flex flex-col justify-between">
+            <div key={fail.id} className="bg-white border border-gray-200 p-6 rounded-lg shadow-xl hover:shadow-2xl transition-all duration-200 flex flex-col justify-between">
             <img
               src={fail.image}
               alt={fail.title}

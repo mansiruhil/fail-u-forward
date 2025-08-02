@@ -74,9 +74,9 @@ export function LeftSidebar() {
   const toggleBio = () => setIsBioExpanded(!isBioExpanded);
 
   return (
-    <div className="hidden w-[16%] absolute left-0 top-16 h-screen bg-background border-r border-border p-4 transition-colors md:block">
+    <div className="hidden w-[16%] absolute left-0 top-16 h-screen bg-white border-r border-gray-200 p-4 transition-colors md:block">
       <div className="space-y-6">
-      <div className="p-4 rounded-lg border border-border bg-card shadow-md text-center">
+      <div className="p-4 rounded-lg border border-gray-200 bg-card shadow-md text-center">
         <Avatar className="w-16 h-16 mx-auto mb-4">
           <AvatarImage 
             src={displayData.profilepic || "/default-avatar.png"} 
@@ -88,7 +88,7 @@ export function LeftSidebar() {
         <h3 className="font-semibold text-lg text-primary">
           {displayData.username}
         </h3>
-        <p className="text-sm text-muted-foreground">
+        <p className="text-sm text-gray-500">
           {    displayData.bio && displayData.bio?.length > 80 ? (
             <>
               {isBioExpanded
