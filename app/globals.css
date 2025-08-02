@@ -90,10 +90,18 @@ html, body {
 
 @layer base {
   * {
+
+    border-color: hsl(var(--border));
+  }
+  body {
+    background-color: hsl(var(--background));
+    color: hsl(var(--foreground));
+
     border-color: #e5e7eb; /* Tailwind's border-gray-200 */
   }
   body {
     background-color: #ffffff;
     color: #111827;
+
   }
 }
