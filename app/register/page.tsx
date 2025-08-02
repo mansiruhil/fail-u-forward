@@ -95,8 +95,13 @@ export default function Signup() {
       newErr.password = "Include uppercase, lowercase, number & symbol";
 
     setErrors(newErr);
-    setIsFormValid(Object.keys(newErr).length === 0 && username && email && password);
-  };
+    setIsFormValid(
+    Object.keys(newErr).length === 0 &&
+    Boolean(username) &&
+    Boolean(email) &&
+    Boolean(password)
+  );
+
 
   const createUserData = async (user: any, displayName?: string) => {
     const docRef = doc(db, "users", user.uid);
