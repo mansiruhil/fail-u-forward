@@ -260,16 +260,10 @@ const PostPage = () => {
                 title={!auth.currentUser ? "Please log in to dislike" : isDisliked ? "Remove dislike" : "Dislike post"}
               >
                 <ThumbsDown
-
-                  className={`h-4 w-4 ${
-                    dislikedPosts.includes(post.id)
-                      ? "text-red-500"
-                      : "text-gray-500"
-                  }`}
-
-                  className={`h-4 w-4 ${isDisliked ? "fill-current" : ""}`}
-
-                />
+  className={`h-4 w-4 ${
+    dislikedPosts.includes(post.id) ? "text-red-500" : "text-gray-500"
+  } ${isDisliked ? "fill-current" : ""}`}
+/>
                 {dislikesCount} Dislike
               </Button>
             </motion.div>
