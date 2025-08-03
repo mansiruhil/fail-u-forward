@@ -1,8 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import {
   collection,
-  addDoc,
-  serverTimestamp,
   getDocs,
   query,
   orderBy,
@@ -15,12 +13,11 @@ import { Textarea } from "@/components/ui/textarea";
 import { HashLoader } from "react-spinners";
 import { toast } from "react-toastify";
 import { motion } from "framer-motion";
-import { firebaseApp } from "@/lib/firebase";
 import { updateDoc, doc, increment } from "firebase/firestore";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { Link2, ThumbsDown, MessageCircle, Heart } from "lucide-react";
-import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { onAuthStateChanged } from "firebase/auth";
 type User = {
   id: string;
   username: string;
@@ -51,52 +48,48 @@ export function CreatePost() {
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [uploadingImage, setUploadingImage] = useState(false);
+  const [editingPostId, setEditingPostId] = useState<string | null>(null);
+  const [editContent, setEditContent] = useState<string>("");
 
   const fetchPosts = async () => {
     try {
-      const postsRef = collection(db, "posts");
-      const postsQuery = query(postsRef, orderBy("timestamp", "desc"));
-      const postsSnapshot = await getDocs(postsQuery);
+      const response = await fetch('/api/post');
+      const data = await response.json();
       
-      const postsList = postsSnapshot.docs.map((doc) => {
-        const data = doc.data();
-        return {
-          id: doc.id,
-          likes: data.likes || 0,
-          likedBy: data.likedBy || [],
-          dislikes: data.dislikes || 0,
-          dislikedBy: data.dislikedBy || [],
-          comments: data.comments || [],
-          ...data,
-        };
-      });
-      
-      setPosts(postsList);
+      if (response.ok) {
+        const postsList = data.posts.map((post: any) => ({
+          id: post.id,
+          likes: post.likes || 0,
+          likedBy: post.likedBy || [],
+          dislikes: post.dislikes || 0,
+          dislikedBy: post.dislikedBy || [],
+          comments: post.comments || [],
+          ...post,
+        }));
+        
+        setPosts(postsList);
 
-      // Update local liked and disliked posts state for the current user (if logged in)
-      const currentUser = auth.currentUser;
-      if (currentUser) {
-        const likedPostIds = postsList
-          .filter((post) => post.likedBy.includes(currentUser.uid))
-          .map((post) => post.id);
-        setLikedPosts(likedPostIds);
+        // Update local liked and disliked posts state for the current user (if logged in)
+        const currentUser = auth.currentUser;
+        if (currentUser) {
+          const likedPostIds = postsList
+            .filter((post: any) => post.likedBy.includes(currentUser.uid))
+            .map((post: any) => post.id);
+          setLikedPosts(likedPostIds);
 
-        const dislikedPostIds = postsList
-          .filter((post) => post.dislikedBy.includes(currentUser.uid))
-          .map((post) => post.id);
-        setDislikedPosts(dislikedPostIds);
+          const dislikedPostIds = postsList
+            .filter((post: any) => post.dislikedBy.includes(currentUser.uid))
+            .map((post: any) => post.id);
+          setDislikedPosts(dislikedPostIds);
+        }
+        
+        setErrorMessage("");
+      } else {
+        setErrorMessage(data.error || "Failed to fetch posts");
       }
-      
-      setErrorMessage("");
     } catch (error) {
       console.error("Error fetching posts:", error);
-      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-
-      if (errorMessage.includes('insufficient permissions') || errorMessage.includes('Missing or insufficient permissions')) {
-        setErrorMessage("Database access restricted. Please check Firebase security rules to allow public read access to posts.");
-      } else {
-        setErrorMessage(`Error fetching posts: ${errorMessage}`);
-      }
+      setErrorMessage("Failed to fetch posts");
     }
   };
 
@@ -244,36 +237,40 @@ export function CreatePost() {
       return;
     }
 
+    const postIndex = posts.findIndex((post) => post.id === postId);
+    const post = posts[postIndex];
+    const newComment = {
+      userId: currentUser.uid,
+      text: commentText,
+      timestamp: Date.now()
+    };
+    const newComments = [...(post.comments || []), newComment];
+
+    setPosts((prevPosts) =>
+      prevPosts.map((p, idx) =>
+        idx === postIndex ? { ...p, comments: newComments } : p
+      )
+    );
+    setCommentInputs((prev: any) => ({ ...prev, [postId]: "" }));
+
     try {
-      const postRef = doc(db, "posts", postId);
-
-      // Get the current comments from the document
-      const postSnapshot = await getDocs(
-        query(collection(db, "posts"), orderBy("timestamp", "desc"))
-      );
-      const postDoc = postSnapshot.docs.find((doc) => doc.id === postId);
-
-      const postComments = postDoc?.data()?.comments || [];
-
-      const newComment = {
-        userId: currentUser.uid,
-        text: commentText,
-        timestamp: Date.now(),
-      };
-
-      await updateDoc(postRef, {
-        comments: [...postComments, newComment],
+      const idToken = await currentUser.getIdToken();
+      await fetch(`/api/post/${postId}/comment`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${idToken}`
+        },
+        body: JSON.stringify({ text: commentText })
       });
-
-      setCommentInputs((prev: any) => ({
-        ...prev,
-        [postId]: "",
-      }));
-
       toast.success("Comment posted successfully.");
-      await fetchPosts();
     } catch (error) {
-      console.error("Posting Comment Error:", error);
+      setPosts((prevPosts) =>
+        prevPosts.map((p, idx) =>
+          idx === postIndex ? { ...p, comments: post.comments } : p
+        )
+      );
+      setCommentInputs((prev: any) => ({ ...prev, [postId]: commentText }));
       toast.error("Failed to post comment.");
     }
   };
@@ -283,73 +280,41 @@ export function CreatePost() {
     if (postContent.trim()) {
       try {
         const currentUser = auth.currentUser;
-
         if (!currentUser) {
           setLoading(false);
           return;
         }
 
-        // Enable validation with Gemini API
-        let validationResult = "1"; // Default to allow
-
-        try {
-          const response = await fetch("/api/validate", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ text: postContent }),
-          });
-
-          if (response.ok) {
-            const data = await response.json();
-            validationResult = data.result;
-          } else {
-            // Validation API failed, allowing post anyway
-            console.log("Validation API failed, allowing post");
-          }
-        } catch (validationError) {
-
-          console.log("Validation error:", validationError);
+        let imageUrl = null;
+        if (selectedImage) {
+          imageUrl = await uploadImageToFirebase(selectedImage);
         }
 
-        if (validationResult === "1") {
-          const currentUserId = currentUser.uid;
-          const postsRef = collection(db, "posts");
+        const idToken = await currentUser.getIdToken();
+        const response = await fetch("/api/post", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${idToken}`
+          },
+          body: JSON.stringify({ content: postContent, imageUrl })
+        });
 
-          let imageUrl = null;
-          if (selectedImage) {
-            imageUrl = await uploadImageToFirebase(selectedImage);
-          }
+        const data = await response.json();
+        console.log(data);
 
-          await addDoc(postsRef, {
-            content: postContent,
-            timestamp: serverTimestamp(),
-            userName: currentUser.displayName || "Anonymous",
-            userEmail: currentUser.email || "Unknown",
-            userId: currentUserId,
-            imageUrl: imageUrl,
-            likes: 0,
-            likedBy: [],
-            dislikes: 0,
-            dislikedBy: [],
-            shares: 0,
-            comments: [], 
-          });
-
+        if (response.ok) {
           await fetchPosts();
           toast.success("Your voice shall be heard");
           setPostContent("");
           setSelectedImage(null);
           setImagePreview(null);
         } else {
-          toast.error("Content not appropriate for posting");
+          toast.error(data.error || "Content not appropriate for posting");
         }
       } catch (error) {
         console.error("Error processing post:", error);
-        if (error instanceof Error) {
-          setErrorMessage(`Error posting: ${error.message}`);
-        } else {
-          setErrorMessage("An error occurred while posting.");
-        }
+        toast.error("An error occurred while posting.");
       } finally {
         setLoading(false);
       }
@@ -360,206 +325,158 @@ export function CreatePost() {
   };
 
   const handleLike = async (postId: string) => {
-    try {
-      const currentUser = auth.currentUser;
+    const currentUser = auth.currentUser;
+    if (!currentUser) {
+      toast.error("You need to be logged in to like a post.");
+      return;
+    }
 
-      if (!currentUser) {
-        toast.error("You need to be logged in to like a post.");
-        return;
-      }
+    const postIndex = posts.findIndex((post) => post.id === postId);
+    const post = posts[postIndex];
+    const userId = currentUser.uid;
+    const hasLiked = post.likedBy?.includes(userId);
+    const hasDisliked = post.dislikedBy?.includes(userId);
 
-      const postRef = doc(db, "posts", postId);
-      const postIndex = posts.findIndex((post) => post.id === postId);
-      const post = posts[postIndex];
-
-      // Check if the user has already liked the post
-      const userId = currentUser.uid;
-      const hasLiked = post.likedBy?.includes(userId);
-      const hasDisliked = post.dislikedBy?.includes(userId);
-
-      if (hasLiked) {
-        // Remove like
-        const updatedLikedBy = post.likedBy.filter(
-          (id: string) => id !== userId
-        );
-
-        await updateDoc(postRef, {
-          likes: Math.max((post.likes || 0) - 1, 0),
-          likedBy: updatedLikedBy,
-        });
-
-        setPosts((prevPosts) =>
-          prevPosts.map((p, idx) =>
-            idx === postIndex
-              ? {
-                  ...p,
-                  likes: Math.max((post.likes || 0) - 1, 0),
-                  likedBy: updatedLikedBy,
-                }
-              : p
-          )
-        );
-
-        setLikedPosts(likedPosts.filter((id) => id !== postId));
+    let newLikedBy, newDislikedBy, newLikes, newDislikes;
+    if (hasLiked) {
+      newLikedBy = post.likedBy.filter((id: string) => id !== userId);
+      newLikes = Math.max((post.likes || 0) - 1, 0);
+      newDislikedBy = post.dislikedBy;
+      newDislikes = post.dislikes;
+    } else {
+      newLikedBy = [...(post.likedBy || []), userId];
+      newLikes = (post.likes || 0) + 1;
+      if (hasDisliked) {
+        newDislikedBy = post.dislikedBy.filter((id: string) => id !== userId);
+        newDislikes = Math.max((post.dislikes || 0) - 1, 0);
+        setDislikedPosts(dislikedPosts.filter((id) => id !== postId));
       } else {
-        // Add like and remove dislike if exists
-        const updatedLikedBy = [...(post.likedBy || []), userId];
-        let updatedDislikedBy = post.dislikedBy || [];
-        let newDislikes = post.dislikes || 0;
-
-        if (hasDisliked) {
-          updatedDislikedBy = post.dislikedBy.filter(
-            (id: string) => id !== userId
-          );
-          newDislikes = Math.max((post.dislikes || 0) - 1, 0);
-          setDislikedPosts(dislikedPosts.filter((id) => id !== postId));
-        }
-
-        await updateDoc(postRef, {
-          likes: (post.likes || 0) + 1,
-          likedBy: updatedLikedBy,
-          dislikes: newDislikes,
-          dislikedBy: updatedDislikedBy,
-        });
-
-        setPosts((prevPosts) =>
-          prevPosts.map((p, idx) =>
-            idx === postIndex
-              ? {
-                  ...p,
-                  likes: (post.likes || 0) + 1,
-                  likedBy: updatedLikedBy,
-                  dislikes: newDislikes,
-                  dislikedBy: updatedDislikedBy,
-                }
-              : p
-          )
-        );
-
-        setLikedPosts([...likedPosts, postId]);
+        newDislikedBy = post.dislikedBy;
+        newDislikes = post.dislikes;
       }
+    }
+
+    setPosts((prevPosts) =>
+      prevPosts.map((p, idx) =>
+        idx === postIndex
+          ? { ...p, likes: newLikes, likedBy: newLikedBy, dislikes: newDislikes, dislikedBy: newDislikedBy }
+          : p
+      )
+    );
+    setLikedPosts(hasLiked ? likedPosts.filter((id) => id !== postId) : [...likedPosts, postId]);
+
+    try {
+      const idToken = await currentUser.getIdToken();
+      await fetch(`/api/post/${postId}/like`, {
+        method: 'POST',
+        headers: { 'Authorization': `Bearer ${idToken}` }
+      });
     } catch (error) {
-      console.error("Error updating likes:", error);
+      setPosts((prevPosts) =>
+        prevPosts.map((p, idx) =>
+          idx === postIndex ? { ...p, likes: post.likes, likedBy: post.likedBy, dislikes: post.dislikes, dislikedBy: post.dislikedBy } : p
+        )
+      );
+      setLikedPosts(hasLiked ? [...likedPosts, postId] : likedPosts.filter((id) => id !== postId));
       toast.error("Failed to update likes.");
     }
   };
 
   const handleDislike = async (postId: string) => {
-    try {
-      const currentUser = auth.currentUser;
+    const currentUser = auth.currentUser;
+    if (!currentUser) {
+      toast.error("You need to be logged in to dislike a post.");
+      return;
+    }
 
-      if (!currentUser) {
-        toast.error("You need to be logged in to dislike a post.");
-        return;
-      }
+    const postIndex = posts.findIndex((post) => post.id === postId);
+    const post = posts[postIndex];
+    const userId = currentUser.uid;
+    const hasDisliked = post.dislikedBy?.includes(userId);
+    const hasLiked = post.likedBy?.includes(userId);
 
-      const postRef = doc(db, "posts", postId);
-      const postIndex = posts.findIndex((post) => post.id === postId);
-      const post = posts[postIndex];
-
-      // Check if the user has already disliked the post
-      const userId = currentUser.uid;
-      const hasDisliked = post.dislikedBy?.includes(userId);
-      const hasLiked = post.likedBy?.includes(userId);
-
-      if (hasDisliked) {
-        // Remove dislike
-        const updatedDislikedBy = post.dislikedBy.filter(
-          (id: string) => id !== userId
-        );
-
-        await updateDoc(postRef, {
-          dislikes: Math.max((post.dislikes || 0) - 1, 0),
-          dislikedBy: updatedDislikedBy,
-        });
-
-        setPosts((prevPosts) =>
-          prevPosts.map((p, idx) =>
-            idx === postIndex
-              ? {
-                  ...p,
-                  dislikes: Math.max((post.dislikes || 0) - 1, 0),
-                  dislikedBy: updatedDislikedBy,
-                }
-              : p
-          )
-        );
-
-        setDislikedPosts(dislikedPosts.filter((id) => id !== postId));
+    let newLikedBy, newDislikedBy, newLikes, newDislikes;
+    if (hasDisliked) {
+      newDislikedBy = post.dislikedBy.filter((id: string) => id !== userId);
+      newDislikes = Math.max((post.dislikes || 0) - 1, 0);
+      newLikedBy = post.likedBy;
+      newLikes = post.likes;
+    } else {
+      newDislikedBy = [...(post.dislikedBy || []), userId];
+      newDislikes = (post.dislikes || 0) + 1;
+      if (hasLiked) {
+        newLikedBy = post.likedBy.filter((id: string) => id !== userId);
+        newLikes = Math.max((post.likes || 0) - 1, 0);
+        setLikedPosts(likedPosts.filter((id) => id !== postId));
       } else {
-        // Add dislike and remove like if exists
-        const updatedDislikedBy = [...(post.dislikedBy || []), userId];
-        let updatedLikedBy = post.likedBy || [];
-        let newLikes = post.likes || 0;
-
-        if (hasLiked) {
-          updatedLikedBy = post.likedBy.filter(
-            (id: string) => id !== userId
-          );
-          newLikes = Math.max((post.likes || 0) - 1, 0);
-          setLikedPosts(likedPosts.filter((id) => id !== postId));
-        }
-
-        await updateDoc(postRef, {
-          dislikes: (post.dislikes || 0) + 1,
-          dislikedBy: updatedDislikedBy,
-          likes: newLikes,
-          likedBy: updatedLikedBy,
-        });
-
-        setPosts((prevPosts) =>
-          prevPosts.map((p, idx) =>
-            idx === postIndex
-              ? {
-                  ...p,
-                  dislikes: (post.dislikes || 0) + 1,
-                  dislikedBy: updatedDislikedBy,
-                  likes: newLikes,
-                  likedBy: updatedLikedBy,
-                }
-              : p
-          )
-        );
-
-        setDislikedPosts([...dislikedPosts, postId]);
+        newLikedBy = post.likedBy;
+        newLikes = post.likes;
       }
+    }
+
+    setPosts((prevPosts) =>
+      prevPosts.map((p, idx) =>
+        idx === postIndex
+          ? { ...p, likes: newLikes, likedBy: newLikedBy, dislikes: newDislikes, dislikedBy: newDislikedBy }
+          : p
+      )
+    );
+    setDislikedPosts(hasDisliked ? dislikedPosts.filter((id) => id !== postId) : [...dislikedPosts, postId]);
+
+    try {
+      const idToken = await currentUser.getIdToken();
+      await fetch(`/api/post/${postId}/dislike`, {
+        method: 'POST',
+        headers: { 'Authorization': `Bearer ${idToken}` }
+      });
     } catch (error) {
-      console.error("Error updating dislikes:", error);
+      setPosts((prevPosts) =>
+        prevPosts.map((p, idx) =>
+          idx === postIndex ? { ...p, likes: post.likes, likedBy: post.likedBy, dislikes: post.dislikes, dislikedBy: post.dislikedBy } : p
+        )
+      );
+      setDislikedPosts(hasDisliked ? [...dislikedPosts, postId] : dislikedPosts.filter((id) => id !== postId));
       toast.error("Failed to update dislikes.");
     }
   };
 
   const handleShare = async (postId: string) => {
+    const postIndex = posts.findIndex((post) => post.id === postId);
+    const post = posts[postIndex];
+    const newShares = (post.shares || 0) + 1;
+
+    setPosts((prevPosts) =>
+      prevPosts.map((p, idx) =>
+        idx === postIndex ? { ...p, shares: newShares } : p
+      )
+    );
+
     try {
-      const postRef = doc(db, "posts", postId);
-      const postIndex = posts.findIndex((post) => post.id === postId);
-
-      if (postIndex !== -1) {
-        // Increment the share count in Firestore
-        await updateDoc(postRef, {
-          shares: increment(1),
+      const currentUser = auth.currentUser;
+      if (currentUser) {
+        const idToken = await currentUser.getIdToken();
+        await fetch(`/api/post/${postId}/share`, {
+          method: 'POST',
+          headers: { 'Authorization': `Bearer ${idToken}` }
         });
+      }
 
-        setPosts((prevPosts) =>
-          prevPosts.map((p, idx) =>
-            idx === postIndex ? { ...p, shares: (p.shares || 0) + 1 } : p
-          )
-        );
-
-        // Optional: Copy link to clipboard or trigger Web Share API
-        const shareUrl = `${window.location.origin}/post/${postId}`;
-        if (navigator.share) {
-          await navigator.share({
-            title: "Check out this post!",
-            url: shareUrl,
-          });
-        } else {
-          await navigator.clipboard.writeText(shareUrl);
-          toast.success("Post link copied to clipboard!");
-        }
+      const shareUrl = `${window.location.origin}/post/${postId}`;
+      if (navigator.share) {
+        await navigator.share({
+          title: "Check out this post!",
+          url: shareUrl,
+        });
+      } else {
+        await navigator.clipboard.writeText(shareUrl);
+        toast.success("Post link copied to clipboard!");
       }
     } catch (error) {
-      console.error("Error sharing post:", error);
+      setPosts((prevPosts) =>
+        prevPosts.map((p, idx) =>
+          idx === postIndex ? { ...p, shares: post.shares } : p
+        )
+      );
       toast.error("Failed to share post.");
     }
   };
@@ -567,6 +484,54 @@ export function CreatePost() {
   const handlePostClick = async (postId: string) => {
     window.location.href = `${window.location.origin}/post/${postId}`;
   }
+
+  const handleEditPost = (postId: string, content: string) => {
+    setEditingPostId(postId);
+    setEditContent(content);
+  };
+
+  const handleSaveEdit = async (postId: string) => {
+    const currentUser = auth.currentUser;
+    if (!currentUser) return;
+
+    try {
+      const idToken = await currentUser.getIdToken();
+      const response = await fetch(`/api/post/${postId}/edit`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${idToken}`
+        },
+        body: JSON.stringify({ content: editContent })
+      });
+
+      if (response.ok) {
+        setPosts(posts.map(post => 
+          post.id === postId ? { ...post, content: editContent } : post
+        ));
+        setEditingPostId(null);
+        setEditContent("");
+        toast.success("Post updated successfully");
+      } else {
+        const data = await response.json();
+        toast.error(data.error || "Failed to update post");
+      }
+    } catch (error) {
+      toast.error("Failed to update post");
+    }
+  };
+
+  const handleCancelEdit = () => {
+    setEditingPostId(null);
+    setEditContent("");
+  };
+
+  const canEditPost = (post: any) => {
+    const currentUser = auth.currentUser;
+    return currentUser && 
+           post.userId === currentUser.uid && 
+           Date.now() < post.editableUntil;
+  };
 
   const toggleCommentBox = (postId: string) => {
     setCommentBoxStates((prev: any) => ({
@@ -733,16 +698,58 @@ export function CreatePost() {
                   <div className="flex-1">
                     <p className="font-bold text-sm">{post.userName}</p>
                     <p className="text-xs text-gray-500">
-                      {new Date(
-                        post.timestamp?.seconds * 1000
-                      ).toLocaleString()}
+                      {new Date(post.timestamp).toLocaleString()}
                     </p>
                   </div>
+                  {canEditPost(post) && (
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={(event) => {
+                        event.stopPropagation();
+                        handleEditPost(post.id, post.content);
+                      }}
+                    >
+                      Edit
+                    </Button>
+                  )}
                 </div>
 
                 {/* Post Content */}
                 <div className="mb-3">
-                  <p className="text-foreground leading-relaxed">{post.content}</p>
+                  {editingPostId === post.id ? (
+                    <div className="space-y-2">
+                      <Textarea
+                        value={editContent}
+                        onChange={(e) => setEditContent(e.target.value)}
+                        className="min-h-[100px]"
+                        onClick={(event) => event.stopPropagation()}
+                      />
+                      <div className="flex gap-2">
+                        <Button
+                          size="sm"
+                          onClick={(event) => {
+                            event.stopPropagation();
+                            handleSaveEdit(post.id);
+                          }}
+                        >
+                          Save
+                        </Button>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={(event) => {
+                            event.stopPropagation();
+                            handleCancelEdit();
+                          }}
+                        >
+                          Cancel
+                        </Button>
+                      </div>
+                    </div>
+                  ) : (
+                    <p className="text-foreground leading-relaxed">{post.content}</p>
+                  )}
                 </div>
                 
                 {/* Display image if exists */}

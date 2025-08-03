@@ -45,11 +45,9 @@
     "@radix-ui/react-toggle-group": "^1.1.0",
     "@radix-ui/react-tooltip": "^1.1.2",
     "@tailwindcss/postcss": "^4.1.11",
-
     "@types/node": "20.6.2",
     "@types/react": "18.2.22",
     "@types/react-dom": "18.2.7",
-
     "@vercel/speed-insights": "^1.1.0",
     "autoprefixer": "^10.4.21",
     "class-variance-authority": "^0.7.0",
@@ -61,6 +59,7 @@
     "embla-carousel-react": "^8.3.0",
     "express": "^4.21.1",
     "firebase": "^11.0.2",
+    "firebase-admin": "^13.4.0",
     "framer-motion": "^11.13.1",
     "input-otp": "^1.2.4",
     "lucide-react": "^0.446.0",
@@ -80,11 +79,7 @@
     "recharts": "^2.12.7",
     "sentiment": "^5.0.2",
     "sonner": "^1.5.0",
-
-    "tailwind-merge": "^3.3.1",
-
     "tailwind-merge": "^2.5.2",
-
     "tailwindcss": "^4.1.11",
     "tailwindcss-animate": "^1.0.7",
     "three": "^0.173.0",
