@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { initializeApp, getApps, cert } from "firebase-admin/app";
 import { getFirestore } from "firebase-admin/firestore";
 import { getAuth } from "firebase-admin/auth";
+export const runtime = 'nodejs';
 
 if (!getApps().length) {
   initializeApp({

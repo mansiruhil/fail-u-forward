@@ -78,3 +78,5 @@ export async function POST(req: NextRequest, { params }: { params: { id: string 
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 }
+
+export const runtime = 'nodejs';
