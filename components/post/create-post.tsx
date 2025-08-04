@@ -126,13 +126,42 @@ export function CreatePost() {
     try {
       setUploadingImage(true);
 
-      return new Promise((resolve) => {
+      // Convert file to base64
+      const base64 = await new Promise<string>((resolve) => {
         const reader = new FileReader();
         reader.onload = () => {
           resolve(reader.result as string);
         };
         reader.readAsDataURL(file);
       });
+
+      // Get auth token
+      const currentUser = auth.currentUser;
+      if (!currentUser) {
+        toast.error("Please login to upload images");
+        return null;
+      }
+
+      const idToken = await currentUser.getIdToken();
+
+      // Upload to server
+      const response = await fetch('/api/upload', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${idToken}`
+        },
+        body: JSON.stringify({ image: base64 })
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        return data.url;
+      } else {
+        toast.error(data.error || "Failed to upload image");
+        return null;
+      }
     } catch (error) {
       console.error("Error uploading image:", error);
       toast.error("Failed to upload image");
