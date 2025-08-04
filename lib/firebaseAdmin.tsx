@@ -1,16 +1,23 @@
 import admin from "firebase-admin";
 
 if (!admin.apps.length) {
-  if (!process.env.FIREBASE_SERVICE_ACCOUNT_BASE64) {
-    throw new Error("Missing FIREBASE_SERVICE_ACCOUNT_BASE64 env variable");
+  const projectId = process.env.FIREBASE_PROJECT_ID;
+  const clientEmail = process.env.FIREBASE_CLIENT_EMAIL;
+  const rawPrivateKey = process.env.FIREBASE_PRIVATE_KEY;
+  const privateKey = rawPrivateKey?.includes('\\n')
+    ? rawPrivateKey.replace(/\\n/g, '\n')
+    : rawPrivateKey;
+
+  if (!projectId || !clientEmail || !privateKey) {
+    throw new Error("Missing Firebase Admin environment variables");
   }
 
-  const serviceAccount = JSON.parse(
-    Buffer.from(process.env.FIREBASE_SERVICE_ACCOUNT_BASE64, "base64").toString("utf8")
-  );
-
   admin.initializeApp({
-    credential: admin.credential.cert(serviceAccount),
+    credential: admin.credential.cert({
+      projectId,
+      clientEmail,
+      privateKey,
+    }),
   });
 }
 
