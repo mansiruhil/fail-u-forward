@@ -48,7 +48,8 @@ export async function POST(req: NextRequest) {
 
     const { content, imageUrl } = await req.json();
 
-    const validateResponse = await fetch(`/api/validate`, {
+    const baseUrl = process.env.NODE_ENV === 'production' ? `https://${process.env.VERCEL_URL}`: 'http://localhost:3000';
+    const validateResponse = await fetch(`${baseUrl}/api/validate`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ text: content })
