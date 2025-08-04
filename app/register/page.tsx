@@ -281,6 +281,7 @@ export default function Signup() {
                 className="absolute inset-0 rounded-md bg-gradient-to-r from-white/10 to-white/20 opacity-0 group-focus-within:opacity-100 transition-opacity duration-300 pointer-events-none"
                 initial={false}
               />
+
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
