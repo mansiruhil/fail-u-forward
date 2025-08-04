@@ -3,8 +3,6 @@
 import React, { useEffect, useState } from "react";
 import Sentiment from "sentiment";
 
-const API_KEY = process.env.NEXT_PUBLIC_NEWS_API_KEY;
-
 const SadRejectionNews = () => {
   const [news, setNews] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -12,9 +10,7 @@ const SadRejectionNews = () => {
   useEffect(() => {
     const fetchNews = async () => {
       try {
-        const response = await fetch(
-          `https://newsapi.org/v2/everything?q=rejection&apiKey=${API_KEY}`
-        );
+        const response = await fetch('/api/news?q=rejection');
         const data = await response.json();
 
         if (data.articles) {
