@@ -3,9 +3,23 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Eye, EyeOff, AlertCircle, CheckCircle, Loader2 } from "lucide-react";
+import type { ReactNode, ButtonHTMLAttributes, InputHTMLAttributes, LabelHTMLAttributes } from "react";
 
 // Mock components - replace with your actual components
-const Button = ({ children, className, type, disabled, onClick, ...props }) => (
+const Button = ({
+  children,
+  className,
+  type,
+  disabled,
+  onClick,
+  ...props
+}: {
+  children: ReactNode;
+  className?: string;
+  type?: "button" | "submit" | "reset";
+  disabled?: boolean;
+  onClick?: () => void;
+} & ButtonHTMLAttributes<HTMLButtonElement>) => (
   <button
     type={type}
     className={`px-4 py-2 rounded-md font-medium transition-all duration-200 ${className}`}
@@ -17,20 +31,41 @@ const Button = ({ children, className, type, disabled, onClick, ...props }) => (
   </button>
 );
 
-const Input = ({ className, ...props }) => (
+const Input = ({
+  className,
+  ...props
+}: InputHTMLAttributes<HTMLInputElement>) => (
   <input
     className={`w-full px-3 py-2 rounded-md border focus:outline-none focus:ring-2 ${className}`}
     {...props}
   />
 );
 
-const Label = ({ children, htmlFor, className }) => (
+
+const Label = ({
+  children,
+  htmlFor,
+  className
+}: {
+  children: ReactNode;
+  htmlFor?: string;
+  className?: string;
+}) => (
   <label htmlFor={htmlFor} className={`block text-sm font-medium ${className}`}>
     {children}
   </label>
 );
 
-const Link = ({ href, children, className }) => (
+
+const Link = ({
+  href,
+  children,
+  className
+}: {
+  href: string;
+  children: ReactNode;
+  className?: string;
+}) => (
   <a href={href} className={className}>
     {children}
   </a>
