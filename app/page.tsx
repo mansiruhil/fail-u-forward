@@ -1,5 +1,6 @@
 "use client";
 
+
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 import { ArrowRight, ThumbsDown, Users, Coffee, Scale } from "lucide-react";
@@ -8,7 +9,9 @@ import { TextGenerateEffect } from "@/components/ui/text-generate-effect";
 import * as THREE from "three";
 import NET from "vanta/dist/vanta.net.min";
 
+
 import Link from "next/link";
+
 
 export default function Home() {
   useEffect(() => {
@@ -32,6 +35,7 @@ export default function Home() {
     };
   }, []);
 
+
   return (
     <div id="vanta-bg" className="min-h-screen w-full flex flex-col items-center justify-center">
       <div className="absolute inset-0 bg-black opacity-70"></div>
@@ -50,7 +54,7 @@ export default function Home() {
           className="text-center space-y-6"
         >
           <br />
-          <p className="text-lg md:text-xl text-muted-foreground text-neutral-200 max-w-2xl mx-auto">
+          <p className="text-lg md:text-xl text-gray-500 text-neutral-200 max-w-2xl mx-auto">
             fail. learn. connect.
           </p>
         </motion.div>
@@ -62,7 +66,7 @@ export default function Home() {
             animate={{ opacity: 1, x: 0, transition: { delay: 2 } }}
           >
             <Link href="/feed">
-              <Button size="lg" className="group">
+              <Button variant="outline" size="lg">
                 <span className="md:text-sm text-xs"> Explore </span>
                   <ArrowRight className="h-4 w-4 ml-2 transform transition duration-300 ease-in-out group-hover:translate-x-[6px]" />
               </Button>
@@ -82,7 +86,8 @@ export default function Home() {
           </motion.div>
         </div>
 
-        {/* <motion.div 
+
+        {/* <motion.div
             initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.2 }}
@@ -91,19 +96,19 @@ export default function Home() {
             <div className="p-6 rounded-lg border bg-card">
               <ThumbsDown className="h-12 w-12 text-primary mb-4" />
               <h3 className="text-xl font-semibold mb-2">Professional Setbacks</h3>
-              <p className="text-muted-foreground">Share your rejected applications and celebrate career mishaps</p>
+              <p className="text-gray-500">Share your rejected applications and celebrate career mishaps</p>
             </div>
-            
+           
             <div className="p-6 rounded-lg border bg-card">
               <Users className="h-12 w-12 text-primary mb-4" />
               <h3 className="text-xl font-semibold mb-2">Network</h3>
-              <p className="text-muted-foreground">Connect with others</p>
+              <p className="text-gray-500">Connect with others</p>
             </div>
-            
+           
             <div className="p-6 rounded-lg border bg-card">
               <Coffee className="h-12 w-12 text-primary mb-4" />
               <h3 className="text-xl font-semibold mb-2">Daily Disappointments</h3>
-              <p className="text-muted-foreground">Share your daily struggles and workplace disasters</p>
+              <p className="text-gray-500">Share your daily struggles and workplace disasters</p>
             </div>
           </motion.div> */}
       </main>

@@ -57,7 +57,7 @@ export default function Messages() {
                     <Avatar className="w-10 h-10" />
                     <div className="flex-1">
                       <p className="font-semibold">Jane Smith</p>
-                      <p className="text-sm text-muted-foreground truncate">
+                      <p className="text-sm text-gray-500 truncate">
                         Latest message preview...
                       </p>
                     </div>
@@ -73,7 +73,7 @@ export default function Messages() {
                 <Avatar className="w-10 h-10" />
                 <div>
                   <p className="font-semibold">Jane Smith</p>
-                  <p className="text-sm text-muted-foreground">Online</p>
+                  <p className="text-sm text-gray-500">Online</p>
                 </div>
               </div>
             </div>
@@ -92,7 +92,7 @@ export default function Messages() {
                       className={`max-w-[70%] p-3 rounded-lg ${
                         index % 2 === 0
                           ? "bg-primary text-primary-foreground"
-                          : "bg-muted"
+                          : "bg-gray-100"
                       }`}
                     >
                       <p>This is a sample message content that could be longer.</p>
