@@ -1,21 +1,30 @@
 import { NextRequest, NextResponse } from 'next/server';
+import admin from '@/lib/firebaseAdmin';
 
 export async function POST(req: NextRequest) {
   try {
-    const formData = await req.formData();
-    const file = formData.get('file'); 
-
-    if (!file || !(file instanceof Blob)) {
-      return NextResponse.json({ error: 'No valid file provided' }, { status: 400 });
+    // Verify user authentication
+    const authHeader = req.headers.get('Authorization');
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
+    const idToken = authHeader.split('Bearer ')[1];
+    await admin.auth().verifyIdToken(idToken);
+
+    const { image } = await req.json();
+
+    if (!image) {
+      return NextResponse.json({ error: 'No image provided' }, { status: 400 });
+    }
+
+    // Upload to Cloudinary using server-side credentials
     const cloudinaryData = new FormData();
-    cloudinaryData.append('file', file);
-    cloudinaryData.append('upload_preset', process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET!);
-    cloudinaryData.append('api_key', process.env.NEXT_PUBLIC_CLOUDINARY_API_KEY!);
+    cloudinaryData.append('file', image);
+    cloudinaryData.append('upload_preset', process.env.CLOUDINARY_UPLOAD_PRESET!);
 
     const cloudinaryResponse = await fetch(
-      `https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload`,
+      `https://api.cloudinary.com/v1_1/${process.env.CLOUDINARY_CLOUD_NAME}/image/upload`,
       {
         method: 'POST',
         body: cloudinaryData,

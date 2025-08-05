@@ -126,13 +126,42 @@ export function CreatePost() {
     try {
       setUploadingImage(true);
 
-      return new Promise((resolve) => {
+      // Convert file to base64
+      const base64 = await new Promise<string>((resolve) => {
         const reader = new FileReader();
         reader.onload = () => {
           resolve(reader.result as string);
         };
         reader.readAsDataURL(file);
       });
+
+      // Get auth token
+      const currentUser = auth.currentUser;
+      if (!currentUser) {
+        toast.error("Please login to upload images");
+        return null;
+      }
+
+      const idToken = await currentUser.getIdToken();
+
+      // Upload to server
+      const response = await fetch('/api/upload', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${idToken}`
+        },
+        body: JSON.stringify({ image: base64 })
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        return data.url;
+      } else {
+        toast.error(data.error || "Failed to upload image");
+        return null;
+      }
     } catch (error) {
       console.error("Error uploading image:", error);
       toast.error("Failed to upload image");
@@ -610,7 +639,7 @@ export function CreatePost() {
                     size="sm"
                     onClick={handlePostSubmit}
                     disabled={loading || uploadingImage}
-                    className="my-2 bg-white text-black hover:bg-gray-100 border border-gray-300"
+                    className="my-2 bg-background text-foreground hover:bg-card border border-gray-300"
                   >
                     {loading || uploadingImage ? "Posting..." : "Confess"}
                   </Button>
@@ -894,7 +923,7 @@ export function CreatePost() {
                         {post.comments.map((comment: any, index: any) => (
                           <div
                             key={index}
-                            className="flex items-center gap-2 mt-2 p-2 rounded-md bg-white"
+                            className="flex items-center gap-2 mt-2 p-2 rounded-md bg-background"
                           >
                             <Avatar className="w-8 h-8">
                               <Image

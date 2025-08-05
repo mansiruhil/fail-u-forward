@@ -11,7 +11,7 @@ import "react-toastify/dist/ReactToastify.css";
 
 
 export default function RootLayout({
-  
+
   children,
 }: {
   children: React.ReactNode;
@@ -25,24 +25,25 @@ export default function RootLayout({
         <meta name="description" content="FailUForward: Share and engage with posts" />
       </head>
 
-      <body className={inter.className}>
+      <body className={`${inter.className}`}>
         <ThemeProvider
           attribute="class"
           defaultTheme="dark"
-          enableSystem
+          enableSystem={false}
           disableTransitionOnChange
         >
-          <AuthProvider >
-          <Navbar />
-          <ToastContainer position="top-right" autoClose={3000} />
-          <main>
-          {children}
-          </main>
-          </AuthProvider>
+          <div className="min-h-screen">
+            <AuthProvider>
+              <Navbar />
+              <ToastContainer position="top-right" autoClose={3000} />
+              <main>{children}</main>
+            </AuthProvider>
+            <SpeedInsights />
+            <Chatbot />
+          </div>
         </ThemeProvider>
-        <SpeedInsights/>
-        <Chatbot />
       </body>
+
     </html>
   );
 }

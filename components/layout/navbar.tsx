@@ -29,7 +29,6 @@ export function Navbar() {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       setLoggedIn(!!user);
     });
-
     return () => unsubscribe();
   }, []);
 
@@ -41,6 +40,7 @@ export function Navbar() {
       console.error("Error signing out:", error);
     }
   };
+
 
   // Hide the navbar on the landing page
   if (pathname === "/") {
@@ -167,6 +167,7 @@ export function Navbar() {
                 <Button size="sm" className="text-white bg-gray-800 hover:bg-gray-700">Sign Up</Button>
               </Link>
             </>
+
           )}
         </div>
       </div>
@@ -179,15 +180,18 @@ export function Navbar() {
           </li>
           <li>
             <Link href="/network" className="block py-2 hover:bg-zinc-700" onClick={() => setIsMenuOpen(false)}>Network</Link>
+
           </li>
           <li>
             {loggedIn ? (
               <>
+
                 <Link href="/profile" className="block py-2 hover:bg-zinc-700" onClick={() => setIsMenuOpen(false)}>Profile</Link>
                 <button onClick={() => { handleLogout(); setIsMenuOpen(false); }} className="block py-2 w-full hover:bg-zinc-700">Logout</button>
               </>
             ) : (
               <Link href="/login" className="block py-2 hover:bg-zinc-700" onClick={() => setIsMenuOpen(false)}>Login</Link>
+
             )}
           </li>
         </ul>
