@@ -1,5 +1,5 @@
 "use client";
-
+import { useRouter } from 'next/router';
 import React, { createContext, useState, useContext, useEffect } from 'react';
 import { 
   getAuth, 
@@ -28,6 +28,7 @@ const AuthContext = createContext<AuthContextType>({
 });
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const router = useRouter();
   const [currentUser, setCurrentUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const auth = getAuth(firebaseApp);
@@ -39,11 +40,16 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     });
 
     return unsubscribe;
-  }, [auth]);
-
+    }, [auth]);
+  useEffect(() => {
+    if (!loading && currentUser) {
+          router.push('/');
+      }
+    }, [loading, currentUser, router]);
   const login = async (email: string, password: string) => {
     try {
       await signInWithEmailAndPassword(auth, email, password);
+      router.push('/');
     } catch (error) {
       console.error('Login error:', error);
       throw error;
@@ -53,6 +59,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const signup = async (email: string, password: string) => {
     try {
       await createUserWithEmailAndPassword(auth, email, password);
+      router.push('/');
     } catch (error) {
       console.error('Signup error:', error);
       throw error;
