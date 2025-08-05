@@ -639,7 +639,7 @@ export function CreatePost() {
                     size="sm"
                     onClick={handlePostSubmit}
                     disabled={loading || uploadingImage}
-                    className="my-2 bg-white text-black hover:bg-gray-100 border border-gray-300"
+                    className="my-2 bg-background text-foreground hover:bg-card border border-gray-300"
                   >
                     {loading || uploadingImage ? "Posting..." : "Confess"}
                   </Button>
@@ -923,7 +923,7 @@ export function CreatePost() {
                         {post.comments.map((comment: any, index: any) => (
                           <div
                             key={index}
-                            className="flex items-center gap-2 mt-2 p-2 rounded-md bg-white"
+                            className="flex items-center gap-2 mt-2 p-2 rounded-md bg-background"
                           >
                             <Avatar className="w-8 h-8">
                               <Image

@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { Users, Briefcase, BookOpen } from "lucide-react";
@@ -15,107 +17,105 @@ interface UserData {
   location?: string;
   bio?: string;
   profilepic?: string;
-
 }
 
 export function LeftSidebar() {
   const [userData, setUserData] = useState<UserData | null>(null);
+  const [isBioExpanded, setIsBioExpanded] = useState(false);
   const router = useRouter();
 
-  const fetchUserData = async () => {
-    const auth = getAuth(firebaseApp);
-    const user = auth.currentUser;
-    if (!user) {
-      router.push("/login");
-      return;
-    }
-    try {
-      const userDoc = doc(db, "users", user.uid);
-      const docSnap = await getDoc(userDoc);
-    
-      if (docSnap.exists()) {
-        setUserData(docSnap.data() as UserData);
-      } else {
+  useEffect(() => {
+    const fetchUserData = async () => {
+      const auth = getAuth(firebaseApp);
+      const user = auth.currentUser;
+      if (!user) {
+        router.push("/login");
+        return;
+      }
+
+      try {
+        const userDoc = doc(db, "users", user.uid);
+        const docSnap = await getDoc(userDoc);
+        if (docSnap.exists()) {
+          setUserData(docSnap.data() as UserData);
+        } else {
+          setUserData({
+            username: "Anonymous",
+            email: user.email || "user@example.com",
+            bio: "Fail. Learn. Repeat.",
+            profilepic: "/default-avatar.png",
+            location: "Unknown",
+          });
+        }
+      } catch (error) {
+        console.error("Error fetching user data:", error);
         setUserData({
-          username: "Anonymous",
-          email: user.email || "user@example.com",
-          bio: "Fail. Learn. Repeat.",
+          username: "UserA",
+          email: user?.email || "user@example.com",
+          bio: "Master of epic flops.",
           profilepic: "/default-avatar.png",
           location: "Unknown",
         });
-      }   
-    } catch (error) {
-      console.error("Error fetching user data:", error);
-      setUserData({
-        username: "UserA",
-        email: user?.email || "user@example.com",
-        bio: "Master of epic flops.",
-        profilepic: "/default-avatar.png",
-        location: "Unknown"
-      });
-    } 
-  }
-    
-  useEffect(() => {
-    fetchUserData();   
-  }, [])
+      }
+    };
+
+    fetchUserData();
+  }, [router]);
 
   const dummyUserData = {
     username: "UserB",
     email: "user@example.com",
     bio: "Learning from every mess.",
-    profilepic: "/default-avatar.png"
+    profilepic: "/default-avatar.png",
   };
 
   const displayData = userData || dummyUserData;
 
-  const [isBioExpanded, setIsBioExpanded] = useState(false);
-
   const toggleBio = () => setIsBioExpanded(!isBioExpanded);
 
   return (
-    <div className="hidden w-[16%] absolute left-0 top-16 h-screen bg-white border-r border-gray-200 p-4 transition-colors md:block">
+    <div className="hidden w-[16%] absolute left-0 top-16 h-screen bg-background border-r border-border p-4 transition-colors md:block">
       <div className="space-y-6">
-      <div className="p-4 rounded-lg border border-gray-200 bg-card shadow-md text-center">
-        <Avatar className="w-16 h-16 mx-auto mb-4">
-          <AvatarImage 
-            src={displayData.profilepic || "/default-avatar.png"} 
-            alt={`${displayData.username}'s avatar`} 
-            loading="lazy"
-          />
-          <AvatarFallback>{displayData.username.charAt(0)}</AvatarFallback>
-        </Avatar>
-        <h3 className="font-semibold text-lg text-primary">
-          {displayData.username}
-        </h3>
-        <p className="text-sm text-gray-500">
-          {    displayData.bio && displayData.bio?.length > 80 ? (
-            <>
-              {isBioExpanded
-                ? displayData.bio
-                : displayData.bio?.slice(0, 80) + "..."}
-              <button
-                className="ml-1 text-primary text-sm focus:outline-none"
-                onClick={toggleBio}
-              >
-                {isBioExpanded ? "See Less" : "See More"}
-              </button>
-            </>
-          ) : (
-            displayData.bio || "No bio available"
-          )}
-        </p>
-        <Link
+        <div className="p-4 rounded-lg border border-border bg-card shadow-md text-center">
+          <Avatar className="w-16 h-16 mx-auto mb-4">
+            <AvatarImage
+              src={displayData.profilepic || "/default-avatar.png"}
+              alt={`${displayData.username}'s avatar`}
+              loading="lazy"
+            />
+            <AvatarFallback>{displayData.username.charAt(0)}</AvatarFallback>
+          </Avatar>
+          <h3 className="font-semibold text-lg text-primary">
+            {displayData.username}
+          </h3>
+          <p className="text-sm text-muted-foreground">
+            {displayData.bio && displayData.bio.length > 80 ? (
+              <>
+                {isBioExpanded
+                  ? displayData.bio
+                  : displayData.bio.slice(0, 80) + "..."}
+                <button
+                  className="ml-1 text-primary text-sm focus:outline-none"
+                  onClick={toggleBio}
+                >
+                  {isBioExpanded ? "See Less" : "See More"}
+                </button>
+              </>
+            ) : (
+              displayData.bio || "No bio available"
+            )}
+          </p>
+          <Link
             href="/profile"
             className={buttonVariants({
               variant: "outline",
-              className: "flex items-center w-full p-3 my-1",
+              className: "flex items-center w-full p-3 my-2 bg-background text-foreground border-border",
             })}
           >
-            <span>Edit Profile
-            </span>
+            Edit Profile
           </Link>
-      </div>
+
+        </div>
 
         <nav className="space-y-2">
           <Link
