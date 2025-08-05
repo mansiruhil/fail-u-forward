@@ -181,13 +181,10 @@ export default function Login() {
   };
 
   return (
-    <div
-      ref={vantaRef}
-      className="relative min-h-screen w-full flex items-center justify-center bg-black"
-    >
-      <div className="absolute inset-0 bg-black opacity-70 pointer-events-none z-10" />
 
-      <motion.div
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-black via-neutral-950 to-zinc-900 px-4">
+      <motion.div 
+
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.3 }}
@@ -200,14 +197,10 @@ export default function Login() {
           backdrop-blur-md
         "
       >
-        <motion.div
-          initial={{ opacity: 0, scale: 0.8 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 2, ease: "easeOut" }}
-          className="text-center"
-        >
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Welcome</h1>
-        </motion.div>
+
+        <div className="space-y-2 text-center">
+          <h1 className="text-3xl sm:text-3xl font-bold text-gray-900 dark:text-white">Welcome</h1>
+        </div>
 
         {error && (
           <div className="flex items-center gap-2 bg-red-50 dark:bg-red-900/30 text-red-700 dark:text-red-300 border border-red-200 dark:border-red-700 rounded px-3 py-2 mb-2">
@@ -322,13 +315,14 @@ export default function Login() {
           </div>
         </div>
 
-        <div className="grid grid-cols-2 gap-6">
-          <Button
-            type="button"
-            variant="outline"
-            onClick={handleGoogleSignIn}
-            disabled={loading}
-            className="flex items-center justify-center space-x-2 w-full hover:bg-gray-50 dark:bg-zinc-900 dark:hover:bg-zinc-800 dark:border-zinc-700 text-sm px-3 py-1 text-white transition rounded-md"
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+         <Button 
+          type="button"
+          variant="outline"
+          className="hover:bg-gray-50 dark:bg-zinc-900 dark:hover:bg-zinc-800 dark:border-zinc-700 text-white"
+          onClick={handleGoogleSignIn}
+          disabled={loading}
+
           >
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20px" height="20px">
               <path
