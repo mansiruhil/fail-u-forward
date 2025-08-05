@@ -40,12 +40,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     });
 
     return unsubscribe;
-    }, [auth]);
-  useEffect(() => {
-    if (!loading && currentUser) {
-          router.push('/');
-      }
-    }, [loading, currentUser, router]);
+  }, [auth]);
+  
+  // useEffect(() => {
+  //   if (!loading && currentUser) {
+  //     router.push('/');
+  //   }
+  // }, [loading, currentUser, router]);
+
   const login = async (email: string, password: string) => {
     try {
       await signInWithEmailAndPassword(auth, email, password);
