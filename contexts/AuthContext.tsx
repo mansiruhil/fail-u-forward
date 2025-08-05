@@ -1,5 +1,4 @@
 "use client";
-
 import React, { createContext, useState, useContext, useEffect } from 'react';
 import { 
   getAuth, 
@@ -40,10 +39,17 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     return unsubscribe;
   }, [auth]);
+  
+  // useEffect(() => {
+  //   if (!loading && currentUser) {
+  //     router.push('/');
+  //   }
+  // }, [loading, currentUser, router]);
 
   const login = async (email: string, password: string) => {
     try {
       await signInWithEmailAndPassword(auth, email, password);
+      // REMOVE router.push('/')
     } catch (error) {
       console.error('Login error:', error);
       throw error;
@@ -53,6 +59,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const signup = async (email: string, password: string) => {
     try {
       await createUserWithEmailAndPassword(auth, email, password);
+      // REMOVE router.push('/')
     } catch (error) {
       console.error('Signup error:', error);
       throw error;
