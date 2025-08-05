@@ -121,7 +121,7 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-background dark:bg-black">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-black via-neutral-950 to-zinc-900 px-4">
       <motion.div 
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
@@ -131,7 +131,7 @@ export default function Login() {
           rounded-lg shadow-lg border border-gray-200 dark:border-zinc-700"
       >
         <div className="space-y-2 text-center">
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Welcome</h1>
+          <h1 className="text-3xl sm:text-3xl font-bold text-gray-900 dark:text-white">Welcome</h1>
         </div>
         {error && (
           <div className="flex items-center gap-2 bg-red-50 dark:bg-red-900/30 text-red-700 dark:text-red-300 border border-red-200 dark:border-red-700 rounded px-3 py-2 mb-2">
@@ -215,7 +215,7 @@ export default function Login() {
           </div>
         </div>
 
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
          <Button 
           type="button"
           variant="outline"
