@@ -2,32 +2,25 @@
 
 import React from 'react';
 import { CreatePost } from './createpost';
-// import { FailurePost } from '../posts/Failurepost';
 
-const SAMPLE_POSTS = [
+const placeholderPosts = [
   {
     id: 1,
-    author: {
-      name: "Jane Cooper",
-      title: "Failed Startup Founder",
-      avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150&h=150&fit=crop",
-    },
-    content: "Just shut down my startup after 2 years. Key learning: Market validation before building is crucial. We built something nobody wanted. Here's to failing forward! 🚀💫",
-    timestamp: "2h ago",
-    likes: 234,
-    comments: 56,
+    user: "Anonymous",
+    content: "Failed my first startup pitch. Learned to prepare better next time.",
+    date: "2025-08-01",
   },
   {
     id: 2,
-    author: {
-      name: "Alex Morgan",
-      title: "Software Engineer",
-      avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&h=150&fit=crop",
-    },
-    content: "Failed my dream company's tech interview today. Froze on a simple algorithm question. Time to get back to practicing and come back stronger! 💪",
-    timestamp: "4h ago",
-    likes: 156,
-    comments: 23,
+    user: "UserB",
+    content: "Got rejected from 10 jobs in a row. Persistence is key!",
+    date: "2025-07-28",
+  },
+  {
+    id: 3,
+    user: "UserC",
+    content: "Launched a product nobody used. Now I talk to users before building.",
+    date: "2025-07-20",
   },
 ];
 
@@ -35,10 +28,15 @@ export function Feed() {
   return (
     <div className="max-w-2xl mx-auto pt-4">
       <CreatePost />
-      {/* {SAMPLE_POSTS.map((post) => (
-        <FailurePost key={post.id} {...post} />
-
-      ))} */}
+      <div className="space-y-4 mt-6">
+        {placeholderPosts.map((post) => (
+          <div key={post.id} className="bg-white dark:bg-card p-4 rounded shadow">
+            <div className="font-semibold">{post.user}</div>
+            <div className="text-gray-700 dark:text-gray-300">{post.content}</div>
+            <div className="text-xs text-gray-400 mt-2">{post.date}</div>
+          </div>
+        ))}
+      </div>
     </div>
   );
 }
