@@ -289,7 +289,7 @@ export default function Profile() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.3 }}
         >
-          <Card className="relative bg-white border border-gray-200/30 rounded-xl shadow-lg">
+          <Card className="relative bg-background text-foreground border border-gray-200/30 rounded-xl shadow-lg">
             <div className="h-36 bg-gradient-to-r from-red-500 to-red-700 rounded-t-xl"></div>
             <div className="p-8">
               <div className="flex items-start mb-6">
@@ -307,7 +307,7 @@ export default function Profile() {
                 <div className="flex-1">
                   <div className="flex flex-col sm:flex-row justify-between items-start space-y-4 sm:space-y-0 sm:items-center">
                     <div>
-                      <h1 className="text-3xl font-bold text-gray-900">{userData?.username || "User"}</h1>
+                      <h1 className="text-3xl font-bold text-foreground">{userData?.username || "User"}</h1>
                       <p className="text-sm text-gray-500 mt-1">{userData?.email}</p>
                       <div className="flex items-center gap-2 mt-2 text-sm text-gray-500">
                         <MapPin className="h-5 w-5" />
@@ -318,7 +318,7 @@ export default function Profile() {
                       <Button 
                         variant="outline" 
                         size="sm" 
-                        className="w-full sm:w-auto px-5 py-2.5 border border-gray-200/50 rounded-lg text-sm font-medium text-gray-900 hover:bg-accent/50"
+                        className="w-full sm:w-auto px-5 py-2.5 border border-gray-200/50 rounded-lg text-sm font-medium text-foreground hover:bg-accent/50"
                         onClick={handleOpenModal}
                       >
                         <Pencil className="h-4 w-4 mr-2" />
@@ -342,7 +342,7 @@ export default function Profile() {
               </div>
 
               <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-6">
-                <Card className="p-6 bg-white border border-gray-200/30 rounded-lg">
+                <Card className="p-6 bg-background border border-gray-200/30 rounded-lg">
                   <h3 className="font-semibold text-lg flex items-center gap-2">
                     <Building2 className="h-5 w-5" />
                     Failed Experience
@@ -354,7 +354,7 @@ export default function Profile() {
                   </ul>
                 </Card>
 
-                <Card className="p-6 bg-white border border-gray-200/30 rounded-lg">
+                <Card className="p-6 bg-background border border-gray-200/30 rounded-lg">
                   <h3 className="font-semibold text-lg flex items-center gap-2">
                     <GraduationCap className="h-5 w-5" />
                     Mis-Education
@@ -388,7 +388,7 @@ export default function Profile() {
                     <p className="text-sm text-gray-500">No posts yet</p>
                   ) : (
                     posts.map((post) => (
-                      <Card key={post.id} className="p-6 bg-white border border-gray-200/30 rounded-lg">
+                      <Card key={post.id} className="p-6 bg-background border border-gray-200/30 rounded-lg">
                         <h4 className="font-semibold text-lg text-gray-900">{post.title}</h4>
                         <p className="text-sm text-gray-500 mt-2">{post.content}</p>
                       </Card>
@@ -419,7 +419,7 @@ export default function Profile() {
               >
                 <div className="p-8">
                   <div className="flex justify-between items-center mb-8">
-                    <h2 className="text-2xl font-bold text-gray-900">Edit Profile</h2>
+                    <h2 className="text-2xl font-bold text-foreground">Edit Profile</h2>
                     <button 
                       onClick={handleCloseModal}
                       className="text-gray-500 hover:text-gray-900 p-2 rounded-full hover:bg-accent/50"
