@@ -79,6 +79,7 @@
     "sentiment": "^5.0.2",
     "sonner": "^1.5.0",
     "tailwind-merge": "^2.5.2",
+    "tailwindcss": "^4.1.11",
     "tailwindcss-animate": "^1.0.7",
     "three": "^0.173.0",
     "vanta": "^0.5.24",
