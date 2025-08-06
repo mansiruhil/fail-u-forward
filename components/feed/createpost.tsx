@@ -3,15 +3,24 @@
 import React, { useState } from 'react';
 import { Image, Link, Send } from 'lucide-react';
 
-export function CreatePost() {
+export function CreatePost({ onAddPost }: { onAddPost: (post: any) => void }) {
   const [content, setContent] = useState('');
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!content.trim()) return;
-    
-    // TODO: Implement post creation
-    console.log('Creating post:', content);
+
+    // Create a new post object
+    const newPost = {
+      id: Date.now(), // simple unique id
+      user: "Anonymous",
+      content,
+      date: new Date().toISOString().slice(0, 10),
+    };
+
+    // Call parent handler
+    onAddPost(newPost);
+
     setContent('');
   };
 

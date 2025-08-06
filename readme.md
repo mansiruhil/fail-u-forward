@@ -1,32 +1,17 @@
-# 💥 FailuForward
+It's a community driven platform where failure is not something to hide but something to celebrate .
+It’s designed to share honest stories of setbacks and rejections and lessons learned: all the stuff LinkedIn filters out .
 
-> **A community-driven platform where failure isn’t hidden — it’s honored.**  
-Share honest stories of rejection, missteps, and chaos. No filters. Just growth.
+**features:**
 
----
-
-## 🌟 Why FailuForward?
-
-In a world of perfect LinkedIn highlights, **FailuForward** offers a safe space to:
-- Reflect on and share **failures and lessons** without shame.
-- Inspire others with real, unfiltered experiences.
-- Celebrate the honesty of trying, failing, and learning.
-
----
-
-## 🚀 Features
-
-- 📢 **Post** rejections, failures, and raw lessons learned.
-- 📚 **Browse** stories by categories:
+- 📢 Post your rejections, failures and real lessons learned
+- 🔍 Browse stories by category:
   - `Startup Crashes`
   - `Interview Wrecks`
   - `Project Chaos`
-  - … and more coming soon!
-- 🔍 Smart **AI validation** for respectful, safe, and constructive content.
+  - and more coming soon
+- 🖥️ Smart AI validation for respectful, safe and constructive content
 
----
-
-## 🛠️ Tech Stack
+**🛠️ tech stack:**
 
 <p float="left">
   <img src="https://img.shields.io/badge/Next.js-000000?style=for-the-badge&logo=nextdotjs&logoColor=white" height="28"/>
@@ -38,64 +23,56 @@ In a world of perfect LinkedIn highlights, **FailuForward** offers a safe space 
 - **Frontend:** Next.js + TypeScript  
 - **Backend:** Next.js API routes  
 - **Database & Auth:** Firebase  
-- **AI Moderation:** Gemini for intelligent validation
+- **AI Validation:** Gemini 
 
----
+**⚙️ setup instructions:**
 
-## ⚙️ Setup Instructions
+**📦 scripts**
 
-### 📦 Scripts
+| Command         | Description                    |
+|-----------------|--------------------------------|
+| `npm run dev`   | Run the development server     |
+| `npm run build` | Build project for production   |
+| `npm start`     | Start production server        |
+| `npm run lint`  | Run linter checks              |
 
-| Command         | Description                   |
-|-----------------|-------------------------------|
-| `pnpm dev`      | Run the development server     |
-| `pnpm build`    | Build project for production   |
-| `pnpm start`    | Start production server        |
-| `pnpm lint`     | Run linter checks              |
+**NOTE: *📦 project manager***
 
-### 🧰 Local Development
+previously used **pnpm** but the project now runs entirely on npm !!
+
+**local development:**
 
 ```bash
 # 1. Clone the repository
-git clone https://github.com/your-username/failuforward.git
+git clone https://github.com/your-username/fail-u-forward.git
 
 # 2. Move into the project directory
-cd failuforward
+cd fail-u-forward
 
 # 3. Install dependencies
-pnpm install
+npm install
 
 # 4. Start the dev server
-pnpm dev
+npm run dev
 ```
 
----
+**🛣️ what's next:**
 
-## 🛣️ What's Next
+- anonymous posting support
+- filters by topic (eg career, academics, personal)  
+- voice/video storytelling support 
 
-We’re just getting started. Planned features include:
+**🤝 contributing:**
 
-- 🕵️ **Anonymous posting support**  
-- 🏷️ **Filters by topic** (e.g., Career, Academics, Personal)  
-- 🎙️ **Voice/video storytelling** support for deeper expression  
+welcome contributions from everyone !!
+please read [contributing guidelines](Contributing.md) to get started
 
----
+**📩 contact:**
 
-## 🤝 Contributing
+- *github:* [@mansiruhil](https://github.com/mansiruhil)  
+- *linkedin:* [@mansiruhil](https://www.linkedin.com/in/mansi-ruhil-7a00a0228)
+- *discord:* [failuforward](https://discord.gg/4kk8bkcz)
 
-Welcome contributions from everyone!  
-Please read our [Contributing Guidelines](Contributing.md) to get started.
+**📄 license:**
 
----
-
-## 💬 Contact
-
-- **GitHub:** [@mansiruhil](https://github.com/mansiruhil)  
-- **LinkedIn:** [@mansiruhil](https://www.linkedin.com/in/mansi-ruhil-7a00a0228)
-
----
-
-## 📄 License
-
-This project is licensed under the [MIT License](LICENSE).  
-Feel free to use, modify, and share it.
+this project is licensed under the [MIT License](LICENSE) 

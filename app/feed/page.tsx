@@ -33,14 +33,14 @@ export default function Feed() {
 
   if (loading) {
     return (
-      <div className="flex h-screen items-center justify-center bg-background dark:bg-black">
+      <div className="flex h-screen items-center justify-center dark:bg-black">
         <Spinner size="lg" />
       </div>
     );
   }
 
   return (
-    <div className="container max-h-screen mx-auto px-4 py-8">
+    <div className="bg-background container max-h-screen mx-auto px-4 py-8">
       <div className="hidden lg:block">
         <LeftSidebar />
       </div>
