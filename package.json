@@ -86,24 +86,24 @@
     "react-icons": "^4.12.0",
     "firebase-admin": "^12.0.0"
   },
-  "devDependencies": {
-  "@testing-library/jest-dom": "^6.4.2",
-  "@testing-library/react": "^14.2.1",
-  "@testing-library/user-event": "^14.5.2",
-  "@types/jest": "^29.5.12",
-  "@types/node": "20.6.2",
-  "@types/react": "18.2.22",
-  "@types/react-dom": "18.2.7",
-  "@types/three": "^0.173.0",
-  "autoprefixer": "^10.4.21",
-  "eslint": "8.49.0",
-  "eslint-config-next": "14.1.0",
-  "jest": "^29.7.0",
-  "jest-environment-jsdom": "^29.7.0",
-  "msw": "^2.2.3",
-  "mini-css-extract-plugin": "^2.9.2",
-  "postcss": "^8.5.6",
-  "typescript": "^5.7.3"
+    "devDependencies": {
+    "@testing-library/jest-dom": "^6.4.2",
+    "@testing-library/react": "^14.2.1",
+    "@testing-library/user-event": "^14.5.2",
+    "@types/jest": "^29.5.12",
+    "@types/node": "20.6.2",
+    "@types/react": "18.2.22",
+    "@types/react-dom": "18.2.7",
+    "@types/three": "^0.173.0",
+    "autoprefixer": "^10.4.21",
+    "eslint": "8.49.0",
+    "eslint-config-next": "14.1.0",
+    "jest": "^29.7.0",
+    "jest-environment-jsdom": "^29.7.0",
+    "msw": "^2.2.3",
+    "mini-css-extract-plugin": "^2.9.2",
+    "postcss": "^8.5.6",
+    "typescript": "^5.7.3"
   },
   "overrides": {
     "@tailwindcss/postcss": "npm:tailwindcss@latest"
