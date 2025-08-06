@@ -66,6 +66,7 @@ export async function POST(req: NextRequest) {
     const userData = userDoc.data();
     const userName = userData?.username || userData?.displayName || "Anonymous";
 
+    // Updated post creation with reactions field
     await db.collection('posts').add({
       content,
       imageUrl: imageUrl || null,
@@ -78,7 +79,15 @@ export async function POST(req: NextRequest) {
       dislikes: 0,
       dislikedBy: [],
       shares: 0,
-      comments: []
+      comments: [],
+      // NEW: Initialize reactions
+      reactions: {
+        hit_hard: { count: 0, users: [] },
+        sending_love: { count: 0, users: [] },
+        deep_insight: { count: 0, users: [] },
+        thank_you: { count: 0, users: [] },
+        been_there: { count: 0, users: [] }
+      }
     });
 
     return NextResponse.json({ success: true });
