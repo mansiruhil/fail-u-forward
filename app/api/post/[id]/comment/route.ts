@@ -3,6 +3,7 @@ import { initializeApp, getApps, cert } from "firebase-admin/app";
 import { getFirestore } from "firebase-admin/firestore";
 import { getAuth } from "firebase-admin/auth";
 
+// firebase initialization
 if (!getApps().length) {
   initializeApp({
     credential: cert({
@@ -16,53 +17,53 @@ if (!getApps().length) {
 const db = getFirestore();
 const auth = getAuth();
 
+
 export async function POST(
   req: NextRequest,
-  context: { params: { id: string } }
+  { params }: { params: { id: string } }
 ) {
   try {
-    const { params } = context;
-    const authHeader = req.headers.get('Authorization');
-    if (!authHeader || !authHeader.startsWith('Bearer ')) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    const authHeader = req.headers.get("Authorization");
+    if (!authHeader || !authHeader.startsWith("Bearer ")) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const idToken = authHeader.split('Bearer ')[1];
+    const idToken = authHeader.split("Bearer ")[1];
     const decodedToken = await auth.verifyIdToken(idToken);
     const uid = decodedToken.uid;
 
     const { text } = await req.json();
 
-    const postRef = db.collection('posts').doc(params.id);
+    const postRef = db.collection("posts").doc(params.id);
     const postDoc = await postRef.get();
-    
+
     if (!postDoc.exists) {
-      return NextResponse.json({ error: 'Post not found' }, { status: 404 });
+      return NextResponse.json({ error: "Post not found" }, { status: 404 });
     }
 
     const post = postDoc.data();
     const comments = post?.comments || [];
-    
+
     const newComment = {
       userId: uid,
-      text: text,
-      timestamp: Date.now()
+      text,
+      timestamp: Date.now(),
     };
 
     const newComments = [...comments, newComment];
 
     await postRef.update({
-      comments: newComments
+      comments: newComments,
     });
 
     return NextResponse.json({
       id: params.id,
-      comments: newComments
+      comments: newComments,
     });
   } catch (error) {
-    console.error('Error:', error);
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    console.error("Error:", error);
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 }
 
-export const runtime = 'nodejs';
+export const runtime = "nodejs";
