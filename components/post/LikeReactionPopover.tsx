@@ -55,11 +55,11 @@ export function LikeReactionPopover({
           className="flex items-center gap-1 min-w-[88px] justify-center"
           aria-label="Reactions"
           onClick={(e) => {
-      e.stopPropagation();
-    }}
+            e.stopPropagation();
+          }}
         >
           <span>
-            {aggregateCount} {aggregateCount === 1 ? "Like" : "Likes"}
+            {aggregateCount} {aggregateCount === 1 ? "Reaction" : "Reactions"}
           </span>
         </Button>
       </PopoverTrigger>
@@ -78,17 +78,15 @@ export function LikeReactionPopover({
               key={key}
               variant={isSelected ? "default" : "ghost"}
               size="sm"
-              className={`flex flex-col items-center justify-center w-12 h-12 p-0 rounded-full ${
-                isSelected ? config.color : "text-gray-600"
-              }`}
+              className={`flex flex-col items-center justify-center w-12 h-12 p-0 rounded-full ${isSelected ? config.color : "text-gray-600"
+                }`}
               onClick={(e) => {
-        e.stopPropagation();         
-        onReact(key);
-      }}
+                e.stopPropagation();
+                onReact(key);
+              }}
               aria-pressed={isSelected}
-              aria-label={`${config.label}, ${reactionCount} ${
-                reactionCount === 1 ? "person" : "people"
-              } reacted`}
+              aria-label={`${config.label}, ${reactionCount} ${reactionCount === 1 ? "person" : "people"
+                } reacted`}
               type="button"
             >
               <span className="text-2xl">{config.emoji}</span>
