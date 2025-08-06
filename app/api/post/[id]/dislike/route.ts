@@ -40,6 +40,21 @@ export async function POST(req: NextRequest, { params }: { params: { id: string 
     const hasLiked = likedBy.includes(uid);
     const hasDisliked = dislikedBy.includes(uid);
 
+    const reactions = post?.reactions || {};
+    const updatedReactions = { ...reactions };
+
+    // Remove user from all emoji reactions
+    for (const [key, reaction] of Object.entries(updatedReactions)) {
+      const r = reaction as { count: number; users: string[] };
+      if (r.users.includes(uid)) {
+        updatedReactions[key] = {
+          count: Math.max(r.count - 1, 0),
+          users: r.users.filter((userId: string) => userId !== uid),
+        };
+      }
+    }
+
+
     let newLikedBy, newDislikedBy, newLikes, newDislikes;
 
     if (hasDisliked) {
@@ -63,7 +78,8 @@ export async function POST(req: NextRequest, { params }: { params: { id: string 
       likes: newLikes,
       likedBy: newLikedBy,
       dislikes: newDislikes,
-      dislikedBy: newDislikedBy
+      dislikedBy: newDislikedBy,
+      reactions: updatedReactions, 
     });
 
     return NextResponse.json({
@@ -71,7 +87,8 @@ export async function POST(req: NextRequest, { params }: { params: { id: string 
       likes: newLikes,
       likedBy: newLikedBy,
       dislikes: newDislikes,
-      dislikedBy: newDislikedBy
+      dislikedBy: newDislikedBy,
+      reactions: updatedReactions
     });
   } catch (error) {
     console.error('Error:', error);
