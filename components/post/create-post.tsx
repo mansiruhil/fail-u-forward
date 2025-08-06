@@ -51,13 +51,13 @@ export function CreatePost() {
   const [uploadingImage, setUploadingImage] = useState(false);
   const [editingPostId, setEditingPostId] = useState<string | null>(null);
   const [editContent, setEditContent] = useState<string>("");
-  const [postReactions, setPostReactions] = useState<{[key: string]: any}>({});
+  const [postReactions, setPostReactions] = useState<{ [key: string]: any }>({});
 
   const fetchPosts = async () => {
     try {
       const response = await fetch('/api/post');
       const data = await response.json();
-      
+
       if (response.ok) {
         const postsList = data.posts.map((post: any) => ({
           id: post.id,
@@ -68,7 +68,7 @@ export function CreatePost() {
           comments: post.comments || [],
           ...post,
         }));
-        
+
         setPosts(postsList);
 
         // Update local liked and disliked posts state for the current user (if logged in)
@@ -84,7 +84,7 @@ export function CreatePost() {
             .map((post: any) => post.id);
           setDislikedPosts(dislikedPostIds);
         }
-        
+
         setErrorMessage("");
       } else {
         setErrorMessage(data.error || "Failed to fetch posts");
@@ -102,14 +102,14 @@ export function CreatePost() {
         toast.error("Image size should be less than 10MB");
         return;
       }
-      
+
       if (!file.type.startsWith('image/')) {
         toast.error("Please select an image file");
         return;
       }
-      
+
       setSelectedImage(file);
-      
+
       // Create preview
       const reader = new FileReader();
       reader.onload = (e) => {
@@ -232,10 +232,10 @@ export function CreatePost() {
     };
 
     loadInitialData();
-  }, []); 
+  }, []);
 
   useEffect(() => {
-   
+
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       setAuthInitialized(true);
       if (user) {
@@ -357,68 +357,68 @@ export function CreatePost() {
 
 
   const handleDislike = async (postId: string) => {
-  const currentUser = auth.currentUser;
-  if (!currentUser) {
-    toast.error("You need to be logged in to dislike a post.");
-    return;
-  }
-
-  const postIndex = posts.findIndex((post) => post.id === postId);
-  if (postIndex === -1) return;
-  const post = posts[postIndex];
-  const userId = currentUser.uid;
-  const hasDisliked = post.dislikedBy?.includes(userId);
-  const hasLiked = post.likedBy?.includes(userId);
-
-  // UI update
-  let newLikedBy = post.likedBy;
-  let newDislikedBy = post.dislikedBy || [];
-  let newLikes = post.likes;
-  let newDislikes = post.dislikes || 0;
-
-  if (hasDisliked) {
-    newDislikedBy = newDislikedBy.filter((id: string) => id !== userId);
-    newDislikes = Math.max(newDislikes - 1, 0);
-  } else {
-    newDislikedBy = [...newDislikedBy, userId];
-    newDislikes = newDislikes + 1;
-    if (hasLiked) {
-      newLikedBy = newLikedBy.filter((id: string) => id !== userId);
-      newLikes = Math.max(newLikes - 1, 0);
-      setLikedPosts(likedPosts.filter((id) => id !== postId));
+    const currentUser = auth.currentUser;
+    if (!currentUser) {
+      toast.error("You need to be logged in to dislike a post.");
+      return;
     }
-  }
 
-  setPosts((prevPosts) =>
-    prevPosts.map((p, idx) =>
-      idx === postIndex
-        ? { ...p, likes: newLikes, likedBy: newLikedBy, dislikes: newDislikes, dislikedBy: newDislikedBy }
-        : p
-    )
-  );
-  setDislikedPosts(hasDisliked ? dislikedPosts.filter((id) => id !== postId) : [...dislikedPosts, postId]);
-  console.log("DislikedPosts state after update:", newDislikes);
+    const postIndex = posts.findIndex((post) => post.id === postId);
+    if (postIndex === -1) return;
+    const post = posts[postIndex];
+    const userId = currentUser.uid;
+    const hasDisliked = post.dislikedBy?.includes(userId);
+    const hasLiked = post.likedBy?.includes(userId);
 
-  try {
-    const idToken = await currentUser.getIdToken();
-    const response = await fetch(`/api/post/${postId}/dislike`, {
-      method: 'POST',
-      headers: { 
-        'Authorization': `Bearer ${idToken}`,
-        'Content-Type': 'application/json' 
+    // UI update
+    let newLikedBy = post.likedBy;
+    let newDislikedBy = post.dislikedBy || [];
+    let newLikes = post.likes;
+    let newDislikes = post.dislikes || 0;
+
+    if (hasDisliked) {
+      newDislikedBy = newDislikedBy.filter((id: string) => id !== userId);
+      newDislikes = Math.max(newDislikes - 1, 0);
+    } else {
+      newDislikedBy = [...newDislikedBy, userId];
+      newDislikes = newDislikes + 1;
+      if (hasLiked) {
+        newLikedBy = newLikedBy.filter((id: string) => id !== userId);
+        newLikes = Math.max(newLikes - 1, 0);
+        setLikedPosts(likedPosts.filter((id) => id !== postId));
       }
-    });
+    }
 
-    if (!response.ok) throw new Error("Failed to update dislike");
-
-    // Parse updated post from backend
-    const updatedPost = await response.json();
-
-    // Update posts state with latest backend data for exact sync
     setPosts((prevPosts) =>
       prevPosts.map((p, idx) =>
         idx === postIndex
-          ? {
+          ? { ...p, likes: newLikes, likedBy: newLikedBy, dislikes: newDislikes, dislikedBy: newDislikedBy }
+          : p
+      )
+    );
+    setDislikedPosts(hasDisliked ? dislikedPosts.filter((id) => id !== postId) : [...dislikedPosts, postId]);
+    console.log("DislikedPosts state after update:", newDislikes);
+
+    try {
+      const idToken = await currentUser.getIdToken();
+      const response = await fetch(`/api/post/${postId}/dislike`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${idToken}`,
+          'Content-Type': 'application/json'
+        }
+      });
+
+      if (!response.ok) throw new Error("Failed to update dislike");
+
+      // Parse updated post from backend
+      const updatedPost = await response.json();
+
+      // Update posts state with latest backend data for exact sync
+      setPosts((prevPosts) =>
+        prevPosts.map((p, idx) =>
+          idx === postIndex
+            ? {
               ...p,
               likes: updatedPost.likes,
               likedBy: updatedPost.likedBy,
@@ -426,26 +426,26 @@ export function CreatePost() {
               dislikedBy: updatedPost.dislikedBy,
               reactions: updatedPost.reactions || p.reactions, // in case backend updated reactions on dislike
             }
-          : p
-      )
-    );
+            : p
+        )
+      );
 
-    // Also update dislikedPosts state based on backend signal
-    if ((updatedPost.dislikedBy || []).includes(userId)) {
-      setDislikedPosts((prev) => (prev.includes(postId) ? prev : [...prev, postId]));
-    } else {
-      setDislikedPosts((prev) => prev.filter((id) => id !== postId));
+      // Also update dislikedPosts state based on backend signal
+      if ((updatedPost.dislikedBy || []).includes(userId)) {
+        setDislikedPosts((prev) => (prev.includes(postId) ? prev : [...prev, postId]));
+      } else {
+        setDislikedPosts((prev) => prev.filter((id) => id !== postId));
+      }
+    } catch (error) {
+      // Rollback UI update on failure
+      setPosts((prevPosts) =>
+        prevPosts.map((p, idx) =>
+          idx === postIndex ? post : p
+        )
+      );
+      setDislikedPosts(hasDisliked ? [...dislikedPosts, postId] : dislikedPosts.filter((id) => id !== postId));
+      toast.error("Failed to update dislikes.");
     }
-  } catch (error) {
-    // Rollback UI update on failure
-    setPosts((prevPosts) =>
-      prevPosts.map((p, idx) =>
-        idx === postIndex ? post : p
-      )
-    );
-    setDislikedPosts(hasDisliked ? [...dislikedPosts, postId] : dislikedPosts.filter((id) => id !== postId));
-    toast.error("Failed to update dislikes.");
-  }
   };
 
 
@@ -553,22 +553,22 @@ export function CreatePost() {
 
       // Update with server response
       setPosts((prevPosts) =>
-      prevPosts.map((p, idx) =>
-        idx === postIndex 
-          ? { 
-              ...p, 
-              reactions: data.reactions, 
-              dislikedBy: data.dislikedBy || [], 
-              dislikes: data.dislikes || 0 
+        prevPosts.map((p, idx) =>
+          idx === postIndex
+            ? {
+              ...p,
+              reactions: data.reactions,
+              dislikedBy: data.dislikedBy || [],
+              dislikes: data.dislikes || 0
             }
-          : p
+            : p
         )
       );
-        // Update dislikedPosts
+      // Update dislikedPosts
       const currentUserId = currentUser.uid;
       if (currentUserId) {
         if ((data.dislikedBy || []).includes(currentUserId)) {
-          setDislikedPosts((prev) => 
+          setDislikedPosts((prev) =>
             prev.includes(postId) ? prev : [...prev, postId]
           );
         } else {
@@ -611,7 +611,7 @@ export function CreatePost() {
       });
 
       if (response.ok) {
-        setPosts(posts.map(post => 
+        setPosts(posts.map(post =>
           post.id === postId ? { ...post, content: editContent } : post
         ));
         setEditingPostId(null);
@@ -633,9 +633,9 @@ export function CreatePost() {
 
   const canEditPost = (post: any) => {
     const currentUser = auth.currentUser;
-    return currentUser && 
-           post.userId === currentUser.uid && 
-           Date.now() < post.editableUntil;
+    return currentUser &&
+      post.userId === currentUser.uid &&
+      Date.now() < post.editableUntil;
   };
 
   const toggleCommentBox = (postId: string) => {
@@ -695,7 +695,7 @@ export function CreatePost() {
                     </Button>
                   </div>
                 )}
-                
+
                 <div className="justify-between items-center mt-4 md:flex">
                   <div className="flex gap-2">
                     <label htmlFor="image-upload">
@@ -733,7 +733,7 @@ export function CreatePost() {
           <p className="text-muted-foreground">
             <Button variant="link" onClick={() => router.push("/login")}>
               Login
-            </Button> 
+            </Button>
             to create posts, like, and comment.
           </p>
         </Card>
@@ -742,9 +742,9 @@ export function CreatePost() {
       {/* Debug and refresh section - only show for authenticated users */}
       {authInitialized && auth.currentUser && (
         <div className="mt-4 flex justify-between items-center">
-          <Button 
-            variant="outline" 
-            size="sm" 
+          <Button
+            variant="outline"
+            size="sm"
             onClick={fetchPosts}
             disabled={loading}
           >
@@ -778,317 +778,316 @@ export function CreatePost() {
       {authInitialized && auth.currentUser && (
         <div className="mt-6">
           {posts.length > 0 ? (
-          posts.map((post: any) => {
-            const user = users[post.userId];
-            const profilePic =
-              user?.profilepic ||
-              "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png";
-            return (
-              <Card 
-                key={post.id} 
-                className="p-4 mb-4"
-                onClick={() => handlePostClick(post.id)}
+            posts.map((post: any) => {
+              const user = users[post.userId];
+              const profilePic =
+                user?.profilepic ||
+                "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png";
+              return (
+                <Card
+                  key={post.id}
+                  className="p-4 mb-4"
+                  onClick={() => handlePostClick(post.id)}
                 >
-                {/* Profile Header */}
-                <div className="flex items-center gap-3 mb-3">
-                  <Avatar className="w-10 h-10">
-                    <Image
-                      src={profilePic}
-                      height={100}
-                      width={100}
-                      alt={`${user?.username || "Anonymous"}'s avatar`}
-                      className="rounded-full"
-                    />
-                  </Avatar>
-                  <div className="flex-1">
-                    <p className="font-bold text-sm">{post.userName}</p>
-                    <p className="text-xs text-gray-500">
-                      {new Date(post.timestamp).toLocaleString()}
-                    </p>
-                  </div>
-                  {canEditPost(post) && (
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={(event) => {
-                        event.stopPropagation();
-                        handleEditPost(post.id, post.content);
-                      }}
-                    >
-                      Edit
-                    </Button>
-                  )}
-                </div>
-
-                {/* Post Content */}
-                <div className="mb-3">
-                  {editingPostId === post.id ? (
-                    <div className="space-y-2">
-                      <Textarea
-                        value={editContent}
-                        onChange={(e) => setEditContent(e.target.value)}
-                        className="min-h-[100px]"
-                        onClick={(event) => event.stopPropagation()}
+                  {/* Profile Header */}
+                  <div className="flex items-center gap-3 mb-3">
+                    <Avatar className="w-10 h-10">
+                      <Image
+                        src={profilePic}
+                        height={100}
+                        width={100}
+                        alt={`${user?.username || "Anonymous"}'s avatar`}
+                        className="rounded-full"
                       />
-                      <div className="flex gap-2">
-                        <Button
-                          size="sm"
-                          onClick={(event) => {
-                            event.stopPropagation();
-                            handleSaveEdit(post.id);
-                          }}
-                        >
-                          Save
-                        </Button>
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={(event) => {
-                            event.stopPropagation();
-                            handleCancelEdit();
-                          }}
-                        >
-                          Cancel
-                        </Button>
-                      </div>
+                    </Avatar>
+                    <div className="flex-1">
+                      <p className="font-bold text-sm">{post.userName}</p>
+                      <p className="text-xs text-gray-500">
+                        {new Date(post.timestamp).toLocaleString()}
+                      </p>
                     </div>
-                  ) : (
-                    <p className="text-foreground leading-relaxed">{post.content}</p>
-                  )}
-                </div>
-                
-                {/* Display image if exists */}
-                {post.imageUrl && (
-                  <div className="mb-4 lg:mb-6">
-                    <Image
-                      src={post.imageUrl}
-                      alt="Post image"
-                      width={500}
-                      height={300}
-                      className="rounded-lg object-cover w-full max-h-96 lg:max-h-[500px]"
-                    />
+                    {canEditPost(post) && (
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={(event) => {
+                          event.stopPropagation();
+                          handleEditPost(post.id, post.content);
+                        }}
+                      >
+                        Edit
+                      </Button>
+                    )}
                   </div>
-                )}
-                <hr className="my-4 lg:my-6 border-secondary" /> {/* Divider line */}
-                <div className="flex justify-around text-sm lg:text-base text-gray-500">
-                  <motion.div whileTap={{ scale: 0.9 }}>
-                    <LikeReactionPopover
-  reactions={post.reactions || {}}
-  currentUserId={auth.currentUser?.uid || null}
-  onReact={(reactionType) => handleReaction(post.id, reactionType)}
-/>
 
-                  </motion.div>
-
-                  <motion.div whileTap={{ scale: 0.9 }}>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={(event) => {
-                        event.stopPropagation();
-                        if (!auth.currentUser) {
-                          toast.error("Please login to dislike posts");
-                          return;
-                        }
-                        handleDislike(post.id);
-                      }}
-                      className="flex items-center gap-2"
-                    >
-                      <ThumbsDown
-  className={`h-4 w-4 ${
-    dislikedPosts.includes(post.id)
-      ? "text-blue-500"
-      : likedPosts.includes(post.id)
-      ? "text-red-500"
-      : "text-gray-500"
-  }`}
-/>
-
-                      {post.dislikes || 0} Dislike
-                    </Button>
-                  </motion.div>
-
-                  
-
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={(event) => {
-                      event.stopPropagation();
-                      if (!auth.currentUser) {
-                        toast.error("Please login to comment on posts");
-                        return;
-                      }
-                      toggleCommentBox(post.id)
-                    }}
-                    className="flex items-center gap-2"
-                  >
-                    <MessageCircle className="h-4 w-4" />
-                    {post.comments?.length || 0} Comments
-                  </Button>
-                  
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={(event) => {
-                      event.stopPropagation();
-                      handleShare(post.id)
-                    }}
-                    className="flex items-center gap-2"
-                  >
-                    <Link2 className="h-4 w-4" />
-                    {post.shares || 0} Shares
-                  </Button>
-                </div>
-                <hr className="my-4 lg:my-6 border-secondary" />
-                {commentBoxStates[post.id] && auth.currentUser && (
-                  <>
-                    <div className="mt-4 lg:mt-6">
-                      <div className="flex items-center gap-2 lg:gap-4">
-                        <Avatar className="w-8 h-8 lg:w-12 lg:h-12">
-                          <Image
-                            src={currentUserProfilePic || ""}
-                            height={100}
-                            width={100}
-                            alt="User Avatar"
-                            className="rounded-full"
+                  {/* Post Content */}
+                  <div className="max-w-xl px-10">
+                    <div className="mb-3">
+                      {editingPostId === post.id ? (
+                        <div className="space-y-2">
+                          <Textarea
+                            value={editContent}
+                            onChange={(e) => setEditContent(e.target.value)}
+                            className="min-h-[100px]"
+                            onClick={(event) => event.stopPropagation()}
                           />
-                        </Avatar>
-                        <Textarea
-                          placeholder="Write a comment..."
-                          className="flex-1 min-h-[40px] lg:min-h-[60px] resize-none text-sm lg:text-base"
-                          value={commentInputs[post.id] || ""}
-                          onChange={(e: any) =>
-                            setCommentInputs((prev: any) => ({
-                              ...prev,
-                              [post.id]: e.target.value,
-                            }))
-                          }
-                          onClick={(event) => {
-                            event.stopPropagation();
-                          }}
-                        />
-                        <Button
-                          size="sm"
-                          className="ml-2 lg:px-6 lg:py-3 lg:text-base"
-                          onClick={(event) => {
-                            event.stopPropagation();
-                            handlePostComment(post.id)
-                          }}
-                        >
-                          Post
-                        </Button>
-                      </div>
-                    </div>
-                    {post.comments && post.comments.length > 0 && (
-                      <div className="mt-4">
-                        {post.comments.map((comment: any, index: any) => (
-                          <div
-                            key={index}
-                            className="flex items-center gap-2 mt-2 p-2 rounded-md bg-background"
-                          >
-                            <Avatar className="w-8 h-8">
-                              <Image
-                                src={
-                                  users[comment.userId]?.profilepic ||
-                                  "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
-                                }
-                                width={100}
-                                height={100}
-                                alt="Commenter's Avatar"
-                                className="rounded-full"
-                              />
-                            </Avatar>
-                            <div>
-                              <p className="font-bold text-sm">
-                                {users[comment.userId]?.username || "Anonymous"}
-                              </p>
-                              <p>{comment.text}</p>
-                              <p className="text-gray-500 text-xs">
-                                {new Date(comment.timestamp).toLocaleString()}
-                              </p>
-                            </div>
+                          <div className="flex gap-2">
+                            <Button
+                              size="sm"
+                              onClick={(event) => {
+                                event.stopPropagation();
+                                handleSaveEdit(post.id);
+                              }}
+                            >
+                              Save
+                            </Button>
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={(event) => {
+                                event.stopPropagation();
+                                handleCancelEdit();
+                              }}
+                            >
+                              Cancel
+                            </Button>
                           </div>
-                        ))}
+                        </div>
+                      ) : (
+                        <p className="text-foreground leading-relaxed px-5">{post.content}</p>
+                      )}
+                    </div>
+
+
+                    {/* Display image if exists */}
+                    {post.imageUrl && (
+                      <div className="mb-4 lg:mb-6">
+                        <Image
+                          src={post.imageUrl}
+                          alt="Post image"
+                          width={500}
+                          height={300}
+                          className="rounded-lg object-cover w-full max-h-96 lg:max-h-[500px]"
+                        />
                       </div>
                     )}
-                  </>
-                )}
-                
-                {/* Show comments even if user is not logged in */}
-                {post.comments && post.comments.length > 0 && !auth.currentUser && (
-                  <div className="mt-4">
-                    <hr className="my-2 border-secondary" />
-                    <p className="text-sm text-muted-foreground mb-2">Comments:</p>
-                    {post.comments.map((comment: any, index: any) => (
-                      <div
-                        key={index}
-                        className="flex items-center gap-2 mt-2 p-2 rounded-md bg-background"
-                      >
-                        <Avatar className="w-8 h-8">
-                          <Image
-                            src={
-                              users[comment.userId]?.profilepic ||
-                              "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
+                    <div className="flex justify-around text-sm lg:text-base text-gray-500">
+                      <motion.div whileTap={{ scale: 0.9 }}>
+                        <LikeReactionPopover
+                          reactions={post.reactions || {}}
+                          currentUserId={auth.currentUser?.uid || null}
+                          onReact={(reactionType) => handleReaction(post.id, reactionType)}
+                        />
+
+                      </motion.div>
+
+                      <motion.div whileTap={{ scale: 0.9 }}>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={(event) => {
+                            event.stopPropagation();
+                            if (!auth.currentUser) {
+                              toast.error("Please login to dislike posts");
+                              return;
                             }
-                            width={100}
-                            height={100}
-                            alt="Commenter's Avatar"
-                            className="rounded-full"
+                            handleDislike(post.id);
+                          }}
+                          className="flex items-center gap-2"
+                        >
+                          <ThumbsDown
+                            className={`h-4 w-4 ${dislikedPosts.includes(post.id)
+                                ? "text-blue-500"
+                                : likedPosts.includes(post.id)
+                                  ? "text-red-500"
+                                  : "text-gray-500"
+                              }`}
                           />
-                        </Avatar>
-                        <div>
-                          <p className="font-bold text-sm">
-                            {users[comment.userId]?.username || "Anonymous"}
-                          </p>
-                          <p>{comment.text}</p>
-                          <p className="text-gray-500 text-xs">
-                            {new Date(comment.timestamp).toLocaleString()}
-                          </p>
+
+                          {post.dislikes || 0} Dislike
+                        </Button>
+                      </motion.div>
+
+
+
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={(event) => {
+                          event.stopPropagation();
+                          if (!auth.currentUser) {
+                            toast.error("Please login to comment on posts");
+                            return;
+                          }
+                          toggleCommentBox(post.id)
+                        }}
+                        className="flex items-center gap-2"
+                      >
+                        <MessageCircle className="h-4 w-4" />
+                        {post.comments?.length || 0} Comments
+                      </Button>
+
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={(event) => {
+                          event.stopPropagation();
+                          handleShare(post.id)
+                        }}
+                        className="flex items-center gap-2"
+                      >
+                        <Link2 className="h-4 w-4" />
+                        {post.shares || 0} Shares
+                      </Button>
+                    </div>
+                  </div>
+                  {commentBoxStates[post.id] && auth.currentUser && (
+                    <>
+                      <div className="mt-4 lg:mt-6">
+                        <div className="flex items-center gap-2 lg:gap-4">
+                          <Avatar className="w-8 h-8 lg:w-12 lg:h-12">
+                            <Image
+                              src={currentUserProfilePic || ""}
+                              height={100}
+                              width={100}
+                              alt="User Avatar"
+                              className="rounded-full"
+                            />
+                          </Avatar>
+                          <Textarea
+                            placeholder="Write a comment..."
+                            className="flex-1 min-h-[40px] lg:min-h-[60px] resize-none text-sm lg:text-base"
+                            value={commentInputs[post.id] || ""}
+                            onChange={(e: any) =>
+                              setCommentInputs((prev: any) => ({
+                                ...prev,
+                                [post.id]: e.target.value,
+                              }))
+                            }
+                            onClick={(event) => {
+                              event.stopPropagation();
+                            }}
+                          />
+                          <Button
+                            size="sm"
+                            className="ml-2 lg:px-6 lg:py-3 lg:text-base"
+                            onClick={(event) => {
+                              event.stopPropagation();
+                              handlePostComment(post.id)
+                            }}
+                          >
+                            Post
+                          </Button>
                         </div>
                       </div>
-                    ))}
+                      {post.comments && post.comments.length > 0 && (
+                        <div className="mt-4">
+                          {post.comments.map((comment: any, index: any) => (
+                            <div
+                              key={index}
+                              className="flex items-center gap-2 mt-2 p-2 rounded-md bg-background"
+                            >
+                              <Avatar className="w-8 h-8">
+                                <Image
+                                  src={
+                                    users[comment.userId]?.profilepic ||
+                                    "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
+                                  }
+                                  width={100}
+                                  height={100}
+                                  alt="Commenter's Avatar"
+                                  className="rounded-full"
+                                />
+                              </Avatar>
+                              <div>
+                                <p className="font-bold text-sm">
+                                  {users[comment.userId]?.username || "Anonymous"}
+                                </p>
+                                <p>{comment.text}</p>
+                                <p className="text-gray-500 text-xs">
+                                  {new Date(comment.timestamp).toLocaleString()}
+                                </p>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </>
+                  )}
+
+                  {/* Show comments even if user is not logged in */}
+                  {post.comments && post.comments.length > 0 && !auth.currentUser && (
+                    <div className="mt-4">
+                      <p className="text-sm text-muted-foreground mb-2">Comments:</p>
+                      {post.comments.map((comment: any, index: any) => (
+                        <div
+                          key={index}
+                          className="flex items-center gap-2 mt-2 p-2 rounded-md bg-background"
+                        >
+                          <Avatar className="w-8 h-8">
+                            <Image
+                              src={
+                                users[comment.userId]?.profilepic ||
+                                "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
+                              }
+                              width={100}
+                              height={100}
+                              alt="Commenter's Avatar"
+                              className="rounded-full"
+                            />
+                          </Avatar>
+                          <div>
+                            <p className="font-bold text-sm">
+                              {users[comment.userId]?.username || "Anonymous"}
+                            </p>
+                            <p>{comment.text}</p>
+                            <p className="text-gray-500 text-xs">
+                              {new Date(comment.timestamp).toLocaleString()}
+                            </p>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </Card>
+              );
+            })
+          ) : (
+            <div className="flex flex-col items-center justify-center h-64 text-center">
+              {errorMessage ? (
+                <div className="space-y-4">
+                  <div className="text-red-500 text-lg font-medium">
+                    ⚠️ Failed to Load Posts
                   </div>
-                )}
-              </Card>
-            );
-          })
-        ) : (
-          <div className="flex flex-col items-center justify-center h-64 text-center">
-            {errorMessage ? (
-              <div className="space-y-4">
-                <div className="text-red-500 text-lg font-medium">
-                  ⚠️ Failed to Load Posts
+                  <p className="text-muted-foreground max-w-md">
+                    We couldn't fetch the posts right now. This might be due to network issues or database permissions.
+                  </p>
+                  <Button
+                    variant="outline"
+                    onClick={fetchPosts}
+                    disabled={loading}
+                    className="mt-4"
+                  >
+                    Try Again
+                  </Button>
                 </div>
-                <p className="text-muted-foreground max-w-md">
-                  We couldn't fetch the posts right now. This might be due to network issues or database permissions.
-                </p>
-                <Button 
-                  variant="outline" 
-                  onClick={fetchPosts}
-                  disabled={loading}
-                  className="mt-4"
-                >
-                  Try Again
-                </Button>
-              </div>
-            ) : loading ? (
-              <div className="space-y-4">
-                <HashLoader color="white" />
-                <p className="text-muted-foreground">Loading posts...</p>
-              </div>
-            ) : (
-              <div className="space-y-4">
-                <div className="text-muted-foreground text-lg">
-                  📝 No Posts Yet
+              ) : loading ? (
+                <div className="space-y-4">
+                  <HashLoader color="white" />
+                  <p className="text-muted-foreground">Loading posts...</p>
                 </div>
-                <p className="text-muted-foreground max-w-md">
-                  Be the first to share your story! Create a post to get the conversation started.
-                </p>
-              </div>
-            )}
-          </div>
-        )}
+              ) : (
+                <div className="space-y-4">
+                  <div className="text-muted-foreground text-lg">
+                    📝 No Posts Yet
+                  </div>
+                  <p className="text-muted-foreground max-w-md">
+                    Be the first to share your story! Create a post to get the conversation started.
+                  </p>
+                </div>
+              )}
+            </div>
+          )}
         </div>
       )}
 
@@ -1102,8 +1101,8 @@ export function CreatePost() {
             <p className="text-muted-foreground max-w-md mx-auto">
               Please login to view and interact with posts from the community.
             </p>
-            <Button 
-              variant="default" 
+            <Button
+              variant="default"
               onClick={() => router.push("/login")}
               className="mt-4"
             >
