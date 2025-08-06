@@ -9,10 +9,14 @@ const TRENDING_TOPICS = [
 ];
 
 const FAILURE_CATEGORIES = [
-  { id: 1, title: "Tech Interviews"},
+  { id: 1, title: "Tech Interviews" },
   { id: 2, title: "Pitch Meetings" },
   { id: 3, title: "Product Launches" },
-];
+  { id: 4, title: "Startup Failures" },
+  { id: 5, title: "Funding Rejections" },
+  { id: 6, title: "Team Conflicts" },
+  { id: 7, title: "Marketing Missteps" }
+]
 
 export function RightSidebar() {
   return (
@@ -38,14 +42,13 @@ export function RightSidebar() {
 
       <div>
         <h3 className="font-semibold text-foreground mb-4">People Also Failed At</h3>
-        <div className="space-y-3">
+        <div className="flex gap-2 flex-wrap">
           {FAILURE_CATEGORIES.map((category) => (
             <Link
               href={`/technews`}
               key={category.id}
-              className="flex items-center text-lg py-4 bg-gray-700 hover:bg-zinc-800 text-white font-semibold rounded-lg transition-colors"
+              className="p-2 bg-background text-foreground border border-gray-400 hover:border-black  rounded-lg transition-all duration-100"
             >
-              <div className="w-2 h-2 bg-primary rounded-full mr-3"></div>
               <span className="text-sm text-foreground">{category.title}</span>
             </Link>
           ))}
