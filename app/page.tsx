@@ -45,7 +45,7 @@ export default function Home() {
       <main className="container relative z-10 flex flex-col px-4 sm:px-6 md:px-8 py-12 sm:py-16 min-h-screen">
         {/* Hero Section */}
         <section className="text-center mt-16 sm:mt-20 space-y-6 px-2">
-          <h1 className="text-2xl sm:text-4xl md:text-6xl font-bold tracking-tight bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 text-transparent bg-clip-text drop-shadow-[0_2px_4px_rgba(255,255,255,0.5)]">
+          <h1 className="text-2xl sm:text-4xl md:text-6xl font-bold tracking-tight bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 text-transparent bg-clip-text ">
             <TextGenerateEffect words="Welcome To Fail U Forward" />
           </h1>
 
