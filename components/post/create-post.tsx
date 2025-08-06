@@ -17,6 +17,7 @@ import { updateDoc, doc, increment } from "firebase/firestore";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { Link2, ThumbsDown, MessageCircle, Heart } from "lucide-react";
+import { LikeReactionPopover } from "./LikeReactionPopover";
 import { onAuthStateChanged } from "firebase/auth";
 type User = {
   id: string;
@@ -50,6 +51,7 @@ export function CreatePost() {
   const [uploadingImage, setUploadingImage] = useState(false);
   const [editingPostId, setEditingPostId] = useState<string | null>(null);
   const [editContent, setEditContent] = useState<string>("");
+  const [postReactions, setPostReactions] = useState<{[key: string]: any}>({});
 
   const fetchPosts = async () => {
     try {
@@ -353,121 +355,99 @@ export function CreatePost() {
     }
   };
 
-  const handleLike = async (postId: string) => {
-    const currentUser = auth.currentUser;
-    if (!currentUser) {
-      toast.error("You need to be logged in to like a post.");
-      return;
-    }
-
-    const postIndex = posts.findIndex((post) => post.id === postId);
-    const post = posts[postIndex];
-    const userId = currentUser.uid;
-    const hasLiked = post.likedBy?.includes(userId);
-    const hasDisliked = post.dislikedBy?.includes(userId);
-
-    let newLikedBy, newDislikedBy, newLikes, newDislikes;
-    if (hasLiked) {
-      newLikedBy = post.likedBy.filter((id: string) => id !== userId);
-      newLikes = Math.max((post.likes || 0) - 1, 0);
-      newDislikedBy = post.dislikedBy;
-      newDislikes = post.dislikes;
-    } else {
-      newLikedBy = [...(post.likedBy || []), userId];
-      newLikes = (post.likes || 0) + 1;
-      if (hasDisliked) {
-        newDislikedBy = post.dislikedBy.filter((id: string) => id !== userId);
-        newDislikes = Math.max((post.dislikes || 0) - 1, 0);
-        setDislikedPosts(dislikedPosts.filter((id) => id !== postId));
-      } else {
-        newDislikedBy = post.dislikedBy;
-        newDislikes = post.dislikes;
-      }
-    }
-
-    setPosts((prevPosts) =>
-      prevPosts.map((p, idx) =>
-        idx === postIndex
-          ? { ...p, likes: newLikes, likedBy: newLikedBy, dislikes: newDislikes, dislikedBy: newDislikedBy }
-          : p
-      )
-    );
-    setLikedPosts(hasLiked ? likedPosts.filter((id) => id !== postId) : [...likedPosts, postId]);
-
-    try {
-      const idToken = await currentUser.getIdToken();
-      await fetch(`/api/post/${postId}/like`, {
-        method: 'POST',
-        headers: { 'Authorization': `Bearer ${idToken}` }
-      });
-    } catch (error) {
-      setPosts((prevPosts) =>
-        prevPosts.map((p, idx) =>
-          idx === postIndex ? { ...p, likes: post.likes, likedBy: post.likedBy, dislikes: post.dislikes, dislikedBy: post.dislikedBy } : p
-        )
-      );
-      setLikedPosts(hasLiked ? [...likedPosts, postId] : likedPosts.filter((id) => id !== postId));
-      toast.error("Failed to update likes.");
-    }
-  };
 
   const handleDislike = async (postId: string) => {
-    const currentUser = auth.currentUser;
-    if (!currentUser) {
-      toast.error("You need to be logged in to dislike a post.");
-      return;
+  const currentUser = auth.currentUser;
+  if (!currentUser) {
+    toast.error("You need to be logged in to dislike a post.");
+    return;
+  }
+
+  const postIndex = posts.findIndex((post) => post.id === postId);
+  if (postIndex === -1) return;
+  const post = posts[postIndex];
+  const userId = currentUser.uid;
+  const hasDisliked = post.dislikedBy?.includes(userId);
+  const hasLiked = post.likedBy?.includes(userId);
+
+  // UI update
+  let newLikedBy = post.likedBy;
+  let newDislikedBy = post.dislikedBy || [];
+  let newLikes = post.likes;
+  let newDislikes = post.dislikes || 0;
+
+  if (hasDisliked) {
+    newDislikedBy = newDislikedBy.filter((id: string) => id !== userId);
+    newDislikes = Math.max(newDislikes - 1, 0);
+  } else {
+    newDislikedBy = [...newDislikedBy, userId];
+    newDislikes = newDislikes + 1;
+    if (hasLiked) {
+      newLikedBy = newLikedBy.filter((id: string) => id !== userId);
+      newLikes = Math.max(newLikes - 1, 0);
+      setLikedPosts(likedPosts.filter((id) => id !== postId));
     }
+  }
 
-    const postIndex = posts.findIndex((post) => post.id === postId);
-    const post = posts[postIndex];
-    const userId = currentUser.uid;
-    const hasDisliked = post.dislikedBy?.includes(userId);
-    const hasLiked = post.likedBy?.includes(userId);
+  setPosts((prevPosts) =>
+    prevPosts.map((p, idx) =>
+      idx === postIndex
+        ? { ...p, likes: newLikes, likedBy: newLikedBy, dislikes: newDislikes, dislikedBy: newDislikedBy }
+        : p
+    )
+  );
+  setDislikedPosts(hasDisliked ? dislikedPosts.filter((id) => id !== postId) : [...dislikedPosts, postId]);
+  console.log("DislikedPosts state after update:", newDislikes);
 
-    let newLikedBy, newDislikedBy, newLikes, newDislikes;
-    if (hasDisliked) {
-      newDislikedBy = post.dislikedBy.filter((id: string) => id !== userId);
-      newDislikes = Math.max((post.dislikes || 0) - 1, 0);
-      newLikedBy = post.likedBy;
-      newLikes = post.likes;
-    } else {
-      newDislikedBy = [...(post.dislikedBy || []), userId];
-      newDislikes = (post.dislikes || 0) + 1;
-      if (hasLiked) {
-        newLikedBy = post.likedBy.filter((id: string) => id !== userId);
-        newLikes = Math.max((post.likes || 0) - 1, 0);
-        setLikedPosts(likedPosts.filter((id) => id !== postId));
-      } else {
-        newLikedBy = post.likedBy;
-        newLikes = post.likes;
+  try {
+    const idToken = await currentUser.getIdToken();
+    const response = await fetch(`/api/post/${postId}/dislike`, {
+      method: 'POST',
+      headers: { 
+        'Authorization': `Bearer ${idToken}`,
+        'Content-Type': 'application/json' 
       }
-    }
+    });
 
+    if (!response.ok) throw new Error("Failed to update dislike");
+
+    // Parse updated post from backend
+    const updatedPost = await response.json();
+
+    // Update posts state with latest backend data for exact sync
     setPosts((prevPosts) =>
       prevPosts.map((p, idx) =>
         idx === postIndex
-          ? { ...p, likes: newLikes, likedBy: newLikedBy, dislikes: newDislikes, dislikedBy: newDislikedBy }
+          ? {
+              ...p,
+              likes: updatedPost.likes,
+              likedBy: updatedPost.likedBy,
+              dislikes: updatedPost.dislikes,
+              dislikedBy: updatedPost.dislikedBy,
+              reactions: updatedPost.reactions || p.reactions, // in case backend updated reactions on dislike
+            }
           : p
       )
     );
-    setDislikedPosts(hasDisliked ? dislikedPosts.filter((id) => id !== postId) : [...dislikedPosts, postId]);
 
-    try {
-      const idToken = await currentUser.getIdToken();
-      await fetch(`/api/post/${postId}/dislike`, {
-        method: 'POST',
-        headers: { 'Authorization': `Bearer ${idToken}` }
-      });
-    } catch (error) {
-      setPosts((prevPosts) =>
-        prevPosts.map((p, idx) =>
-          idx === postIndex ? { ...p, likes: post.likes, likedBy: post.likedBy, dislikes: post.dislikes, dislikedBy: post.dislikedBy } : p
-        )
-      );
-      setDislikedPosts(hasDisliked ? [...dislikedPosts, postId] : dislikedPosts.filter((id) => id !== postId));
-      toast.error("Failed to update dislikes.");
+    // Also update dislikedPosts state based on backend signal
+    if ((updatedPost.dislikedBy || []).includes(userId)) {
+      setDislikedPosts((prev) => (prev.includes(postId) ? prev : [...prev, postId]));
+    } else {
+      setDislikedPosts((prev) => prev.filter((id) => id !== postId));
     }
+  } catch (error) {
+    // Rollback UI update on failure
+    setPosts((prevPosts) =>
+      prevPosts.map((p, idx) =>
+        idx === postIndex ? post : p
+      )
+    );
+    setDislikedPosts(hasDisliked ? [...dislikedPosts, postId] : dislikedPosts.filter((id) => id !== postId));
+    toast.error("Failed to update dislikes.");
+  }
   };
+
 
   const handleShare = async (postId: string) => {
     const postIndex = posts.findIndex((post) => post.id === postId);
@@ -507,6 +487,102 @@ export function CreatePost() {
         )
       );
       toast.error("Failed to share post.");
+    }
+  };
+
+  //Updated likes to reaction function
+  const handleReaction = async (postId: string, reactionType: string) => {
+    const currentUser = auth.currentUser;
+    if (!currentUser) {
+      toast.error("You need to be logged in to react to a post.");
+      return;
+    }
+
+    const postIndex = posts.findIndex((post) => post.id === postId);
+    if (postIndex === -1) return;
+
+    const post = posts[postIndex];
+    const currentReactions = post.reactions || {};
+
+    // UI update
+    const updatedReactions = { ...currentReactions };
+    const userId = currentUser.uid;
+
+    // Remove user from all reactions first
+    Object.keys(updatedReactions).forEach((key) => {
+      updatedReactions[key] = {
+        count: Math.max((updatedReactions[key]?.count || 0) - (updatedReactions[key]?.users.includes(userId) ? 1 : 0), 0),
+        users: (updatedReactions[key]?.users || []).filter((id: string) => id !== userId),
+      };
+    });
+
+    // Toggle the selected reaction
+    const hasReacted = currentReactions[reactionType]?.users?.includes(userId);
+    if (!hasReacted) {
+      if (!updatedReactions[reactionType]) {
+        updatedReactions[reactionType] = { count: 0, users: [] };
+      }
+      updatedReactions[reactionType] = {
+        count: (updatedReactions[reactionType]?.count || 0) + 1,
+        users: [...(updatedReactions[reactionType]?.users || []), userId],
+      };
+    }
+
+    setPosts((prevPosts) =>
+      prevPosts.map((p, idx) =>
+        idx === postIndex ? { ...p, reactions: updatedReactions } : p
+      )
+    );
+
+    try {
+      const idToken = await currentUser.getIdToken();
+      const response = await fetch(`/api/post/${postId}/reaction`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${idToken}`,
+        },
+        body: JSON.stringify({ reactionType }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to update reaction");
+      }
+
+      const data = await response.json();
+
+      // Update with server response
+      setPosts((prevPosts) =>
+      prevPosts.map((p, idx) =>
+        idx === postIndex 
+          ? { 
+              ...p, 
+              reactions: data.reactions, 
+              dislikedBy: data.dislikedBy || [], 
+              dislikes: data.dislikes || 0 
+            }
+          : p
+        )
+      );
+        // Update dislikedPosts
+      const currentUserId = currentUser.uid;
+      if (currentUserId) {
+        if ((data.dislikedBy || []).includes(currentUserId)) {
+          setDislikedPosts((prev) => 
+            prev.includes(postId) ? prev : [...prev, postId]
+          );
+        } else {
+          setDislikedPosts((prev) => prev.filter(id => id !== postId));
+        }
+      }
+    } catch (error) {
+      // Revert update on error
+      setPosts((prevPosts) =>
+        prevPosts.map((p, idx) =>
+          idx === postIndex ? { ...p, reactions: currentReactions } : p
+        )
+      );
+      toast.error("Failed to update reaction.");
     }
   };
 
@@ -796,28 +872,12 @@ export function CreatePost() {
                 <hr className="my-4 lg:my-6 border-secondary" /> {/* Divider line */}
                 <div className="flex justify-around text-sm lg:text-base text-gray-500">
                   <motion.div whileTap={{ scale: 0.9 }}>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={(event) => {
-                        event.stopPropagation();
-                        if (!auth.currentUser) {
-                          toast.error("Please login to like posts");
-                          return;
-                        }
-                        handleLike(post.id);
-                      }}
-                      className="flex items-center gap-2"
-                    >
-                      <Heart
-                        className={`h-4 w-4 ${
-                          likedPosts.includes(post.id)
-                            ? "text-red-500 fill-red-500"
-                            : "text-muted-foreground"
-                        }`}
-                      />
-                      {post.likes || 0} Like
-                    </Button>
+                    <LikeReactionPopover
+  reactions={post.reactions || {}}
+  currentUserId={auth.currentUser?.uid || null}
+  onReact={(reactionType) => handleReaction(post.id, reactionType)}
+/>
+
                   </motion.div>
 
                   <motion.div whileTap={{ scale: 0.9 }}>
@@ -847,6 +907,8 @@ export function CreatePost() {
                       {post.dislikes || 0} Dislike
                     </Button>
                   </motion.div>
+
+                  
 
                   <Button
                     variant="ghost"
