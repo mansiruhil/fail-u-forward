@@ -16,8 +16,12 @@ if (!getApps().length) {
 const db = getFirestore();
 const auth = getAuth();
 
-export async function POST(req: NextRequest, { params }: { params: { id: string } }) {
+export async function POST(
+  req: NextRequest,
+  context: { params: { id: string } }
+) {
   try {
+    const { params } = context;
     const authHeader = req.headers.get('Authorization');
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
