@@ -103,9 +103,7 @@
     "msw": "^2.2.3",
     "mini-css-extract-plugin": "^2.9.2",
     "postcss": "^8.5.6",
-    "typescript": "^5.7.3"
-  },
-  "overrides": {
-    "@tailwindcss/postcss": "npm:tailwindcss@latest"
+    "typescript": "^5.7.3",
+    "@tailwindcss/postcss": "^1.0.0"
   }
 }
