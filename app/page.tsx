@@ -40,7 +40,7 @@ export default function Home() {
         {/* All content above cards */}
         <div className="flex-grow mt-16 sm:mt-20">
           <div className="text-center space-y-6 px-2">
-            <h1 className="text-2xl sm:text-4xl md:text-6xl font-bold tracking-tight bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 text-transparent bg-clip-text drop-shadow-[0_2px_4px_rgba(255,255,255,0.5)]">
+            <h1 className="text-3xl md:text-6xl font-bold tracking-tight">
               <TextGenerateEffect words={"Welcome To Fail U Forward"} />
             </h1>
           </div>
@@ -52,7 +52,7 @@ export default function Home() {
             className="text-center space-y-6"
           >
             <br />
-            <p className="text-base sm:text-lg md:text-xl text-neutral-200 max-w-2xl mx-auto font-bold">
+            <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto">
               fail. learn. connect.
             </p>
           </motion.div>
@@ -68,7 +68,7 @@ export default function Home() {
                 <Button
                   variant="outline"
                   size="lg"
-                  className="bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 font-bold hover:opacity-90 text-xs sm:text-sm"
+                  className="bg-black text-white border-black font-bold hover:bg-gray-800 hover:border-gray-800 text-xs sm:text-s"
                 >
                   Explore
                   <ArrowRight className="h-4 w-4 ml-2 transform transition duration-300 ease-in-out group-hover:translate-x-[6px]" />
@@ -86,7 +86,7 @@ export default function Home() {
                 <Button
                   variant="outline"
                   size="lg"
-                  className="bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 font-bold hover:opacity-90 text-xs sm:text-sm"
+                  className="bg-white text-black border-gray-300 font-bold hover:bg-gray-50 hover:border-gray-400 text-xs sm:text-s"
                 >
                   About Fail U Forward
                 </Button>
