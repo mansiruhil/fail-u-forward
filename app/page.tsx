@@ -1,15 +1,13 @@
 "use client";
 
-import { useEffect } from "react";
-import Link from "next/link";
-import * as THREE from "three";
-import NET from "vanta/dist/vanta.net.min";
+import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 import { ArrowRight, ThumbsDown, Users, Coffee } from "lucide-react";
-
+import { useEffect } from "react";
 import { TextGenerateEffect } from "@/components/ui/text-generate-effect";
-import { Button } from "@/components/ui/button";
-import GradientButton from "@/components/ui/gradient-button";
+import * as THREE from "three";
+import NET from "vanta/dist/vanta.net.min";
+import Link from "next/link";
 
 export default function Home() {
   useEffect(() => {
@@ -24,7 +22,7 @@ export default function Home() {
       scale: 1.0,
       scaleMobile: 1.0,
       color: 0xffffff,
-      backgroundColor: 0x000000,
+      backgroundColor: 0x0,
       points: 20.0,
       maxDistance: 12.0,
     });
@@ -34,114 +32,107 @@ export default function Home() {
   }, []);
 
   return (
-    <div
-      id="vanta-bg"
-      className="min-h-screen w-full flex flex-col items-center justify-center relative"
-    >
-      {/* Overlay */}
-      <div className="absolute inset-0 bg-black opacity-70 z-0" />
+    <div id="vanta-bg" className="min-h-screen w-full flex flex-col items-center justify-center relative">
+      <div className="absolute inset-0 bg-black opacity-70 z-0"></div>
 
-      {/* Main content */}
-      <main className="container relative z-10 flex flex-col px-4 sm:px-6 md:px-8 py-12 sm:py-16 min-h-screen">
-        {/* Hero Section */}
-        <section className="text-center mt-16 sm:mt-20 space-y-6 px-2">
-          <h1 className="text-2xl sm:text-4xl md:text-6xl font-bold tracking-tight bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 text-transparent bg-clip-text ">
-            <TextGenerateEffect words="Welcome To Fail U Forward" />
-          </h1>
+      {/* MAIN SECTION with Flex Layout */}
+      <main className="container mx-auto px-4 sm:px-6 md:px-8 py-12 sm:py-16 flex flex-col min-h-screen relative z-10">
+        {/* All content above cards */}
+        <div className="flex-grow mt-16 sm:mt-20">
+          <div className="text-center space-y-6 px-2">
+            <h1 className="text-2xl sm:text-4xl md:text-6xl font-bold tracking-tight bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 text-transparent bg-clip-text drop-shadow-[0_2px_4px_rgba(255,255,255,0.5)]">
+              <TextGenerateEffect words={"Welcome To Fail U Forward"} />
+            </h1>
+          </div>
 
-          <motion.p
-            initial={{ opacity: 0, y: -20 }}
+          <motion.div
+            initial={{ opacity: 0, y: -40 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 1 }}
-            className="text-base sm:text-lg md:text-xl text-neutral-200 max-w-2xl mx-auto font-bold"
+            transition={{ duration: 0.5, delay: 1.5, type: "tween" }}
+            className="text-center space-y-6"
           >
-            fail. learn. connect.
-          </motion.p>
+            <br />
+            <p className="text-base sm:text-lg md:text-xl text-neutral-200 max-w-2xl mx-auto font-bold">
+              fail. learn. connect.
+            </p>
+          </motion.div>
 
-          {/* Buttons */}
-          <div className="flex flex-col sm:flex-row justify-center gap-4 mt-6 sm:mt-8">
+          <div className="flex flex-col sm:flex-row gap-4 justify-center mt-6 sm:mt-8 px-2">
             <motion.div
               whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.95 }}
+              whileTap={{ scale: 0.9 }}
               initial={{ opacity: 0, x: 40 }}
-              animate={{ opacity: 1, x: 0, transition: { delay: 1.5 } }}
+              animate={{ opacity: 1, x: 0, transition: { delay: 2 } }}
             >
               <Link href="/feed">
-                <GradientButton className="text-xs sm:text-sm">
-                  Explore <ArrowRight className="h-4 w-4 ml-2" />
-                </GradientButton>
+                <Button
+                  variant="outline"
+                  size="lg"
+                  className="bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 font-bold hover:opacity-90 text-xs sm:text-sm"
+                >
+                  Explore
+                  <ArrowRight className="h-4 w-4 ml-2 transform transition duration-300 ease-in-out group-hover:translate-x-[6px]" />
+                </Button>
               </Link>
             </motion.div>
 
             <motion.div
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.95 }}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.9 }}
               initial={{ opacity: 0, x: -40 }}
-              animate={{ opacity: 1, x: 0, transition: { delay: 1.6 } }}
+              animate={{ opacity: 1, x: 0, transition: { delay: 2 } }}
             >
               <Link href="/about">
-                <GradientButton className="text-xs sm:text-sm">
+                <Button
+                  variant="outline"
+                  size="lg"
+                  className="bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 font-bold hover:opacity-90 text-xs sm:text-sm"
+                >
                   About Fail U Forward
-                </GradientButton>
+                </Button>
               </Link>
             </motion.div>
           </div>
-        </section>
+        </div>
 
-        {/* Cards Section */}
-        <section className="mt-12 sm:mt-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 sm:gap-8">
-          {/* Card 1 */}
-          <motion.div
-            initial={{ opacity: 0, y: 40 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 2 }}
-            className="p-4 sm:p-6 rounded-lg border bg-gradient-to-r from-slate-400 via-slate-200 to-slate-600"
-          >
-            <div className="flex items-center gap-2 mb-4">
-              <ThumbsDown className="h-10 w-10 sm:h-12 sm:w-12 text-primary" />
-              <h3 className="text-lg sm:text-xl font-bold">Professional Setbacks</h3>
+        {/* Cards section pushed to bottom via mt-auto */}
+        <motion.div
+          initial={{ opacity: 0, y: 40 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.2 }}
+          className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 sm:gap-8 mt-12 sm:mt-auto"
+        >
+          <div className="p-4 sm:p-6 rounded-lg border bg-card bg-gradient-to-r from-slate-400 via-slate-200 to-slate-600">
+            <div className="flex items-center gap-2">
+              <ThumbsDown className="h-10 w-10 sm:h-12 sm:w-12 text-primary mb-2" />
+              <h3 className="text-lg sm:text-xl font-bold mb-2 relative z-10 mb-4">
+                Professional Setbacks
+              </h3>
             </div>
-            <p className="text-black font-semibold text-sm sm:text-base">
-              Share your rejected applications and celebrate career mishaps.
+            <p className="text-black font-bold text-sm sm:text-base">
+              Share your rejected applications and celebrate career mishaps
             </p>
-          </motion.div>
+          </div>
 
-          {/* Card 2 */}
-          <motion.div
-            initial={{ opacity: 0, y: 40 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 2.2 }}
-            className="p-4 sm:p-6 rounded-lg border bg-gradient-to-r from-slate-400 via-slate-200 to-slate-600"
-          >
-            <div className="flex items-center gap-2 mb-4">
-              <Users className="h-10 w-10 sm:h-12 sm:w-12 text-primary" />
-              <h3 className="text-lg sm:text-xl font-bold">Network</h3>
+          <div className="p-4 sm:p-6 rounded-lg border bg-card bg-gradient-to-r from-slate-400 via-slate-200 to-slate-600">
+            <div className="flex items-center gap-2">
+              <Users className="h-10 w-10 sm:h-12 sm:w-12 text-primary mb-2" />
+              <h3 className="text-lg sm:text-xl font-semibold mb-2">Network</h3>
             </div>
-            <p className="text-black font-semibold text-sm sm:text-base">
-              Connect with others who have failed forward.
-            </p>
-          </motion.div>
+            <p className="text-black font-bold text-sm sm:text-base">Connect with others</p>
+          </div>
 
-          {/* Card 3 */}
-          <motion.div
-            initial={{ opacity: 0, y: 40 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 2.4 }}
-            className="p-4 sm:p-6 rounded-lg border bg-gradient-to-r from-slate-400 via-slate-200 to-slate-600"
-          >
-            <div className="flex items-center gap-2 mb-4">
-              <Coffee className="h-10 w-10 sm:h-12 sm:w-12 text-primary" />
-              <h3 className="text-lg sm:text-xl font-bold">Daily Disappointments</h3>
+          <div className="p-4 sm:p-6 rounded-lg border bg-card bg-gradient-to-r from-slate-400 via-slate-200 to-slate-600">
+            <div className="flex items-center gap-2">
+              <Coffee className="h-10 w-10 sm:h-12 sm:w-12 text-primary mb-2" />
+              <h3 className="text-lg sm:text-xl font-semibold mb-2">Daily Disappointments</h3>
             </div>
-            <p className="text-black font-semibold text-sm sm:text-base">
-              Share your daily struggles and workplace disasters.
+            <p className="text-black font-bold text-sm sm:text-base">
+              Share your daily struggles and workplace disasters
             </p>
-          </motion.div>
-        </section>
+          </div>
+        </motion.div>
       </main>
     </div>
   );
 }
-
-
-
