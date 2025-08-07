@@ -4,6 +4,13 @@ import Link from "next/link";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { Button } from "@/components/ui/button";
 import { Home, MessageSquare, Bell, User, Briefcase, LogOut, Settings, HelpCircle, Plus } from "lucide-react";
+import {
+  Users,
+  UserCircle,
+  LogIn,
+  X,
+  Network,
+} from "lucide-react";
 import { useState, useEffect } from "react";
 import { usePathname } from "next/navigation";
 import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
@@ -46,7 +53,7 @@ export function Navbar() {
   if (pathname === "/") {
     return null;
   }
- return (
+  return (
     <nav className="bg-gradient-to-r from-gray-800 via-gray-900 to-gray-700 w-full">
       <div className="container mx-auto px-4 flex h-14 justify-between items-center">
         {/* Logo */}
@@ -172,30 +179,102 @@ export function Navbar() {
         </div>
       </div>
 
+
+      {isMenuOpen && (
+        <div className="fixed inset-0 z-40 bg-black/30 backdrop-blur-xs md:hidden" onClick={() => setIsMenuOpen(false)} />
+      )}
+      
       {/* Mobile Dropdown Menu */}
-      <div className={`md:hidden transition-all duration-500 overflow-hidden ${isMenuOpen ? "max-h-screen opacity-100" : "max-h-0 opacity-0"}`}>
-        <ul className="bg-zinc-900 flex flex-col text-center text-white font-bold uppercase">
+      <div
+        className={`fixed top-0 left-0 z-50 w-[80vw] max-w-xs h-screen bg-white text-black transform transition-transform duration-500 ease-in-out shadow-lg ${isMenuOpen ? "translate-x-0" : "-translate-x-full"
+          } md:hidden`}
+      >
+        <div className="flex justify-between items-center px-4 py-4 border-b border-gray-200">
+          <h2 className="text-xl font-bold tracking-wide">Fail U Forward</h2>
+          <button
+            onClick={() => setIsMenuOpen(false)}
+            className="text-black hover:text-gray-500 transition"
+          >
+            <X size={24} />
+          </button>
+        </div>
+
+        <div className="text-sm font-semibold text-gray-500 uppercase px-6 pt-6">
+          Discover
+        </div>
+
+        <ul className="flex flex-col gap-3 px-6 py-4 text-base font-medium">
           <li>
-            <Link href="/feed" className="block py-2 hover:bg-zinc-700" onClick={() => setIsMenuOpen(false)}>Feed</Link>
+            <Link
+              href="/feed"
+              className="flex items-center gap-3 py-2 px-3 rounded-md hover:bg-gray-100 transition"
+              onClick={() => setIsMenuOpen(false)}
+            >
+              <Home size={20} />
+              Home
+            </Link>
           </li>
           <li>
-            <Link href="/network" className="block py-2 hover:bg-zinc-700" onClick={() => setIsMenuOpen(false)}>Network</Link>
-
+            <Link
+              href="/network"
+              className="flex items-center gap-3 py-2 px-3 rounded-md hover:bg-gray-100 transition"
+              onClick={() => setIsMenuOpen(false)}
+            >
+              <Users size={20} />
+              Network
+            </Link>
           </li>
-          <li>
-            {loggedIn ? (
-              <>
 
-                <Link href="/profile" className="block py-2 hover:bg-zinc-700" onClick={() => setIsMenuOpen(false)}>Profile</Link>
-                <button onClick={() => { handleLogout(); setIsMenuOpen(false); }} className="block py-2 w-full hover:bg-zinc-700">Logout</button>
-              </>
-            ) : (
-              <Link href="/login" className="block py-2 hover:bg-zinc-700" onClick={() => setIsMenuOpen(false)}>Login</Link>
-
-            )}
-          </li>
+          {loggedIn ? (
+            <>
+              <li>
+                <Link
+                  href="/profile"
+                  className="flex items-center gap-3 py-2 px-3 rounded-md hover:bg-gray-100 transition"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  <UserCircle size={20} />
+                  Profile
+                </Link>
+              </li>
+              <li>
+                <button
+                  onClick={() => {
+                    handleLogout();
+                    setIsMenuOpen(false);
+                  }}
+                  className="flex items-center gap-3 w-full py-2 px-3 rounded-md hover:bg-gray-100 transition"
+                >
+                  <LogOut size={20} />
+                  Logout
+                </button>
+              </li>
+            </>
+          ) : (
+            <>
+              <li>
+                <Link
+                  href="/login"
+                  className="w-full block bg-black text-white text-center py-2 rounded-md font-semibold hover:bg-gray-800 transition"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  LogIn
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/signup"
+                  className="w-full block bg-black text-white text-center py-2 rounded-md font-semibold hover:bg-gray-800 transition"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  SignUp
+                </Link>
+              </li>
+            </>
+          )}
         </ul>
       </div>
+
     </nav>
   );
 }
