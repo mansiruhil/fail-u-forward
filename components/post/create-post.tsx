@@ -19,6 +19,7 @@ import Image from "next/image";
 import { Link2, ThumbsDown, MessageCircle, Heart } from "lucide-react";
 import { LikeReactionPopover } from "./LikeReactionPopover";
 import { onAuthStateChanged } from "firebase/auth";
+import { WordCounter } from "./WordCounter"
 type User = {
   id: string;
   username: string;
@@ -52,6 +53,7 @@ export function CreatePost() {
   const [editingPostId, setEditingPostId] = useState<string | null>(null);
   const [editContent, setEditContent] = useState<string>("");
   const [postReactions, setPostReactions] = useState<{ [key: string]: any }>({});
+  const [wordCount, setWordCount] = useState<number>(0)
 
   const fetchPosts = async () => {
     try {
@@ -673,7 +675,15 @@ export function CreatePost() {
                   placeholder="Share your latest failure..."
                   className="min-h-[100px]"
                   value={postContent}
-                  onChange={(e: any) => setPostContent(e.target.value)}
+                  onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => {
+                    const text = e.target.value;
+                    const words = text.split('').filter(word => word.length > 0);
+
+                    if(words.length <= 600){
+                      setPostContent(text);
+                      setWordCount(words.length);
+                    }
+                  }}
                 />
 
                 {imagePreview && (
@@ -698,6 +708,7 @@ export function CreatePost() {
 
                 <div className="justify-between items-center mt-4 md:flex">
                   <div className="flex gap-2">
+                  <div className="flex gap-2">
                     <label htmlFor="image-upload">
                       <Button variant="outline" size="sm" type="button" asChild>
                         <span>Upload Image</span>
@@ -710,6 +721,8 @@ export function CreatePost() {
                       className="hidden"
                       onChange={handleImageSelect}
                     />
+                  </div>
+                  <WordCounter count={wordCount} />
                   </div>
                   <Button
                     size="sm"
@@ -897,10 +910,10 @@ export function CreatePost() {
                         >
                           <ThumbsDown
                             className={`h-4 w-4 ${dislikedPosts.includes(post.id)
-                                ? "text-blue-500"
-                                : likedPosts.includes(post.id)
-                                  ? "text-red-500"
-                                  : "text-gray-500"
+                              ? "text-blue-500"
+                              : likedPosts.includes(post.id)
+                                ? "text-red-500"
+                                : "text-gray-500"
                               }`}
                           />
 
