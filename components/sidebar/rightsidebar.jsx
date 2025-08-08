@@ -9,13 +9,13 @@ const TRENDING_TOPICS = [
 ];
 
 const FAILURE_CATEGORIES = [
-  { id: 1, title: "Tech Interviews" },
-  { id: 2, title: "Pitch Meetings" },
-  { id: 3, title: "Product Launches" },
-  { id: 4, title: "Startup Failures" },
-  { id: 5, title: "Funding Rejections" },
-  { id: 6, title: "Team Conflicts" },
-  { id: 7, title: "Marketing Missteps" }
+  { id: 1, title: "Tech Interviews", count: 12},
+  { id: 2, title: "Pitch Meetings", count: 33},
+  { id: 3, title: "Product Launches", count: 7},
+  { id: 4, title: "Startup Failures", count: 21},
+  { id: 5, title: "Funding Rejections", count: 8},
+  { id: 6, title: "Team Conflicts", count: 41},
+  { id: 7, title: "Marketing Missteps", count: 20}
 ]
 
 export function RightSidebar() {
@@ -47,9 +47,10 @@ export function RightSidebar() {
             <Link
               href={`/technews`}
               key={category.id}
-              className="p-2 bg-background text-foreground border border-gray-400 hover:border-black  rounded-lg transition-all duration-100"
+              className="relative p-2 bg-background text-foreground border border-gray-400 hover:border-black  rounded-lg transition-all duration-100"
             >
               <span className="text-sm text-foreground">{category.title}</span>
+              <span className="absolute -top-2 -right-1 rounded-full text-white text-xs bg-neutral-800 flex justify-center items-center w-5 h-5 z-10">{category.count}</span>
             </Link>
           ))}
         </div>
