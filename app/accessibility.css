@@ -1,0 +1,193 @@
+/* Accessibility Enhancements for Fail U Forward */
+
+/* High contrast focus indicators */
+*:focus-visible {
+  outline: 2px solid #ef4444 !important;
+  outline-offset: 2px !important;
+  border-radius: 4px;
+}
+
+/* Ensure focus indicators are visible in dark mode */
+.dark *:focus-visible {
+  outline-color: #fca5a5 !important;
+}
+
+/* Skip to main content link */
+.skip-to-main {
+  position: absolute;
+  top: -40px;
+  left: 6px;
+  background: #ef4444;
+  color: white;
+  padding: 8px;
+  text-decoration: none;
+  border-radius: 4px;
+  z-index: 1000;
+  font-weight: 600;
+}
+
+.skip-to-main:focus {
+  top: 6px;
+}
+
+/* Screen reader only content */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Ensure interactive elements have minimum touch target size */
+button, 
+input[type="button"], 
+input[type="submit"], 
+input[type="reset"], 
+a {
+  min-height: 44px;
+  min-width: 44px;
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  * {
+    border-color: currentColor !important;
+  }
+  
+  button, input, textarea, select {
+    border: 2px solid currentColor !important;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Ensure text has sufficient contrast */
+.text-gray-400 {
+  color: #6b7280 !important;
+}
+
+.dark .text-gray-400 {
+  color: #9ca3af !important;
+}
+
+/* Focus trap for modals and dropdowns */
+.focus-trap {
+  position: relative;
+}
+
+.focus-trap::before,
+.focus-trap::after {
+  content: '';
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Ensure form validation messages are announced */
+[aria-invalid="true"] {
+  border-color: #ef4444 !important;
+}
+
+[role="alert"] {
+  font-weight: 600;
+}
+
+/* Improve button accessibility */
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+/* Ensure links are distinguishable */
+a:not([class]) {
+  text-decoration: underline;
+  color: #2563eb;
+}
+
+.dark a:not([class]) {
+  color: #60a5fa;
+}
+
+/* Loading states should be announced */
+[aria-live] {
+  position: relative;
+}
+
+/* Ensure proper heading hierarchy */
+h1 { font-size: 2rem; font-weight: 700; }
+h2 { font-size: 1.5rem; font-weight: 600; }
+h3 { font-size: 1.25rem; font-weight: 600; }
+h4 { font-size: 1.125rem; font-weight: 600; }
+h5 { font-size: 1rem; font-weight: 600; }
+h6 { font-size: 0.875rem; font-weight: 600; }
+
+/* Ensure sufficient color contrast for interactive elements */
+.hover\:bg-gray-100:hover {
+  background-color: #f3f4f6 !important;
+}
+
+.dark .hover\:bg-gray-700:hover {
+  background-color: #374151 !important;
+}
+
+/* Keyboard navigation improvements */
+[tabindex="0"]:focus,
+[tabindex="-1"]:focus {
+  outline: 2px solid #ef4444;
+  outline-offset: 2px;
+}
+
+/* Ensure form labels are properly associated */
+label {
+  cursor: pointer;
+}
+
+/* Progress indicators should be accessible */
+[role="progressbar"] {
+  background-color: #e5e7eb;
+}
+
+.dark [role="progressbar"] {
+  background-color: #374151;
+}
+
+/* Ensure status messages are properly announced */
+[role="status"] {
+  padding: 1rem;
+}
+
+/* Improve table accessibility */
+table {
+  border-collapse: collapse;
+}
+
+th {
+  text-align: left;
+  font-weight: 600;
+}
+
+/* Ensure proper spacing for touch targets */
+.space-x-4 > * + * {
+  margin-left: 1rem;
+}
+
+.space-y-4 > * + * {
+  margin-top: 1rem;
+}

@@ -592,6 +592,13 @@ export function CreatePost() {
     window.location.href = `${window.location.origin}/post/${postId}`;
   }
 
+  const handleKeyDown = (event: React.KeyboardEvent, action: () => void) => {
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      action();
+    }
+  }
+
   const handleEditPost = (postId: string, content: string) => {
     setEditingPostId(postId);
     setEditContent(content);
@@ -709,12 +716,21 @@ export function CreatePost() {
         <h2 className="text-lg font-semibold mb-2">Share your story</h2>
 
         <div className="rounded-xl border-2 border-white/80 bg-black/80 transition-colors focus-within:border-white">
+          <label htmlFor="post-content" className="sr-only">
+            Share your failure story or experience
+          </label>
           <Textarea
+            id="post-content"
             placeholder="Share your latest failure..."
             className="min-h-[110px] w-full bg-transparent text-white border-0 px-4 py-3 text-sm placeholder:text-white/50 focus-visible:ring-0"
             value={postContent}
             onChange={(e: any) => setPostContent(e.target.value)}
+            aria-describedby="post-content-description"
+            maxLength={2000}
           />
+          <div id="post-content-description" className="sr-only">
+            Share your failure story, what you learned, or ask for advice. Maximum 2000 characters.
+          </div>
         </div>
 
         {imagePreview && (
@@ -729,11 +745,11 @@ export function CreatePost() {
             <Button
               type="button"
               size="sm"
-              className="absolute top-2 right-2 h-8 w-8 p-0 rounded-full bg-black text-white border-2 border-white hover:translate-y-0.5 transition"
+              className="absolute top-2 right-2 h-8 w-8 p-0 rounded-full bg-black text-white border-2 border-white hover:translate-y-0.5 transition focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-black"
               onClick={removeImage}
-              aria-label="Remove selected image"
+              aria-label="Remove selected image from post"
             >
-              ✕
+              <span aria-hidden="true">✕</span>
             </Button>
           </div>
         )}
@@ -748,11 +764,13 @@ export function CreatePost() {
                   "my-2 px-6 py-2 rounded-xl font-semibold transition-transform",
                   "bg-black text-white border-2 border-white",
                   "hover:translate-y-0.5 active:translate-y-1",
-                  "disabled:opacity-50 disabled:cursor-not-allowed"
+                  "disabled:opacity-50 disabled:cursor-not-allowed",
+                  "focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-black"
                 ].join(" ")}
+                aria-describedby="image-upload-description"
               >
                 <span className="flex items-center gap-2">
-                  <ImageUp className="h-4 w-4" />
+                  <ImageUp className="h-4 w-4" aria-hidden="true" />
                   <span>Upload image</span>
                 </span>
               </Button>
@@ -763,7 +781,11 @@ export function CreatePost() {
               accept="image/*"
               className="hidden"
               onChange={handleImageSelect}
+              aria-describedby="image-upload-description"
             />
+            <div id="image-upload-description" className="sr-only">
+              Upload an image to accompany your post. Supported formats: JPG, PNG, GIF. Maximum size: 10MB.
+            </div>
             {uploadingImage && (
               <span className="text-sm text-white/70 ml-2">Uploading...</span>
             )}
@@ -776,16 +798,32 @@ export function CreatePost() {
               setTimeout(() => setPostBtnActive(false), 300);
               await handlePostSubmit();
             }}
-            disabled={loading || uploadingImage}
+            disabled={loading || uploadingImage || !postContent.trim()}
             className={[
               "my-2 px-6 py-2 rounded-xl font-semibold transition-transform",
               "bg-white text-black border-2 border-white", // contrasty primary action
               postBtnActive ? "translate-y-0.5" : "hover:translate-y-0.5 active:translate-y-1",
-              "disabled:opacity-50 disabled:cursor-not-allowed"
+              "disabled:opacity-50 disabled:cursor-not-allowed",
+              "focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-black"
             ].join(" ")}
+            aria-describedby="post-button-description"
+            type="submit"
           >
-            {loading || uploadingImage ? "Posting..." : "POST"}
+            {loading || uploadingImage ? (
+              <>
+                <span className="sr-only">Publishing your post...</span>
+                <span aria-hidden="true">Posting...</span>
+              </>
+            ) : (
+              <>
+                <span className="sr-only">Publish your failure story</span>
+                <span aria-hidden="true">POST</span>
+              </>
+            )}
           </Button>
+          <div id="post-button-description" className="sr-only">
+            Click to publish your post. Button is disabled when content is empty or while uploading.
+          </div>
         </div>
 
         {errorMessage && <p className="text-red-400 text-sm mt-3">{errorMessage}</p>}
@@ -855,8 +893,12 @@ export function CreatePost() {
               return (
                 <Card
                   key={post.id}
-                  className="p-4 mb-4"
+                  className="p-4 mb-4 cursor-pointer focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
                   onClick={() => handlePostClick(post.id)}
+                  onKeyDown={(e) => handleKeyDown(e, () => handlePostClick(post.id))}
+                  tabIndex={0}
+                  role="button"
+                  aria-label={`View post by ${post.userName}`}
                 >
                   {/* Profile Header */}
                   <div className="flex items-center gap-3 mb-3">
@@ -962,7 +1004,9 @@ export function CreatePost() {
                             }
                             handleDislike(post.id);
                           }}
-                          className="flex items-center gap-2"
+                          className="flex items-center gap-2 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
+                          aria-label={`${dislikedPosts.includes(post.id) ? 'Remove dislike from' : 'Dislike'} post by ${post.userName}`}
+                          aria-pressed={dislikedPosts.includes(post.id)}
                         >
                           <ThumbsDown
                             className={`h-4 w-4 ${dislikedPosts.includes(post.id)
@@ -971,9 +1015,9 @@ export function CreatePost() {
                                   ? "text-red-500"
                                   : "text-gray-500"
                               }`}
+                            aria-hidden="true"
                           />
-
-                          {post.dislikes || 0} Dislike
+                          <span>{post.dislikes || 0} Dislike{(post.dislikes || 0) !== 1 ? 's' : ''}</span>
                         </Button>
                       </motion.div>
 
@@ -990,10 +1034,12 @@ export function CreatePost() {
                           }
                           toggleCommentBox(post.id)
                         }}
-                        className="flex items-center gap-2"
+                        className="flex items-center gap-2 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
+                        aria-label={`${commentBoxStates[post.id] ? 'Hide' : 'Show'} comments for post by ${post.userName}`}
+                        aria-expanded={commentBoxStates[post.id] || false}
                       >
-                        <MessageCircle className="h-4 w-4" />
-                        {post.comments?.length || 0} Comments
+                        <MessageCircle className="h-4 w-4" aria-hidden="true" />
+                        <span>{post.comments?.length || 0} Comment{(post.comments?.length || 0) !== 1 ? 's' : ''}</span>
                       </Button>
 
                       <Button
@@ -1003,10 +1049,11 @@ export function CreatePost() {
                           event.stopPropagation();
                           handleShare(post.id)
                         }}
-                        className="flex items-center gap-2"
+                        className="flex items-center gap-2 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
+                        aria-label={`Share post by ${post.userName}`}
                       >
-                        <Link2 className="h-4 w-4" />
-                        {post.shares || 0} Shares
+                        <Link2 className="h-4 w-4" aria-hidden="true" />
+                        <span>{post.shares || 0} Share{(post.shares || 0) !== 1 ? 's' : ''}</span>
                       </Button>
                     </div>
                   </div>
@@ -1023,7 +1070,11 @@ export function CreatePost() {
                               className="rounded-full"
                             />
                           </Avatar>
+                          <label htmlFor={`comment-${post.id}`} className="sr-only">
+                            Write a comment on this post
+                          </label>
                           <Textarea
+                            id={`comment-${post.id}`}
                             placeholder="Write a comment..."
                             className="flex-1 min-h-[40px] lg:min-h-[60px] resize-none text-sm lg:text-base"
                             value={commentInputs[post.id] || ""}
@@ -1036,16 +1087,24 @@ export function CreatePost() {
                             onClick={(event) => {
                               event.stopPropagation();
                             }}
+                            aria-describedby={`comment-description-${post.id}`}
+                            maxLength={500}
                           />
+                          <div id={`comment-description-${post.id}`} className="sr-only">
+                            Share your thoughts on this failure story. Maximum 500 characters.
+                          </div>
                           <Button
                             size="sm"
-                            className="ml-2 lg:px-6 lg:py-3 lg:text-base"
+                            className="ml-2 lg:px-6 lg:py-3 lg:text-base focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
                             onClick={(event) => {
                               event.stopPropagation();
                               handlePostComment(post.id)
                             }}
+                            disabled={!commentInputs[post.id]?.trim()}
+                            aria-label="Post comment"
+                            type="submit"
                           >
-                            Post
+                            Post Comment
                           </Button>
                         </div>
                       </div>
