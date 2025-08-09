@@ -19,6 +19,7 @@ import Image from "next/image";
 import { Link2, ThumbsDown, MessageCircle, Heart, ImageUp } from "lucide-react";
 import { LikeReactionPopover } from "./LikeReactionPopover";
 import { onAuthStateChanged } from "firebase/auth";
+import { WordCounter } from "./WordCounter"
 type User = {
   id: string;
   username: string;
@@ -52,6 +53,7 @@ export function CreatePost() {
   const [editingPostId, setEditingPostId] = useState<string | null>(null);
   const [editContent, setEditContent] = useState<string>("");
   const [postReactions, setPostReactions] = useState<{ [key: string]: any }>({});
+  const [wordCount, setWordCount] = useState<number>(0)
   // NEW: small state for click-toggle animation of POST button
   const [postBtnActive, setPostBtnActive] = useState(false);
 
@@ -658,6 +660,85 @@ export function CreatePost() {
       {/* Show post creation only if user is authenticated */}
       {authInitialized && auth.currentUser && (
         <>
+          <Card className="p-4 ">
+            <div className="flex gap-4">
+              <Avatar className="w-10 h-10">
+                <Image
+                  loading="lazy"
+                  src={currentUserProfilePic || ""}
+                  width={100}
+                  height={100}
+                  alt={"User's avatar"}
+                  className="rounded-full"
+                />
+              </Avatar>
+              <div className="flex-1 w-[50%]">
+                <Textarea
+                  placeholder="Share your latest failure..."
+                  className="min-h-[100px]"
+                  value={postContent}
+                  onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => {
+                    const text = e.target.value;
+                    const words = text.split('').filter(word => word.length > 0);
+
+                    if(words.length <= 600){
+                      setPostContent(text);
+                      setWordCount(words.length);
+                    }
+                  }}
+                />
+
+                {imagePreview && (
+                  <div className="mt-4 relative">
+                    <Image
+                      src={imagePreview}
+                      alt="Preview"
+                      width={300}
+                      height={200}
+                      className="rounded-lg object-cover"
+                    />
+                    <Button
+                      variant="destructive"
+                      size="sm"
+                      className="absolute top-2 right-2"
+                      onClick={removeImage}
+                    >
+                      ✕
+                    </Button>
+                  </div>
+                )}
+
+                <div className="justify-between items-center mt-4 md:flex">
+                  <div className="flex gap-2">
+                  <div className="flex gap-2">
+                    <label htmlFor="image-upload">
+                      <Button variant="outline" size="sm" type="button" asChild>
+                        <span>Upload Image</span>
+                      </Button>
+                    </label>
+                    <input
+                      id="image-upload"
+                      type="file"
+                      accept="image/*"
+                      className="hidden"
+                      onChange={handleImageSelect}
+                    />
+                  </div>
+                  <WordCounter count={wordCount} />
+                  </div>
+                  <Button
+                    size="sm"
+                    onClick={handlePostSubmit}
+                    disabled={loading || uploadingImage}
+                    className="my-2 bg-background text-foreground hover:bg-card border border-gray-300"
+                  >
+                    {loading || uploadingImage ? "Posting..." : "Confess"}
+                  </Button>
+                </div>
+              </div>
+            </div>
+            {errorMessage && <p className="text-red-500 text-sm">{errorMessage}</p>}
+          </Card>
 
 {/* ========== UPDATED POST CREATION BOX (only this block changed) ========== */}
   <Card
@@ -792,7 +873,6 @@ export function CreatePost() {
       </div>
     </div>
   </Card>
-  {/* ========== END updated block ========== */}
         </>
       )}
 
@@ -966,10 +1046,10 @@ export function CreatePost() {
                         >
                           <ThumbsDown
                             className={`h-4 w-4 ${dislikedPosts.includes(post.id)
-                                ? "text-blue-500"
-                                : likedPosts.includes(post.id)
-                                  ? "text-red-500"
-                                  : "text-gray-500"
+                              ? "text-blue-500"
+                              : likedPosts.includes(post.id)
+                                ? "text-red-500"
+                                : "text-gray-500"
                               }`}
                           />
 
