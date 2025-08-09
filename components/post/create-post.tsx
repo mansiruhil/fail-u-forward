@@ -16,7 +16,7 @@ import { motion } from "framer-motion";
 import { updateDoc, doc, increment } from "firebase/firestore";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-import { Link2, ThumbsDown, MessageCircle, Heart } from "lucide-react";
+import { Link2, ThumbsDown, MessageCircle, Heart, ImageUp } from "lucide-react";
 import { LikeReactionPopover } from "./LikeReactionPopover";
 import { onAuthStateChanged } from "firebase/auth";
 import { WordCounter } from "./WordCounter"
@@ -54,6 +54,8 @@ export function CreatePost() {
   const [editContent, setEditContent] = useState<string>("");
   const [postReactions, setPostReactions] = useState<{ [key: string]: any }>({});
   const [wordCount, setWordCount] = useState<number>(0)
+  // NEW: small state for click-toggle animation of POST button
+  const [postBtnActive, setPostBtnActive] = useState(false);
 
   const fetchPosts = async () => {
     try {
@@ -737,6 +739,140 @@ export function CreatePost() {
             </div>
             {errorMessage && <p className="text-red-500 text-sm">{errorMessage}</p>}
           </Card>
+
+{/* ========== UPDATED POST CREATION BOX (only this block changed) ========== */}
+  <Card
+    className={[
+      "relative mx-auto w-full max-w-[560px] overflow-hidden rounded-2xl",
+      "border-2 border-white bg-black",
+
+      "shadow-[10px_10px_0_#ffffff]",
+
+      "focus-within:ring-2 focus-within:ring-white/40"
+    ].join(" ")}
+  >
+    <div
+      aria-hidden="true"
+      className="pointer-events-none absolute inset-0 opacity-30"
+    >
+      <div className="absolute inset-0 [background:repeating-linear-gradient(135deg,rgba(255,255,255,0.22)_0px,rgba(255,255,255,0.22)_2px,transparent_2px,transparent_18px)] [filter:drop-shadow(0_0_6px_rgba(255,255,255,0.18))]" />
+      <div className="absolute inset-0 [background:repeating-linear-gradient(45deg,rgba(255,255,255,0.18)_0px,rgba(255,255,255,0.18)_1.5px,transparent_1.5px,transparent_22px)] [filter:drop-shadow(0_0_8px_rgba(255,255,255,0.22))]" />
+
+      <svg className="absolute -top-12 -left-12 h-56 w-56" viewBox="0 0 200 200" fill="none">
+        <path d="M10 60 L140 10 M0 150 L200 90" stroke="white" strokeOpacity="0.28" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+        <path d="M60 200 L180 60" stroke="white" strokeOpacity="0.22" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round" />
+      </svg>
+      <svg className="absolute -bottom-14 -right-16 h-64 w-64" viewBox="0 0 200 200" fill="none">
+        <path d="M20 20 L180 20 L180 180" stroke="white" strokeOpacity="0.22" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+        <path d="M0 120 L160 0" stroke="white" strokeOpacity="0.25" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+      </svg>
+    </div>
+
+    <div className="relative z-10 px-5 pt-4 pb-2">
+      <div className="inline-flex items-center gap-2 rounded-full border border-white/40 bg-black/60 px-3 py-1">
+        <span className="h-2 w-2 rounded-full bg-white" />
+        <span className="text-xs font-semibold tracking-wider text-white">Create Post</span>
+      </div>
+    </div>
+    <div className="relative z-10 flex gap-4 p-5 pt-2 text-white">
+      <Avatar className="w-10 h-10 ring-1 ring-white/30">
+        <Image
+          loading="lazy"
+          src={currentUserProfilePic || ""}
+          width={100}
+          height={100}
+          alt={"User's avatar"}
+          className="rounded-full"
+        />
+      </Avatar>
+
+      <div className="flex-1">
+        <h2 className="text-lg font-semibold mb-2">Share your story</h2>
+
+        <div className="rounded-xl border-2 border-white/80 bg-black/80 transition-colors focus-within:border-white">
+          <Textarea
+            placeholder="Share your latest failure..."
+            className="min-h-[110px] w-full bg-transparent text-white border-0 px-4 py-3 text-sm placeholder:text-white/50 focus-visible:ring-0"
+            value={postContent}
+            onChange={(e: any) => setPostContent(e.target.value)}
+          />
+        </div>
+
+        {imagePreview && (
+          <div className="mt-4 relative">
+            <Image
+              src={imagePreview}
+              alt="Preview"
+              width={300}
+              height={200}
+              className="rounded-lg object-cover border-2 border-white"
+            />
+            <Button
+              type="button"
+              size="sm"
+              className="absolute top-2 right-2 h-8 w-8 p-0 rounded-full bg-black text-white border-2 border-white hover:translate-y-0.5 transition"
+              onClick={removeImage}
+              aria-label="Remove selected image"
+            >
+              ✕
+            </Button>
+          </div>
+        )}
+
+        <div className="justify-between items-center mt-4 md:flex">
+          <div className="flex gap-2 items-center">
+            <label htmlFor="image-upload" className="cursor-pointer">
+              <Button
+                type="button"
+                size="sm"
+                className={[
+                  "my-2 px-6 py-2 rounded-xl font-semibold transition-transform",
+                  "bg-black text-white border-2 border-white",
+                  "hover:translate-y-0.5 active:translate-y-1",
+                  "disabled:opacity-50 disabled:cursor-not-allowed"
+                ].join(" ")}
+              >
+                <span className="flex items-center gap-2">
+                  <ImageUp className="h-4 w-4" />
+                  <span>Upload image</span>
+                </span>
+              </Button>
+            </label>
+            <input
+              id="image-upload"
+              type="file"
+              accept="image/*"
+              className="hidden"
+              onChange={handleImageSelect}
+            />
+            {uploadingImage && (
+              <span className="text-sm text-white/70 ml-2">Uploading...</span>
+            )}
+          </div>
+
+          <Button
+            size="sm"
+            onClick={async () => {
+              setPostBtnActive(true);
+              setTimeout(() => setPostBtnActive(false), 300);
+              await handlePostSubmit();
+            }}
+            disabled={loading || uploadingImage}
+            className={[
+              "my-2 px-6 py-2 rounded-xl font-semibold transition-transform",
+              "bg-white text-black border-2 border-white", // contrasty primary action
+              postBtnActive ? "translate-y-0.5" : "hover:translate-y-0.5 active:translate-y-1",
+              "disabled:opacity-50 disabled:cursor-not-allowed"
+            ].join(" ")}
+          >
+            {loading || uploadingImage ? "Posting..." : "POST"}
+          </Button>
+        </div>
+
+        {errorMessage && <p className="text-red-400 text-sm mt-3">{errorMessage}</p>}
+      </div>
+    </div>
+  </Card>
         </>
       )}
 
