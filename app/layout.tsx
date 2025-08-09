@@ -26,6 +26,9 @@ export default function RootLayout({
       </head>
 
       <body className={`${inter.className}`}>
+        <a href="#main-content" className="skip-to-main">
+          Skip to main content
+        </a>
         <ThemeProvider
           attribute="class"
           defaultTheme="dark"
@@ -36,7 +39,7 @@ export default function RootLayout({
             <AuthProvider>
               <Navbar />
               <ToastContainer position="top-right" autoClose={3000} />
-              <main>{children}</main>
+              <main id="main-content">{children}</main>
             </AuthProvider>
             <SpeedInsights />
             <Chatbot />

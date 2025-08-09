@@ -187,20 +187,20 @@ export default function Login() {
       className="relative min-h-screen w-full flex items-center justify-center bg-black"
     >
       <div className="absolute inset-0 bg-black opacity-70 pointer-events-none z-10" />
-<motion.div
-
-        initial={{ opacity: 0, scale: 0.95 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 0.3 }}
-        className="
-          relative z-20 w-full max-w-md p-8 space-y-6 
-          bg-white/70 dark:bg-zinc-900/70 
-          rounded-2xl 
-          shadow-xl shadow-black/20 dark:shadow-black/50
-          border border-gray-200 dark:border-zinc-700 
-          backdrop-blur-md
-        "
-      >
+      <main role="main">
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.3 }}
+          className="
+            relative z-20 w-full max-w-md p-8 space-y-6 
+            bg-white/70 dark:bg-zinc-900/70 
+            rounded-2xl 
+            shadow-xl shadow-black/20 dark:shadow-black/50
+            border border-gray-200 dark:border-zinc-700 
+            backdrop-blur-md
+          "
+        >
 
         <motion.div
           initial={{ opacity: 0, scale: 0.8 }}
@@ -212,13 +212,17 @@ export default function Login() {
         </motion.div>
 
         {error && (
-          <div className="flex items-center gap-2 bg-red-50 dark:bg-red-900/30 text-red-700 dark:text-red-300 border border-red-200 dark:border-red-700 rounded px-3 py-2 mb-2">
-            <AlertCircle className="w-4 h-4 shrink-0" />
+          <div 
+            className="flex items-center gap-2 bg-red-50 dark:bg-red-900/30 text-red-700 dark:text-red-300 border border-red-200 dark:border-red-700 rounded px-3 py-2 mb-2"
+            role="alert"
+            aria-live="assertive"
+          >
+            <AlertCircle className="w-4 h-4 shrink-0" aria-hidden="true" />
             <span className="text-sm">{error}</span>
           </div>
         )}
 
-        <form onSubmit={handleLogin} className="space-y-4">
+        <form onSubmit={handleLogin} className="space-y-4" noValidate>
           <div className="space-y-2">
             <Label htmlFor="email" className="text-gray-800 dark:text-gray-200">
               Email
@@ -233,7 +237,12 @@ export default function Login() {
               onChange={(e) => setEmail(e.target.value)}
               required
               disabled={loading}
+              aria-describedby="email-description"
+              aria-invalid={error ? 'true' : 'false'}
             />
+            <div id="email-description" className="sr-only">
+              Enter your email address to sign in to your account
+            </div>
           </div>
 
           <div className="space-y-2 relative">
@@ -250,7 +259,12 @@ export default function Login() {
               onChange={(e) => setPassword(e.target.value)}
               required
               disabled={loading}
+              aria-describedby="password-description password-strength"
+              aria-invalid={error ? 'true' : 'false'}
             />
+            <div id="password-description" className="sr-only">
+              Enter your password to sign in to your account
+            </div>
             <button
               type="button"
               aria-label={showPassword ? "Hide password" : "Show password"}
@@ -269,8 +283,15 @@ export default function Login() {
             </button>
 
             {password.length > 0 && (
-              <div className="mt-1">
-                <div className="h-2 rounded-full bg-gray-200 dark:bg-zinc-700 relative">
+              <div className="mt-1" id="password-strength">
+                <div 
+                  className="h-2 rounded-full bg-gray-200 dark:bg-zinc-700 relative"
+                  role="progressbar"
+                  aria-valuenow={passwordStrength.score}
+                  aria-valuemin={0}
+                  aria-valuemax={3}
+                  aria-label={`Password strength: ${passwordStrength.label}`}
+                >
                   <div
                     className="h-2 rounded-full transition-all duration-500"
                     style={{
@@ -283,8 +304,12 @@ export default function Login() {
                     }}
                   />
                 </div>
-                <p className="mt-1 text-xs font-medium select-none" style={{ color: passwordStrength.color }}>
-                  {passwordStrength.label}
+                <p 
+                  className="mt-1 text-xs font-medium select-none" 
+                  style={{ color: passwordStrength.color }}
+                  aria-live="polite"
+                >
+                  Password strength: {passwordStrength.label}
                 </p>
               </div>
             )}
@@ -328,38 +353,52 @@ export default function Login() {
          <Button 
           type="button"
           variant="outline"
-          className="hover:bg-gray-50 dark:bg-zinc-900 dark:hover:bg-zinc-800 dark:border-zinc-700 text-white"
+          className="hover:bg-gray-50 dark:bg-zinc-900 dark:hover:bg-zinc-800 dark:border-zinc-700 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
           onClick={handleGoogleSignIn}
           disabled={loading}
-
+          aria-describedby="google-signin-description"
           >
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20px" height="20px">
+            <svg 
+              xmlns="http://www.w3.org/2000/svg" 
+              viewBox="0 0 24 24" 
+              width="20px" 
+              height="20px"
+              aria-hidden="true"
+            >
               <path
                 d="M12.24 10.29v3.52h6.21c-.3.86-.87 1.88-1.74 2.54-.87.66-2.15 1.15-3.66 1.15-3.35 0-6.07-2.72-6.07-6.07s2.72-6.07 6.07-6.07c1.51 0 2.82.43 3.87 1.34l2.87-2.87C17.58 2.96 15.02 2 12.24 2 6.64 2 2 6.64 2 12s4.64 10 10.24 10c6.01 0 9.87-4.14 9.87-10.14 0-.69-.06-1.35-.16-1.97H12.24z"
                 fill="currentColor"
               />
             </svg>
-            <span className="google px-3 ">Google</span>
+            <span className="google px-3">Continue with Google</span>
           </Button>
+          <div id="google-signin-description" className="sr-only">
+            Sign in using your Google account
+          </div>
           <Button
             type="button"
             variant="outline"
             onClick={handleGitHubSignIn}
             disabled={loading}
-            className="flex items-center justify-center space-x-2 w-full hover:bg-gray-50 dark:bg-zinc-900 dark:hover:bg-zinc-800 dark:border-zinc-700 text-sm px-1 py-1 text-white transition rounded-md"
+            className="flex items-center justify-center space-x-2 w-full hover:bg-gray-50 dark:bg-zinc-900 dark:hover:bg-zinc-800 dark:border-zinc-700 text-sm px-1 py-1 text-white transition rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+            aria-describedby="github-signin-description"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 24 24"
               className="h-5 w-5 text-black dark:text-white"
+              aria-hidden="true"
             >
               <path
                 fill="currentColor"
                 d="M12 0a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2.1c-3.3.7-4-1.6-4-1.6-.5-1.3-1.3-1.7-1.3-1.7-1.1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1.1 1.8 2.9 1.3 3.6 1 .1-.8.4-1.3.8-1.6-2.8-.3-5.7-1.4-5.7-6.2 0-1.4.5-2.6 1.3-3.5-.1-.3-.6-1.7.1-3.5 0 0 1-.3 3.4 1.3a11.9 11.9 0 0 1 6 0c2.4-1.6 3.4-1.3 3.4-1.3.7 1.8.2 3.2.1 3.5.9.9 1.3 2.1 1.3 3.5 0 4.8-2.9 5.9-5.7 6.2.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6A12 12 0 0 0 12 0z"
               />
             </svg>
-            <span className="gtihub px-3">GitHub</span>
+            <span className="github px-3">Continue with GitHub</span>
           </Button>
+          <div id="github-signin-description" className="sr-only">
+            Sign in using your GitHub account
+          </div>
         </div>
 
         <p className="text-center text-sm text-gray-600 dark:text-gray-300">
@@ -368,7 +407,8 @@ export default function Login() {
             Sign up
           </Link>
         </p>
-      </motion.div>
+        </motion.div>
+      </main>
     </div>
   );
 }

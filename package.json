@@ -14,7 +14,10 @@
     "test": "jest",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
-    "test:ci": "jest --ci --coverage --watchAll=false"
+    "test:ci": "jest --ci --coverage --watchAll=false",
+    "accessibility:test": "node scripts/accessibility-test.js",
+    "accessibility:audit": "npm run build && npx lighthouse http://localhost:3000 --only-categories=accessibility --chrome-flags='--headless' --output=html --output-path=./accessibility-report.html",
+    "test:a11y": "npm run accessibility:test"
   },
   "dependencies": {
     "@google/generative-ai": "^0.21.0",
