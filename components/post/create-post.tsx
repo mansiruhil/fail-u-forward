@@ -666,170 +666,167 @@ export function CreatePost() {
       {authInitialized && auth.currentUser && (
         <>
 
-{/* ========== UPDATED POST CREATION BOX (only this block changed) ========== */}
-  <Card
-    className={[
-      "relative mx-auto w-full max-w-[560px] overflow-hidden rounded-2xl",
-      "border-2 border-white bg-black",
-
-      "shadow-[10px_10px_0_#ffffff]",
-
-      "focus-within:ring-2 focus-within:ring-white/40"
-    ].join(" ")}
+<Card
+  className={[
+    "relative mx-auto w-full max-w-[560px] overflow-hidden rounded-2xl",
+    "border border-border bg-background",
+  ].join(" ")}
+>
+  <div
+    aria-hidden="true"
+    className="pointer-events-none absolute inset-0 opacity-30"
   >
-    <div
-      aria-hidden="true"
-      className="pointer-events-none absolute inset-0 opacity-30"
-    >
-      <div className="absolute inset-0 [background:repeating-linear-gradient(135deg,rgba(255,255,255,0.22)_0px,rgba(255,255,255,0.22)_2px,transparent_2px,transparent_18px)] [filter:drop-shadow(0_0_6px_rgba(255,255,255,0.18))]" />
-      <div className="absolute inset-0 [background:repeating-linear-gradient(45deg,rgba(255,255,255,0.18)_0px,rgba(255,255,255,0.18)_1.5px,transparent_1.5px,transparent_22px)] [filter:drop-shadow(0_0_8px_rgba(255,255,255,0.22))]" />
+    <div className="absolute inset-0 [background:repeating-linear-gradient(135deg,rgba(255,255,255,0.22)_0px,rgba(255,255,255,0.22)_2px,transparent_2px,transparent_18px)] [filter:drop-shadow(0_0_6px_rgba(255,255,255,0.18))]" />
+    <div className="absolute inset-0 [background:repeating-linear-gradient(45deg,rgba(255,255,255,0.18)_0px,rgba(255,255,255,0.18)_1.5px,transparent_1.5px,transparent_22px)] [filter:drop-shadow(0_0_8px_rgba(255,255,255,0.22))]" />
 
-      <svg className="absolute -top-12 -left-12 h-56 w-56" viewBox="0 0 200 200" fill="none">
-        <path d="M10 60 L140 10 M0 150 L200 90" stroke="white" strokeOpacity="0.28" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
-        <path d="M60 200 L180 60" stroke="white" strokeOpacity="0.22" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round" />
-      </svg>
-      <svg className="absolute -bottom-14 -right-16 h-64 w-64" viewBox="0 0 200 200" fill="none">
-        <path d="M20 20 L180 20 L180 180" stroke="white" strokeOpacity="0.22" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
-        <path d="M0 120 L160 0" stroke="white" strokeOpacity="0.25" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
-      </svg>
-    </div>
+    <svg className="absolute -top-12 -left-12 h-56 w-56" viewBox="0 0 200 200" fill="none">
+      <path d="M10 60 L140 10 M0 150 L200 90" stroke="currentColor" className="opacity-30" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M60 200 L180 60" stroke="currentColor" className="opacity-25" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+    <svg className="absolute -bottom-14 -right-16 h-64 w-64" viewBox="0 0 200 200" fill="none">
+      <path d="M20 20 L180 20 L180 180" stroke="currentColor" className="opacity-25" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M0 120 L160 0" stroke="currentColor" className="opacity-25" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  </div>
 
-    <div className="relative z-10 px-5 pt-4 pb-2">
-      <div className="inline-flex items-center gap-2 rounded-full border border-white/40 bg-black/60 px-3 py-1">
-        <span className="h-2 w-2 rounded-full bg-white" />
-        <span className="text-xs font-semibold tracking-wider text-white">Create Post</span>
-      </div>
+  <div className="relative z-10 px-5 pt-4 pb-2">
+    <div className="inline-flex items-center gap-2 rounded-full border border-border bg-secondary/60 px-3 py-1">
+      <span className="h-2 w-2 rounded-full bg-foreground" />
+      <span className="text-xs font-semibold tracking-wider text-foreground">Create Post</span>
     </div>
-    <div className="relative z-10 flex gap-4 p-5 pt-2 text-white">
-      <Avatar className="w-10 h-10 ring-1 ring-white/30">
-        <Image
-          loading="lazy"
-          src={currentUserProfilePic || ""}
-          width={100}
-          height={100}
-          alt={"User's avatar"}
-          className="rounded-full"
+  </div>
+
+  <div className="relative z-10 flex gap-4 p-5 pt-2">
+    <Avatar className="w-10 h-10 ring-1 ring-border">
+      <Image
+        loading="lazy"
+        src={currentUserProfilePic || ""}
+        width={100}
+        height={100}
+        alt={"User's avatar"}
+        className="rounded-full"
+      />
+    </Avatar>
+
+    <div className="flex-1">
+      <h2 className="text-lg font-semibold mb-2">Share your story</h2>
+
+      <div className="rounded-xl border-1 border-border bg-muted/80 transition-colors focus-within:border-primary focus-within:bg-muted">
+        <label htmlFor="post-content" className="sr-only">
+          Share your failure story or experience
+        </label>
+        <Textarea
+          id="post-content"
+          placeholder="Share your latest failure..."
+          className="min-h-[110px] w-full bg-transparent text-foreground border-0 px-4 py-3 text-sm placeholder:text-muted-foreground focus-visible:ring-0"
+          value={postContent}
+          onChange={(e: any) => setPostContent(e.target.value)}
+          aria-describedby="post-content-description"
+          maxLength={2000}
         />
-      </Avatar>
-
-      <div className="flex-1">
-        <h2 className="text-lg font-semibold mb-2">Share your story</h2>
-
-        <div className="rounded-xl border-2 border-white/80 bg-black/80 transition-colors focus-within:border-white">
-          <label htmlFor="post-content" className="sr-only">
-            Share your failure story or experience
-          </label>
-          <Textarea
-            id="post-content"
-            placeholder="Share your latest failure..."
-            className="min-h-[110px] w-full bg-transparent text-white border-0 px-4 py-3 text-sm placeholder:text-white/50 focus-visible:ring-0"
-            value={postContent}
-            onChange={(e: any) => setPostContent(e.target.value)}
-            aria-describedby="post-content-description"
-            maxLength={2000}
-          />
-          <div id="post-content-description" className="sr-only">
-            Share your failure story, what you learned, or ask for advice. Maximum 2000 characters.
-          </div>
+        <div id="post-content-description" className="sr-only">
+          Share your failure story, what you learned, or ask for advice. Maximum 2000 characters.
         </div>
+      </div>
 
-        {imagePreview && (
-          <div className="mt-4 relative">
-            <Image
-              src={imagePreview}
-              alt="Preview"
-              width={300}
-              height={200}
-              className="rounded-lg object-cover border-2 border-white"
-            />
+      {imagePreview && (
+        <div className="mt-4 relative">
+          <Image
+            src={imagePreview}
+            alt="Preview"
+            width={300}
+            height={200}
+            className="rounded-lg object-cover border-2 border-border"
+          />
+          <Button
+            type="button"
+            size="sm"
+            className="absolute top-2 right-2 h-8 w-8 p-0 rounded-full bg-background text-foreground border-2 border-border hover:translate-y-0.5 transition focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 focus:ring-offset-background"
+            onClick={removeImage}
+            aria-label="Remove selected image from post"
+          >
+            <span aria-hidden="true">✕</span>
+          </Button>
+        </div>
+      )}
+
+      <div className="justify-between items-center mt-4 md:flex">
+        <div className="flex gap-2 items-center">
+          <label htmlFor="image-upload" className="cursor-pointer">
             <Button
               type="button"
               size="sm"
-              className="absolute top-2 right-2 h-8 w-8 p-0 rounded-full bg-black text-white border-2 border-white hover:translate-y-0.5 transition focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-black"
-              onClick={removeImage}
-              aria-label="Remove selected image from post"
-            >
-              <span aria-hidden="true">✕</span>
-            </Button>
-          </div>
-        )}
-
-        <div className="justify-between items-center mt-4 md:flex">
-          <div className="flex gap-2 items-center">
-            <label htmlFor="image-upload" className="cursor-pointer">
-              <Button
-                type="button"
-                size="sm"
-                className={[
-                  "my-2 px-6 py-2 rounded-xl font-semibold transition-transform",
-                  "bg-black text-white border-2 border-white",
-                  "hover:translate-y-0.5 active:translate-y-1",
-                  "disabled:opacity-50 disabled:cursor-not-allowed",
-                  "focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-black"
-                ].join(" ")}
-                aria-describedby="image-upload-description"
-              >
-                <span className="flex items-center gap-2">
-                  <ImageUp className="h-4 w-4" aria-hidden="true" />
-                  <span>Upload image</span>
-                </span>
-              </Button>
-            </label>
-            <input
-              id="image-upload"
-              type="file"
-              accept="image/*"
-              className="hidden"
-              onChange={handleImageSelect}
+              className={[
+                "my-2 px-6 py-2 rounded-xl font-semibold transition-transform",
+                "bg-background text-foreground border-1 border-border",
+                "hover:translate-y-0.5 active:translate-y-1",
+                "disabled:opacity-50 disabled:cursor-not-allowed",
+               
+              ].join(" ")}
               aria-describedby="image-upload-description"
-            />
-            <div id="image-upload-description" className="sr-only">
-              Upload an image to accompany your post. Supported formats: JPG, PNG, GIF. Maximum size: 10MB.
-            </div>
-            {uploadingImage && (
-              <span className="text-sm text-white/70 ml-2">Uploading...</span>
-            )}
+            >
+              <span className="flex items-center gap-2">
+                <ImageUp className="h-4 w-4" aria-hidden="true" />
+                <span>Upload image</span>
+              </span>
+            </Button>
+          </label>
+          <input
+            id="image-upload"
+            type="file"
+            accept="image/*"
+            className="hidden"
+            onChange={handleImageSelect}
+            aria-describedby="image-upload-description"
+          />
+          <div id="image-upload-description" className="sr-only">
+            Upload an image to accompany your post. Supported formats: JPG, PNG, GIF. Maximum size: 10MB.
           </div>
-
-          <Button
-            size="sm"
-            onClick={async () => {
-              setPostBtnActive(true);
-              setTimeout(() => setPostBtnActive(false), 300);
-              await handlePostSubmit();
-            }}
-            disabled={loading || uploadingImage || !postContent.trim()}
-            className={[
-              "my-2 px-6 py-2 rounded-xl font-semibold transition-transform",
-              "bg-white text-black border-2 border-white", // contrasty primary action
-              postBtnActive ? "translate-y-0.5" : "hover:translate-y-0.5 active:translate-y-1",
-              "disabled:opacity-50 disabled:cursor-not-allowed",
-              "focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-black"
-            ].join(" ")}
-            aria-describedby="post-button-description"
-            type="submit"
-          >
-            {loading || uploadingImage ? (
-              <>
-                <span className="sr-only">Publishing your post...</span>
-                <span aria-hidden="true">Posting...</span>
-              </>
-            ) : (
-              <>
-                <span className="sr-only">Publish your failure story</span>
-                <span aria-hidden="true">POST</span>
-              </>
-            )}
-          </Button>
-          <div id="post-button-description" className="sr-only">
-            Click to publish your post. Button is disabled when content is empty or while uploading.
-          </div>
+          {uploadingImage && (
+            <span className="text-sm text-muted-foreground ml-2">Uploading...</span>
+          )}
         </div>
 
-        {errorMessage && <p className="text-red-400 text-sm mt-3">{errorMessage}</p>}
+        <Button
+          size="sm"
+          onClick={async () => {
+            setPostBtnActive(true);
+            setTimeout(() => setPostBtnActive(false), 300);
+            await handlePostSubmit();
+          }}
+          disabled={loading || uploadingImage || !postContent.trim()}
+          className={[
+            "my-2 px-6 py-2 rounded-xl font-semibold transition-transform",
+            "bg-primary text-primary-foreground border-1 border-primary",
+            postBtnActive ? "translate-y-0.5" : "hover:translate-y-0.5 active:translate-y-1",
+            "disabled:opacity-50 disabled:cursor-not-allowed",
+            "focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 focus:ring-offset-background"
+          ].join(" ")}
+          aria-describedby="post-button-description"
+          type="submit"
+        >
+          {loading || uploadingImage ? (
+            <>
+              <span className="sr-only">Publishing your post...</span>
+              <span aria-hidden="true">Posting...</span>
+            </>
+          ) : (
+            <>
+              <span className="sr-only">Publish your failure story</span>
+              <span aria-hidden="true">POST</span>
+            </>
+          )}
+        </Button>
+        <div id="post-button-description" className="sr-only">
+          Click to publish your post. Button is disabled when content is empty or while uploading.
+        </div>
       </div>
+
+      {errorMessage && <p className="text-destructive text-sm mt-3">{errorMessage}</p>}
     </div>
-  </Card>
+  </div>
+</Card>
+
   {/* ========== END updated block ========== */}
         </>
       )}
