@@ -1,14 +1,13 @@
 "use client";
 
 import React, { useEffect, useRef } from "react";
-import { Button } from "@/components/ui/button";
 import { Twitter, Linkedin, Github, Instagram } from "lucide-react";
 import * as THREE from "three";
 import NET from "vanta/dist/vanta.net.min";
 
 const StoryPage = () => {
-  const vantaRef = useRef(null); // Reference for the background container
-  const vantaEffect = useRef<any>(null); // To store the Vanta effect instance
+  const vantaRef = useRef(null);
+  const vantaEffect = useRef<any>(null);
 
   useEffect(() => {
     if (!vantaEffect.current && vantaRef.current) {
@@ -45,17 +44,16 @@ const StoryPage = () => {
 
   return (
     <div ref={vantaRef} className="relative min-h-screen w-full text-primary overflow-hidden">
-      {/* Overlay for better text contrast */}
+      {/* Overlay */}
       <div className="absolute inset-0 bg-black opacity-70 pointer-events-none z-10"></div>
 
-      {/* Content container - relative to overlay */}
+      {/* Page Content */}
       <div className="relative z-20">
         <section className="py-16 px-4 sm:px-6 md:px-8 text-base">
           <h2 className="text-3xl sm:text-4xl font-extrabold mb-10 text-center text-white tracking-wide drop-shadow-lg">
             About Fail U Forward
           </h2>
           
-          {/* Paragraphs */}
           {[
             "The idea for Fail U Forward came from scrolling through LinkedIn where everyone’s success stories looked flawless but real growth happens through failure. I wanted to create a space that shows the messy, unfiltered side of the journey that LinkedIn rarely highlights.",
             "This platform is your no judgment zone to share your rejections, epic fails and the lessons you actually learned because failure is the ultimate teacher. Whether you flopped a project, bombed an interview or just had a bad day, Fail U Forward turns those moments into badges of honor.",
@@ -71,7 +69,7 @@ const StoryPage = () => {
           ))}
         </section>
 
-        {/* Features Grid */}
+        {/* Features */}
         <section className="bg-black py-16 px-4 sm:px-6 md:px-8">
           <h2 className="text-3xl sm:text-4xl font-extrabold mb-10 text-center text-white tracking-wide drop-shadow-lg">
             Features
@@ -88,31 +86,50 @@ const StoryPage = () => {
           </div>
         </section>
 
-        {/* Footer Section */}
-        <footer className="bg-gradient-to-r from-neutral-950 via-gray-900 to-zinc-900 flex justify-center items-center py-8 px-4">
-          <div className="max-w-4xl mx-auto text-center w-full">
-            <p className="text-base sm:text-lg font-semibold mb-4 text-white font-bold">
-              Find more about Fail U Forward on
-            </p>
-            <div className="flex justify-center gap-4 sm:gap-6 text-xl sm:text-2xl mb-2">
-              <a href="https://twitter.com/username" target="_blank" rel="noopener noreferrer" className="p-2 sm:p-3 rounded-full bg-gray-200 hover:bg-gray-500 shadow transition duration-300 transform hover:-translate-y-1">
-                <Twitter size={24} />
-              </a>
-              <a href="https://linkedin.com/in/username" target="_blank" rel="noopener noreferrer" className="p-2 sm:p-3 rounded-full bg-gray-200 hover:bg-gray-500 shadow transition duration-300 transform hover:-translate-y-1">
-                <Linkedin size={24} />
-              </a>
-              <a href="https://github.com/username" target="_blank" rel="noopener noreferrer" className="p-2 sm:p-3 rounded-full bg-gray-200 hover:bg-gray-500 shadow transition duration-300 transform hover:-translate-y-1">
-                <Github size={24} />
-              </a>
-              <a href="https://instagram.com/username" target="_blank" rel="noopener noreferrer" className="p-2 sm:p-3 rounded-full bg-gray-200 hover:bg-gray-500 shadow transition duration-300 transform hover:-translate-y-1">
-                <Instagram size={24} />
-              </a>
-            </div>
+        {/* Footer */}
+        <div className="max-w-4xl mx-auto text-center w-full">
+          <p className="text-base sm:text-lg font-semibold mb-4 text-white font-bold">
+            Find more about Fail U Forward on
+          </p>
+          <div className="flex justify-center gap-4 sm:gap-6 text-xl sm:text-2xl mb-2">
+            <a
+              href="https://twitter.com/username"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="p-2 sm:p-3 rounded-full bg-white hover:bg-gray-300 shadow transition duration-300 transform hover:-translate-y-1"
+            >
+              <Twitter size={24} className="text-black" />
+            </a>
+            <a
+              href="https://linkedin.com/in/username"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="p-2 sm:p-3 rounded-full bg-white hover:bg-gray-300 shadow transition duration-300 transform hover:-translate-y-1"
+            >
+              <Linkedin size={24} className="text-black" />
+            </a>
+            <a
+              href="https://github.com/username"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="p-2 sm:p-3 rounded-full bg-white hover:bg-gray-300 shadow transition duration-300 transform hover:-translate-y-1"
+            >
+              <Github size={24} className="text-black" />
+            </a>
+            <a
+              href="https://instagram.com/username"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="p-2 sm:p-3 rounded-full bg-white hover:bg-gray-300 shadow transition duration-300 transform hover:-translate-y-1"
+            >
+              <Instagram size={24} className="text-black" />
+            </a>
           </div>
-        </footer>
+        </div>
       </div>
     </div>
   );
 };
+
 
 export default StoryPage;
