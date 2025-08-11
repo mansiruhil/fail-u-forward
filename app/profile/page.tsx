@@ -23,6 +23,8 @@ interface UserData {
   failedExperience?: string[];
   misEducation?: string[];
   failureHighlights?: string[];
+  followers?: string[];
+  following?: string[];
 }
 
 interface Post {
@@ -35,6 +37,8 @@ interface Post {
 export default function Profile() {
   const [userData, setUserData] = useState<UserData | null>(null);
   const [loading, setLoading] = useState(true);
+  const [followerCount, setFollowerCount] = useState(0);
+  const [followingCount, setFollowingCount] = useState(0);
   const [edit, setEdit] = useState<UserData>({
     username: "",
     email: "",
@@ -51,6 +55,7 @@ export default function Profile() {
   const [preview, setPreview] = useState<string | null>(null);
   const [isUploading, setIsUploading] = useState(false);
   const router = useRouter();
+  
   const fetchUserData = useCallback(async () => {
     const auth = getAuth(firebaseApp);
     const user = auth.currentUser;
@@ -67,6 +72,10 @@ export default function Profile() {
       if (docSnap.exists()) {
         const fetchedUserData = docSnap.data() as UserData;
         setUserData(fetchedUserData);
+        
+        // Set follower/following counts
+        setFollowerCount(fetchedUserData.followers?.length || 0);
+        setFollowingCount(fetchedUserData.following?.length || 0);
         
         setEdit({
           username: fetchedUserData.username || "",
@@ -312,6 +321,16 @@ export default function Profile() {
                       <div className="flex items-center gap-2 mt-2 text-sm text-gray-500">
                         <MapPin className="h-5 w-5" />
                         <span>{userData?.location || "Unknown location"}</span>
+                      </div>
+                      <div className="flex items-center gap-6 mt-3 text-sm">
+                        <div className="text-center">
+                          <span className="font-semibold text-foreground">{followerCount}</span>
+                          <p className="text-gray-500">Followers</p>
+                        </div>
+                        <div className="text-center">
+                          <span className="font-semibold text-foreground">{followingCount}</span>
+                          <p className="text-gray-500">Following</p>
+                        </div>
                       </div>
                     </div>
                     <div className="flex items-center gap-3 w-full sm:w-auto">
