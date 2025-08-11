@@ -303,7 +303,7 @@ export default function Profile() {
             <div className="p-8">
               <div className="flex items-start mb-6">
                 <div className="relative">
-                  <Avatar className="w-36 h-36 mr-6">
+                <Avatar className="w-36 h-36 mr-6 ring-3 ring-gray-600">
                     <AvatarImage 
                       src={avatarSrc} 
                       alt={`${userData?.username || 'User'}'s avatar`} 

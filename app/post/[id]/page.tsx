@@ -222,7 +222,7 @@ const PostPage = () => {
       <div className="w-full max-w-2xl mx-auto">
         <Card className="p-4 mb-4">
           <div className="flex gap-4">
-            <Avatar className="w-12 h-12">
+            <Avatar className="w-12 h-12 ring-1 ring-border">
               <Image
                 src={
                   post.userProfilePic ||
@@ -303,7 +303,7 @@ const PostPage = () => {
               <div className="space-y-4">
                 {post.comments.map((comment: any, index: number) => (
                   <div key={index} className="flex gap-4">
-                    <Avatar className="w-10 h-10">
+                    <Avatar className="w-10 h-10 ring-1 ring-border">
                       <Image
                         src={
                           comment.profilePic ||
