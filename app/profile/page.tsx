@@ -6,7 +6,7 @@ import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { motion, AnimatePresence } from "framer-motion";
-import { Pencil, MapPin, Building2, GraduationCap, ThumbsDown, LogOut, User, Trash2, X } from "lucide-react";
+import { Pencil, MapPin, Building2, GraduationCap, ThumbsDown, LogOut, User, Trash2, X, Camera } from "lucide-react";
 import { doc, getDoc, collection, query, getDocs, updateDoc } from "firebase/firestore";
 import { getAuth, signOut } from "firebase/auth";
 import { useRouter } from "next/navigation";
@@ -23,6 +23,8 @@ interface UserData {
   failedExperience?: string[];
   misEducation?: string[];
   failureHighlights?: string[];
+  followers?: string[];
+  following?: string[];
 }
 
 interface Post {
@@ -35,6 +37,8 @@ interface Post {
 export default function Profile() {
   const [userData, setUserData] = useState<UserData | null>(null);
   const [loading, setLoading] = useState(true);
+  const [followerCount, setFollowerCount] = useState(0);
+  const [followingCount, setFollowingCount] = useState(0);
   const [edit, setEdit] = useState<UserData>({
     username: "",
     email: "",
@@ -51,6 +55,7 @@ export default function Profile() {
   const [preview, setPreview] = useState<string | null>(null);
   const [isUploading, setIsUploading] = useState(false);
   const router = useRouter();
+  
   const fetchUserData = useCallback(async () => {
     const auth = getAuth(firebaseApp);
     const user = auth.currentUser;
@@ -67,6 +72,10 @@ export default function Profile() {
       if (docSnap.exists()) {
         const fetchedUserData = docSnap.data() as UserData;
         setUserData(fetchedUserData);
+        
+        // Set follower/following counts
+        setFollowerCount(fetchedUserData.followers?.length || 0);
+        setFollowingCount(fetchedUserData.following?.length || 0);
         
         setEdit({
           username: fetchedUserData.username || "",
@@ -290,20 +299,31 @@ export default function Profile() {
           transition={{ duration: 0.3 }}
         >
           <Card className="relative bg-background text-foreground border border-gray-200/30 rounded-xl shadow-lg">
-            <div className="h-36 bg-gradient-to-r from-red-500 to-red-700 rounded-t-xl"></div>
+            <div className="h-24 bg-gradient-to-r from-gray-50 to-gray-100 rounded-t-xl border-b border-gray-200"></div>
             <div className="p-8">
               <div className="flex items-start mb-6">
-                <Avatar className="w-36 h-36 mr-6">
-                  <AvatarImage 
-                    src={avatarSrc} 
-                    alt={`${userData?.username || 'User'}'s avatar`} 
-                    className="w-full h-full object-cover"
-                    loading="lazy"
-                  />
-                  <AvatarFallback className="w-full h-full flex items-center justify-center bg-gray-100 text-2xl font-semibold text-gray-500">
-                    {userData?.username?.[0] || 'U'}
-                  </AvatarFallback>
-                </Avatar>
+                <div className="relative">
+                <Avatar className="w-36 h-36 mr-6 ring-3 ring-gray-600">
+                    <AvatarImage 
+                      src={avatarSrc} 
+                      alt={`${userData?.username || 'User'}'s avatar`} 
+                      className="w-full h-full object-cover"
+                      loading="lazy"
+                    />
+                    <AvatarFallback className="w-full h-full flex items-center justify-center bg-gray-100 text-2xl font-semibold text-gray-500">
+                      {userData?.username?.[0] || 'U'}
+                    </AvatarFallback>
+                  </Avatar>
+                  
+                  {/* Add profile change icon */}
+                  <button 
+                    className="absolute -bottom-2 right-2 bg-white border-2 border-gray-300 rounded-full p-2 shadow-sm hover:shadow-md transition-shadow"
+                    onClick={handleOpenModal}
+                    title="Change profile picture"
+                  >
+                    <Camera className="h-4 w-4 text-gray-600" />
+                  </button>
+                </div>
                 <div className="flex-1">
                   <div className="flex flex-col sm:flex-row justify-between items-start space-y-4 sm:space-y-0 sm:items-center">
                     <div>
@@ -312,6 +332,16 @@ export default function Profile() {
                       <div className="flex items-center gap-2 mt-2 text-sm text-gray-500">
                         <MapPin className="h-5 w-5" />
                         <span>{userData?.location || "Unknown location"}</span>
+                      </div>
+                      <div className="flex items-center gap-6 mt-3 text-sm">
+                        <div className="text-center">
+                          <span className="font-semibold text-foreground">{followerCount}</span>
+                          <p className="text-gray-500">Followers</p>
+                        </div>
+                        <div className="text-center">
+                          <span className="font-semibold text-foreground">{followingCount}</span>
+                          <p className="text-gray-500">Following</p>
+                        </div>
                       </div>
                     </div>
                     <div className="flex items-center gap-3 w-full sm:w-auto">

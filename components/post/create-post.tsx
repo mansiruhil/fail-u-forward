@@ -899,7 +899,7 @@ export function CreatePost() {
                 >
                   {/* Profile Header */}
                   <div className="flex items-center gap-3 mb-3">
-                    <Avatar className="w-10 h-10">
+                    <Avatar className="w-10 h-10 ring-1 ring-border">
                       <Image
                         src={profilePic}
                         height={100}
@@ -1112,7 +1112,7 @@ export function CreatePost() {
                               key={index}
                               className="flex items-center gap-2 mt-2 p-2 rounded-md bg-background"
                             >
-                              <Avatar className="w-8 h-8">
+                              <Avatar className="w-8 h-8 ring-1 ring-border">
                                 <Image
                                   src={
                                     users[comment.userId]?.profilepic ||
@@ -1149,7 +1149,7 @@ export function CreatePost() {
                           key={index}
                           className="flex items-center gap-2 mt-2 p-2 rounded-md bg-background"
                         >
-                          <Avatar className="w-8 h-8">
+                          <Avatar className="w-8 h-8 ring-1 ring-border">
                             <Image
                               src={
                                 users[comment.userId]?.profilepic ||

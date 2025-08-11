@@ -54,7 +54,7 @@ export default function Messages() {
                   className="p-4 hover:bg-accent cursor-pointer"
                 >
                   <div className="flex items-center gap-3">
-                    <Avatar className="w-10 h-10" />
+                    <Avatar className="w-10 h-10 ring-1 ring-border" />
                     <div className="flex-1">
                       <p className="font-semibold">Jane Smith</p>
                       <p className="text-sm text-gray-500 truncate">
@@ -70,7 +70,7 @@ export default function Messages() {
           <div className="col-span-2 flex flex-col">
             <div className="p-4 border-b">
               <div className="flex items-center gap-3">
-                <Avatar className="w-10 h-10" />
+                <Avatar className="w-10 h-10 ring-1 ring-border" />
                 <div>
                   <p className="font-semibold">Jane Smith</p>
                   <p className="text-sm text-gray-500">Online</p>
