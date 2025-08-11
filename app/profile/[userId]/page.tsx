@@ -5,7 +5,7 @@ import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { motion } from "framer-motion";
-import { MapPin, Building2, GraduationCap, ThumbsDown } from "lucide-react";
+import { MapPin, Building2, GraduationCap, ThumbsDown, Camera } from "lucide-react";
 import { FollowButton } from "@/components/ui/follow-button";
 import { useAuth } from "@/contexts/AuthContext";
 import { doc, getDoc } from "firebase/firestore";
@@ -106,20 +106,33 @@ export default function PublicProfile({ params }: { params: { userId: string } }
           transition={{ duration: 0.3 }}
         >
           <Card className="relative bg-background text-foreground border border-gray-200/30 rounded-xl shadow-lg">
-            <div className="h-36 bg-gradient-to-r from-red-500 to-red-700 rounded-t-xl"></div>
+            <div className="h-24 bg-gradient-to-r from-gray-50 to-gray-100 rounded-t-xl border-b border-gray-200"></div>
             <div className="p-8">
               <div className="flex items-start mb-6">
-                <Avatar className="w-36 h-36 mr-6">
-                  <AvatarImage 
-                    src={avatarSrc} 
-                    alt={`${userData.username}'s avatar`} 
-                    className="w-full h-full object-cover"
-                    loading="lazy"
-                  />
-                  <AvatarFallback className="w-full h-full flex items-center justify-center bg-gray-100 text-2xl font-semibold text-gray-500">
-                    {userData.username[0]}
-                  </AvatarFallback>
-                </Avatar>
+                <div className="relative">
+                  <Avatar className="w-36 h-36 mr-6">
+                    <AvatarImage 
+                      src={avatarSrc} 
+                      alt={`${userData.username}'s avatar`} 
+                      className="w-full h-full object-cover"
+                      loading="lazy"
+                    />
+                    <AvatarFallback className="w-full h-full flex items-center justify-center bg-gray-100 text-2xl font-semibold text-gray-500">
+                      {userData.username[0]}
+                    </AvatarFallback>
+                  </Avatar>
+                  
+                  {/* Add profile change icon - only show on own profile */}
+                  {isOwnProfile && (
+                    <button 
+                      className="absolute -bottom-2 right-2 bg-white border-2 border-gray-300 rounded-full p-2 shadow-sm hover:shadow-md transition-shadow"
+                      onClick={() => window.location.href = '/profile'}
+                      title="Edit profile"
+                    >
+                      <Camera className="h-4 w-4 text-gray-600" />
+                    </button>
+                  )}
+                </div>
                 <div className="flex-1">
                   <div className="flex flex-col sm:flex-row justify-between items-start space-y-4 sm:space-y-0 sm:items-center">
                     <div>
