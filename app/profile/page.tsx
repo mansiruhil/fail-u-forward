@@ -1,13 +1,14 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, FormEvent } from "react";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import Image from "next/image";
+import React from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { motion, AnimatePresence } from "framer-motion";
 import { Pencil, MapPin, Building2, GraduationCap, ThumbsDown, LogOut, User, Trash2, X, Camera } from "lucide-react";
-import { doc, getDoc, collection, query, getDocs, updateDoc } from "firebase/firestore";
+import { doc, getDoc, collection, query, getDocs, updateDoc, onSnapshot } from "firebase/firestore";
 import { getAuth, signOut } from "firebase/auth";
 import { useRouter } from "next/navigation";
 import { firebaseApp, db } from "@/lib/firebase";
@@ -35,6 +36,7 @@ interface Post {
 }
 
 export default function Profile() {
+  // State hooks - must be called unconditionally at the top level
   const [userData, setUserData] = useState<UserData | null>(null);
   const [loading, setLoading] = useState(true);
   const [followerCount, setFollowerCount] = useState(0);
@@ -54,44 +56,76 @@ export default function Profile() {
   const [file, setFile] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
   const [isUploading, setIsUploading] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
+  const [avatarSrc, setAvatarSrc] = useState<string>("");
+  const [isImageLoading, setIsImageLoading] = useState(true);
   const router = useRouter();
   
-  const fetchUserData = useCallback(async () => {
+  const fetchUserData = useCallback(async (): Promise<(() => void) | undefined> => {
     const auth = getAuth(firebaseApp);
     const user = auth.currentUser;
     
     if (!user) {
       router.push("/login");
-      return;
+      return undefined;
     }
 
     try {
-      const userDoc = doc(db, "users", user.uid);
-      const docSnap = await getDoc(userDoc);
+      const userDocRef = doc(db, "users", user.uid);
+      
+      // Use real-time listener instead of one-time fetch
+      const unsubscribe = onSnapshot(userDocRef, (docSnap) => {
+        if (docSnap.exists()) {
+          const fetchedUserData = docSnap.data() as UserData;
+          console.log("onSnapshot triggered - new user data:", fetchedUserData);
+          setUserData(fetchedUserData);
+          
+          // Set follower/following counts
+          setFollowerCount(fetchedUserData.followers?.length || 0);
+          setFollowingCount(fetchedUserData.following?.length || 0);
+          
+          setEdit({
+            username: fetchedUserData.username || "",
+            email: fetchedUserData.email || "",
+            location: fetchedUserData.location || "",
+            bio: fetchedUserData.bio || "",
+            profilepic: fetchedUserData.profilepic || "",
+            failedExperience: (fetchedUserData.failedExperience && fetchedUserData.failedExperience.length > 0) 
+              ? fetchedUserData.failedExperience 
+              : [""],
+            misEducation: (fetchedUserData.misEducation && fetchedUserData.misEducation.length > 0) 
+              ? fetchedUserData.misEducation 
+              : [""],
+            failureHighlights: fetchedUserData.failureHighlights || []
+          });
+        } else {
+          console.error("No user document found!");
+          setUserData(null);
+        }
+        setLoading(false);
+      }, (error) => {
+        console.error("Error fetching user data:", error);
+        toast.error("Failed to fetch user data");
+        setLoading(false);
+      });
+
+      // Return cleanup function
+      return unsubscribe;
+    } catch (error) {
+      console.error("Error setting up user data listener:", error);
+      toast.error("Failed to fetch user data");
+      setLoading(false);
+      return undefined;
+    }
+  }, [router]);
+
+  const fetchPosts = useCallback(async () => {
+    const auth = getAuth(firebaseApp);
+    const user = auth.currentUser;
     
-      if (docSnap.exists()) {
-        const fetchedUserData = docSnap.data() as UserData;
-        setUserData(fetchedUserData);
-        
-        // Set follower/following counts
-        setFollowerCount(fetchedUserData.followers?.length || 0);
-        setFollowingCount(fetchedUserData.following?.length || 0);
-        
-        setEdit({
-          username: fetchedUserData.username || "",
-          email: fetchedUserData.email || "",
-          location: fetchedUserData.location || "",
-          bio: fetchedUserData.bio || "",
-          profilepic: fetchedUserData.profilepic || "",
-          failedExperience: fetchedUserData.failedExperience || [],
-          misEducation: fetchedUserData.misEducation || [],
-          failureHighlights: fetchedUserData.failureHighlights || []
-        });
-      } else {
-        console.error("No user document found!");
-        setUserData(null);
-      }
-    
+    if (!user) return;
+
+    try {
       const postsCollection = collection(db, "posts"); 
       const postsQuery = query(postsCollection); 
     
@@ -105,16 +139,26 @@ export default function Profile() {
     
       setPosts(fetchedPosts); 
     } catch (error) {
-      console.error("Error fetching user data or posts:", error);
-      toast.error("Failed to fetch user data");
-    } finally {
-      setLoading(false);
+      console.error("Error fetching posts:", error);
     }
-}, [router]);
-    
+  }, []);
+
   useEffect(() => {
-    fetchUserData();
-  }, [fetchUserData]);
+    let userUnsubscribe: (() => void) | undefined;
+    
+    const setupData = async () => {
+      userUnsubscribe = await fetchUserData();
+      await fetchPosts();
+    };
+    
+    setupData();
+    
+    return () => {
+      if (userUnsubscribe) {
+        userUnsubscribe();
+      }
+    };
+  }, [fetchUserData, fetchPosts]);
 
   const handleLogout = async () => {
     try {
@@ -134,8 +178,8 @@ export default function Profile() {
       location: userData?.location || "",
       bio: userData?.bio || "",
       profilepic: userData?.profilepic || "",
-      failedExperience: userData?.failedExperience || [],
-      misEducation: userData?.misEducation || [],
+      failedExperience: (userData?.failedExperience && userData.failedExperience.length > 0) ? userData.failedExperience : [""],
+      misEducation: (userData?.misEducation && userData.misEducation.length > 0) ? userData.misEducation : [""],
       failureHighlights: userData?.failureHighlights || []
     });
     setIsModalOpen(true);
@@ -198,97 +242,159 @@ export default function Profile() {
     }
   };
 
-  const uploadFile = async () => {
+  const uploadFile = async (): Promise<string | null> => {
     if (!file) {
       toast.error("Please select a file first.");
-      return;
+      return null;
+    }
+
+    // Client-side validation
+    const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
+    const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+
+    if (file.size > MAX_FILE_SIZE) {
+      toast.error("File too large. Maximum size is 5MB");
+      return null;
+    }
+
+    if (!ALLOWED_TYPES.includes(file.type)) {
+      toast.error("Invalid file type. Please upload an image (JPEG, PNG, GIF, or WebP)");
+      return null;
     }
 
     setIsUploading(true);
-    const formData = new FormData();
-    formData.append("file", file);
-
+    
     try {
-      const response = await fetch("/api/upload", {
-        method: "POST",
-        body: formData,
+      // Convert file to base64 for the API
+      const base64 = await new Promise<string>((resolve, reject) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file!);
+        reader.onload = () => resolve(reader.result as string);
+        reader.onerror = error => reject(error);
       });
 
-      if (response.ok) {
-        const data = await response.json();
-        
-        const auth = getAuth(firebaseApp);
-        const user = auth.currentUser;
+      const auth = getAuth(firebaseApp);
+      const user = auth.currentUser;
+      const idToken = await user?.getIdToken();
 
-        if (!user) {
-          toast.error("No authenticated user found");
-          return;
-        }
-
-        setEdit(prev => ({ ...prev, profilepic: data.url }));
-        setPreview(null);
-        setFile(null);
-        toast.success("Profile picture uploaded successfully!");
-      } else {
-        throw new Error("Failed to upload file");
+      if (!user || !idToken) {
+        toast.error("Authentication required. Please sign in again.");
+        return null;
       }
+
+      console.log("Starting secure file upload...");
+      const response = await fetch("/api/upload", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${idToken}`
+        },
+        body: JSON.stringify({ image: base64 })
+      });
+
+      const responseData = await response.json();
+
+      if (!response.ok) {
+        console.error("Upload failed:", responseData);
+        throw new Error(responseData.message || "Failed to upload file");
+      }
+
+      console.log("Upload successful, received URL:", responseData.url);
+      return responseData.url;
     } catch (error) {
-      console.error("Error uploading file:", error);
-      toast.error("Failed to upload file");
+      console.error("Upload error:", error);
+      toast.error(error instanceof Error ? error.message : "Failed to upload file");
+      return null;
     } finally {
       setIsUploading(false);
     }
   };
 
-  const handleProfileUpdate = async (e: React.FormEvent) => {
+  const handleProfileUpdate = async (e: FormEvent) => {
     e.preventDefault();
+    
     const auth = getAuth(firebaseApp);
     const user = auth.currentUser;
-  
+    
     if (!user) {
-      toast.error("No authenticated user found");
+      toast.error("User not authenticated");
       return;
     }
-  
+
+    setIsSaving(true);
+
     try {
+      let profilePicUrl = userData?.profilepic;
+      
+      // Handle profile picture upload first if there's a new file
+      if (file) {
+        const uploadedUrl = await uploadFile();
+        if (uploadedUrl) {
+          profilePicUrl = uploadedUrl;
+          // Update the edit state with the new URL
+          setEdit(prev => ({ ...prev, profilepic: uploadedUrl }));
+        } else {
+          // If upload failed but user still wants to save other changes
+          const shouldContinue = window.confirm(
+            "Profile picture upload failed. Would you like to save other changes?"
+          );
+          if (!shouldContinue) return;
+        }
+      }
+
+      // Filter out empty strings from arrays
+      const cleanedEdit = {
+        ...edit,
+        username: edit.username.trim(),
+        bio: (edit.bio ?? '').trim(),
+        location: (edit.location ?? '').trim(),
+        profilepic: profilePicUrl, // Use the new URL or keep existing
+        failedExperience: edit.failedExperience?.filter(item => item.trim() !== "") || [],
+        misEducation: edit.misEducation?.filter(item => item.trim() !== "") || [],
+        failureHighlights: edit.failureHighlights?.filter(item => item.trim() !== "") || []
+      };
+
       const userDoc = doc(db, "users", user.uid);
-      await updateDoc(userDoc, {
-        username: edit.username,
-        bio: edit.bio,
-        location: edit.location,
-        profilepic: edit.profilepic || userData?.profilepic,
-        failedExperience: edit.failedExperience,
-        misEducation: edit.misEducation,
-        failureHighlights: edit.failureHighlights
-      });
-  
-      setUserData(prev => ({
-        ...prev!,
-        username: edit.username,
-        bio: edit.bio,
-        location: edit.location,
-        profilepic: edit.profilepic || prev?.profilepic,
-        failedExperience: edit.failedExperience,
-        misEducation: edit.misEducation,
-        failureHighlights: edit.failureHighlights
-      }));
-  
+      await updateDoc(userDoc, cleanedEdit);
+      
+      // Update local state with cleaned data
+      setUserData(prev => prev ? { ...prev, ...cleanedEdit } : null);
+      
+      // Show success toast
       toast.success("Profile successfully updated!");
-      setIsModalOpen(false)
+      
+      // Close modal and reset states after a short delay for better UX
+      setTimeout(() => {
+        setIsModalOpen(false);
+        setFile(null);
+        setPreview(null);
+      }, 1000);
     } catch (error) {
       console.error("Error updating profile:", error);
-      toast.error("Failed to update profile");
+      toast.error(error instanceof Error ? error.message : "Failed to update profile");
+    } finally {
+      setIsSaving(false);
     }
   };
 
-  if (loading) return (
-    <div className="flex h-screen items-center justify-center">
-      <HashLoader color="white"/>
-    </div>
-  );
+  // Update avatar source when userData changes
+  useEffect(() => {
+    if (userData?.profilepic) {
+      setAvatarSrc(userData.profilepic);
+      setIsImageLoading(true);
+    } else {
+      setAvatarSrc("");
+      setIsImageLoading(false);
+    }
+  }, [userData?.profilepic]);
 
-  const avatarSrc = userData?.profilepic || 
-    "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png";
+  if (loading) {
+    return (
+      <div className="flex h-screen items-center justify-center">
+        <HashLoader color="white"/>
+      </div>
+    );
+  }
 
   return (
     <div className="container mx-auto px-6 py-10">
@@ -303,17 +409,35 @@ export default function Profile() {
             <div className="p-8">
               <div className="flex items-start mb-6">
                 <div className="relative">
-                <Avatar className="w-36 h-36 mr-6 ring-3 ring-gray-600">
-                    <AvatarImage 
-                      src={avatarSrc} 
-                      alt={`${userData?.username || 'User'}'s avatar`} 
-                      className="w-full h-full object-cover"
-                      loading="lazy"
-                    />
-                    <AvatarFallback className="w-full h-full flex items-center justify-center bg-gray-100 text-2xl font-semibold text-gray-500">
-                      {userData?.username?.[0] || 'U'}
-                    </AvatarFallback>
-                  </Avatar>
+                  <div className="w-36 h-36 mr-6 ring-3 ring-gray-600 rounded-full overflow-hidden">
+                    <div className="relative w-full h-full bg-gray-100 rounded-full overflow-hidden">
+                      {isImageLoading && (
+                        <div className="absolute inset-0 flex items-center justify-center bg-gray-200 animate-pulse">
+                          <span className="text-gray-500">Loading...</span>
+                        </div>
+                      )}
+                      {avatarSrc ? (
+                        <Image 
+                          src={avatarSrc} 
+                          alt={`${userData?.username || 'User'}'s avatar`} 
+                          width={144}
+                          height={144}
+                          className={`w-full h-full object-cover ${isImageLoading ? 'opacity-0' : 'opacity-100'}`}
+                          loading="lazy"
+                          onLoad={() => setIsImageLoading(false)}
+                          onError={() => {
+                            console.error("Image failed to load:", avatarSrc);
+                            setAvatarSrc("");
+                            setIsImageLoading(false);
+                          }}
+                        />
+                      ) : (
+                        <div className="w-full h-full flex items-center justify-center bg-gray-200 text-gray-500">
+                          No image
+                        </div>
+                      )}
+                    </div>
+                  </div>
                   
                   {/* Add profile change icon */}
                   <button 
@@ -363,6 +487,8 @@ export default function Profile() {
                         <LogOut className="h-4 w-4 mr-2" />
                         Logout
                       </Button>
+                      
+
                     </div>
                   </div>
                   <div className="mt-6">
@@ -467,7 +593,7 @@ export default function Profile() {
                           <input
                             type="text"
                             id="username"
-                            className="w-full px-4 py-2.5 border border-gray-200/50 rounded-lg bg-white text-gray-900 focus:ring-2 focus:ring-primary/50 focus:border-primary outline-none"
+                            className="w-full px-4 py-2.5 border border-gray-400 rounded-lg bg-white text-gray-900 focus:ring-0 focus:border-black outline-none"
                             value={edit.username}
                             onChange={handleEditChange}
                           />
@@ -479,7 +605,7 @@ export default function Profile() {
                           <input
                             id="location"
                             type="text"
-                            className="w-full px-4 py-2.5 border border-gray-200/50 rounded-lg bg-white text-gray-900 focus:ring-2 focus:ring-primary/50 focus:border-primary outline-none"
+                            className="w-full px-4 py-2.5 border border-gray-400 rounded-lg bg-white text-gray-900 focus:ring-0 focus:border-black outline-none"
                             value={edit.location}
                             onChange={handleEditChange}
                           />
@@ -491,13 +617,14 @@ export default function Profile() {
                           <textarea
                             id="bio"
                             rows={4}
-                            className="w-full px-4 py-2.5 border border-gray-200/50 rounded-lg bg-white text-gray-900 focus:ring-2 focus:ring-primary/50 focus:border-primary outline-none"
+                            spellCheck="false"
+                            className="w-full px-4 py-2.5 border border-gray-400 rounded-lg bg-white text-gray-900 focus:ring-0 focus:border-black outline-none"
                             value={edit.bio}
                             onChange={handleEditChange}
                           />
                         </div>
                         <div>
-                          <label htmlFor="profilepic" className="block text-sm font-medium mb-2 text-gray-900">
+                          <label className="block text-sm font-medium mb-2 text-gray-900">
                             Profile Picture
                           </label>
                           <div className="flex items-center gap-4">
@@ -508,25 +635,21 @@ export default function Profile() {
                                 width={80}
                                 height={80}
                                 loading="lazy"
-                                className="w-20 h-20 object-cover rounded-full border border-gray-200/50"
+                                className="w-20 h-20 object-cover rounded-full border border-gray-400"
                               />
                             ) : (
-                              <div className="w-20 h-20 rounded-full bg-gray-100 flex items-center justify-center border border-gray-200/50">
+                              <div className="w-20 h-20 rounded-full bg-gray-100 flex items-center justify-center border border-gray-400">
                                 <User className="h-6 w-6 text-gray-500" />
                               </div>
                             )}
                             <div className="flex-1 space-y-2">
-                              <input
-                                id="profilepic"
-                                type="file"
-                                onChange={handleFileChange}
-                                className="hidden"
-                                accept="image/*"
-                              />
-                              <label
-                                htmlFor="profilepic"
-                                className="block text-sm px-4 py-2 border border-gray-200/50 rounded-lg hover:bg-accent/50 cursor-pointer text-center"
-                              >
+                              <label className="block text-sm px-4 py-2 border border-gray-400 rounded-lg hover:bg-accent/50 cursor-pointer text-center">
+                                <input
+                                  type="file"
+                                  onChange={handleFileChange}
+                                  className="hidden"
+                                  accept="image/*"
+                                />
                                 Choose File
                               </label>
                               <p className="text-xs text-gray-500 truncate">
@@ -561,7 +684,7 @@ export default function Profile() {
                                   type="text"
                                   value={experience}
                                   onChange={(e) => handleArrayEdit('failedExperience', index, e.target.value)}
-                                  className="flex-1 px-4 py-2.5 border border-gray-200/50 rounded-lg bg-white text-gray-900 focus:ring-2 focus:ring-primary/50 focus:border-primary outline-none"
+                                  className="flex-1 px-4 py-2.5 border border-gray-400 rounded-lg bg-white text-gray-900 focus:ring-0 focus:border-black outline-none"
                                 />
                                 <Button
                                   type="button"
@@ -597,7 +720,7 @@ export default function Profile() {
                                   type="text"
                                   value={education}
                                   onChange={(e) => handleArrayEdit('misEducation', index, e.target.value)}
-                                  className="flex-1 px-4 py-2.5 border border-gray-200/50 rounded-lg bg-white text-gray-900 focus:ring-2 focus:ring-primary/50 focus:border-primary outline-none"
+                                  className="flex-1 px-4 py-2.5 border border-gray-400 rounded-lg bg-white text-gray-900 focus:ring-0 focus:border-black outline-none"
                                 />
                                 <Button
                                   type="button"
@@ -633,7 +756,7 @@ export default function Profile() {
                                   type="text"
                                   value={highlight}
                                   onChange={(e) => handleArrayEdit('failureHighlights', index, e.target.value)}
-                                  className="flex-1 px-4 py-2.5 border border-gray-200/50 rounded-lg bg-white text-gray-900 focus:ring-2 focus:ring-primary/50 focus:border-primary outline-none"
+                                  className="flex-1 px-4 py-2.5 border border-gray-400 rounded-lg bg-white text-gray-900 focus:ring-0 focus:border-black outline-none"
                                 />
                                 <Button
                                   type="button"
@@ -664,15 +787,24 @@ export default function Profile() {
                         variant="outline"
                         type="button"
                         onClick={handleCloseModal}
-                        className="px-6 py-2 border border-gray-200/50 rounded-lg text-sm font-medium text-gray-900 hover:bg-accent/50"
+                        className="px-6 py-2 border border-gray-400 rounded-lg text-sm font-medium text-gray-900 hover:bg-accent/50"
                       >
                         Cancel
                       </Button>
                       <Button
                         type="submit"
-                        className="px-6 py-2 bg-primary text-primary-foreground rounded-lg text-sm font-medium hover:bg-primary/90"
+                        className="px-6 py-2 bg-black text-white rounded-lg text-sm font-medium hover:bg-black/90 flex items-center gap-2"
+                        disabled={isSaving}
                       >
-                        Save
+                        {isSaving ? (
+                          <>
+                            <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                            </svg>
+                            Saving...
+                          </>
+                        ) : 'Save'}
                       </Button>
                     </div>
                   </form>
