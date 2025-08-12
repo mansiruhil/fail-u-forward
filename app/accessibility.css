@@ -1,15 +1,13 @@
 /* Accessibility Enhancements for Fail U Forward */
 
-/* High contrast focus indicators */
+/* Remove global focus outline to prevent double borders */
 *:focus-visible {
-  outline: 2px solid #ef4444 !important;
-  outline-offset: 2px !important;
-  border-radius: 4px;
+  outline: none !important;
 }
 
 /* Ensure focus indicators are visible in dark mode */
 .dark *:focus-visible {
-  outline-color: #fca5a5 !important;
+  outline: none !important;
 }
 
 /* Skip to main content link */
@@ -150,8 +148,7 @@ h6 { font-size: 0.875rem; font-weight: 600; }
 /* Keyboard navigation improvements */
 [tabindex="0"]:focus,
 [tabindex="-1"]:focus {
-  outline: 2px solid #ef4444;
-  outline-offset: 2px;
+  outline: none;
 }
 
 /* Ensure form labels are properly associated */
