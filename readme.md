@@ -11,7 +11,7 @@ It’s designed to share honest stories of setbacks and rejections and lessons l
   - and more coming soon
 - 🖥️ Smart AI validation for respectful, safe and constructive content
 
-**🛠️ tech stack:**
+**🛠️ tech stack: **
 
 <p float="left">
   <img src="https://img.shields.io/badge/Next.js-000000?style=for-the-badge&logo=nextdotjs&logoColor=white" height="28"/>
@@ -19,6 +19,7 @@ It’s designed to share honest stories of setbacks and rejections and lessons l
   <img src="https://img.shields.io/badge/Firebase-FFCA28?style=for-the-badge&logo=firebase&logoColor=black" height="28"/>
   <img src="https://img.shields.io/badge/Gemini_AI-ffffff?style=for-the-badge&logo=google&logoColor=blue" height="28"/>
 </p>
+
 
 - **Frontend:** Next.js + TypeScript  
 - **Backend:** Next.js API routes  
