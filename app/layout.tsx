@@ -4,24 +4,32 @@ import { ThemeProvider } from "@/components/theme-provider";
 import { Navbar } from "@/components/layout/navbar";
 import { AuthProvider } from "@/contexts/AuthContext";
 import Chatbot from "@/components/chatbot";
-const inter = Inter({ subsets: ["latin"] });
-import { SpeedInsights } from "@vercel/speed-insights/next"
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { dir } from "i18next";
+import { languages } from "../next-i18next.config";
 
+const inter = Inter({ subsets: ["latin"] });
+
+export const dynamicParams = false;
+
+export function generateStaticParams() {
+  return languages.map((lng: string) => ({ locale: lng }));
+}
 
 export default function RootLayout({
-
   children,
+  params
 }: {
   children: React.ReactNode;
+  params: { locale: string };
 }) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang={params.locale} dir={dir(params.locale)} suppressHydrationWarning>
       <head>
         <title>failuforward</title>
         <link rel="icon" href="/favicon.ico" />
-        <link rel="apple-touch-icon" href="/favicon.ico" />
         <meta name="description" content="FailUForward: Share and engage with posts" />
       </head>
 
@@ -29,12 +37,7 @@ export default function RootLayout({
         <a href="#main-content" className="skip-to-main">
           Skip to main content
         </a>
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="dark"
-          enableSystem={false}
-          disableTransitionOnChange
-        >
+        <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false} disableTransitionOnChange>
           <div className="min-h-screen">
             <AuthProvider>
               <Navbar />
@@ -46,7 +49,6 @@ export default function RootLayout({
           </div>
         </ThemeProvider>
       </body>
-
     </html>
   );
 }
