@@ -3,13 +3,13 @@
 import Link from 'next/link';
 import { Briefcase, Search, Bell, UserCircle } from 'lucide-react';
 import { useState } from 'react';
+import LanguageSwitcher from '@/components/ui/LanguageSwitcher';
 
 export function Header() {
   const [searchQuery, setSearchQuery] = useState('');
 
   const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // Handle search functionality
     console.log('Search query:', searchQuery);
   };
 
@@ -20,15 +20,19 @@ export function Header() {
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
+          {/* Logo */}
           <Link 
             href="/" 
             className="flex items-center focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 rounded-md p-1 -m-1"
             aria-label="Fail U Forward - Go to homepage"
           >
             <Briefcase className="h-8 w-8 text-red-500" aria-hidden="true" />
-            <span className="ml-2 space-x-2 text-xl font-bold dark:text-white">Fail U Forward</span>
+            <span className="ml-2 space-x-2 text-xl font-bold dark:text-white">
+              Fail U Forward
+            </span>
           </Link>
           
+          {/* Search */}
           <div className="flex-1 max-w-xl px-4" role="search">
             <form onSubmit={handleSearchSubmit} className="relative">
               <label htmlFor="search-input" className="sr-only">
@@ -53,7 +57,9 @@ export function Header() {
             </form>
           </div>
 
+          {/* Right Side Actions */}
           <nav className="flex items-center space-x-4" role="navigation" aria-label="User actions">
+            <LanguageSwitcher /> {/* Language dropdown here */}
             <button 
               className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2" 
               aria-label="View notifications"
