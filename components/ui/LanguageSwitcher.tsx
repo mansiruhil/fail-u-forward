@@ -23,8 +23,7 @@ export default function LanguageSwitcher() {
     >
       <option value="en">English</option>
       <option value="hi">हिन्दी</option>
-      <option value="fr">Français</option>
-      {/* Add more languages here */}
+      <option value="fr">Spanish</option>
     </select>
   );
 }
