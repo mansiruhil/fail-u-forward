@@ -3,6 +3,7 @@
 import React, { useEffect, useRef } from "react";
 import { Github } from "lucide-react";
 import * as THREE from "three";
+import { FaDiscord } from "react-icons/fa";
 import NET from "vanta/dist/vanta.net.min";
 
 const StoryPage = () => {
@@ -107,7 +108,9 @@ const StoryPage = () => {
               rel="noopener noreferrer"
               className="p-2 sm:p-3 rounded-full bg-white hover:bg-gray-300 shadow transition duration-300 transform hover:-translate-y-1"
             >
-              <Github size={24} className="text-black" />
+              <FaDiscord size={24} className="text-black" />
+
+              
             </a>
           </div>
         </div>
