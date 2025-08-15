@@ -30,12 +30,12 @@ export default function RootLayout({
       <head>
         <title>failuforward</title>
         <link rel="icon" href="/favicon.ico" />
-        <meta name="description" content="FailUForward: Share and engage with posts" />
+        <meta name="description" content="failuforward: Share and engage with posts" />
       </head>
 
       <body className={`${inter.className}`}>
         <a href="#main-content" className="skip-to-main">
-          Skip to main content
+          skip to main content
         </a>
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false} disableTransitionOnChange>
           <div className="min-h-screen">
