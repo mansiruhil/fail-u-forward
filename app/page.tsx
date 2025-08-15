@@ -11,12 +11,10 @@ import Link from "next/link";
 import { useTranslation } from "react-i18next";
 
 export default function Home() {
-  const { t } = useTranslation();
-
   useEffect(() => {
     const vantaEffect = NET({
       el: "#vanta-bg",
-      THREE,
+      THREE: THREE,
       mouseControls: true,
       touchControls: true,
       gyroControls: false,
@@ -29,19 +27,23 @@ export default function Home() {
       points: 20.0,
       maxDistance: 12.0,
     });
-    return () => vantaEffect && vantaEffect.destroy();
+    return () => {
+      if (vantaEffect) vantaEffect.destroy();
+    };
   }, []);
 
   return (
     <div id="vanta-bg" className="min-h-screen w-full flex flex-col items-center justify-center relative">
       <div className="absolute inset-0 bg-black opacity-70 z-0"></div>
+
       {/* MAIN SECTION with Flex Layout */}
       <main className="container mx-auto px-4 sm:px-6 md:px-8 py-12 sm:py-16 flex flex-col min-h-screen relative z-10">
         {/* All content above cards */}
-        <div className="flex-grow mt-16 sm:mt-20 text-center space-y-6 px-2">
-          <h1 className="text-3xl md:text-6xl font-bold tracking-tight">
-            <TextGenerateEffect words={t("welcome to failuforward")} />
-          </h1>
+        <div className="flex-grow mt-16 sm:mt-20">
+          <div className="text-center space-y-6 px-2">
+            <h1 className="text-3xl md:text-6xl font-bold tracking-tight">
+              <TextGenerateEffect words={"Welcome To Fail U Forward"} />
+            </h1>
           </div>
 
           <motion.div
