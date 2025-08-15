@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useRef } from "react";
-import { Twitter, Linkedin, Github, Instagram } from "lucide-react";
+import { Github, Discord } from "lucide-react";
 import * as THREE from "three";
 import NET from "vanta/dist/vanta.net.min";
 
