@@ -92,37 +92,16 @@ const StoryPage = () => {
             Find more about Fail U Forward on
           </p>
           <div className="flex justify-center gap-4 sm:gap-6 text-xl sm:text-2xl mb-2">
-            <a
-              href="https://twitter.com/username"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="p-2 sm:p-3 rounded-full bg-white hover:bg-gray-300 shadow transition duration-300 transform hover:-translate-y-1"
-            >
-              <Twitter size={24} className="text-black" />
-            </a>
-            <a
-              href="https://linkedin.com/in/username"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="p-2 sm:p-3 rounded-full bg-white hover:bg-gray-300 shadow transition duration-300 transform hover:-translate-y-1"
-            >
-              <Linkedin size={24} className="text-black" />
-            </a>
-            <a
-              href="https://github.com/username"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="p-2 sm:p-3 rounded-full bg-white hover:bg-gray-300 shadow transition duration-300 transform hover:-translate-y-1"
-            >
+            
               <Github size={24} className="text-black" />
             </a>
             <a
-              href="https://instagram.com/username"
+              href="https://discord.gg/ZEspWbV6"
               target="_blank"
               rel="noopener noreferrer"
               className="p-2 sm:p-3 rounded-full bg-white hover:bg-gray-300 shadow transition duration-300 transform hover:-translate-y-1"
             >
-              <Instagram size={24} className="text-black" />
+              <Discord size={24} className="text-black" />
             </a>
           </div>
         </div>
