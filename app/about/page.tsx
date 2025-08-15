@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useRef } from "react";
-import { Github, Discord } from "lucide-react";
+import { Github } from "lucide-react";
 import * as THREE from "three";
 import NET from "vanta/dist/vanta.net.min";
 
@@ -107,7 +107,7 @@ const StoryPage = () => {
               rel="noopener noreferrer"
               className="p-2 sm:p-3 rounded-full bg-white hover:bg-gray-300 shadow transition duration-300 transform hover:-translate-y-1"
             >
-              <Discord size={24} className="text-black" />
+              <Github size={24} className="text-black" />
             </a>
           </div>
         </div>
