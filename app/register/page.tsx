@@ -1,9 +1,25 @@
-import { useState, useEffect, useRef } from "react";
-import { motion, useAnimation } from "framer-motion";
-import { AlertCircle, Eye, EyeOff, CheckCircle, Loader2 } from "lucide-react";
+"use client";
+
+import { useState, useEffect } from "react";
+import { motion } from "framer-motion";
+import { Eye, EyeOff, AlertCircle, CheckCircle, Loader2 } from "lucide-react";
+import type { ReactNode, ButtonHTMLAttributes, InputHTMLAttributes, LabelHTMLAttributes } from "react";
 
 // mock components 
-const Button = ({ children, className, type, disabled, onClick, ...props }) => (
+const Button = ({
+  children,
+  className,
+  type,
+  disabled,
+  onClick,
+  ...props
+}: {
+  children: ReactNode;
+  className?: string;
+  type?: "button" | "submit" | "reset";
+  disabled?: boolean;
+  onClick?: () => void;
+} & ButtonHTMLAttributes<HTMLButtonElement>) => (
   <button
     type={type}
     className={`px-4 py-2 rounded-md font-medium transition-all duration-200 ${className}`}
@@ -15,26 +31,48 @@ const Button = ({ children, className, type, disabled, onClick, ...props }) => (
   </button>
 );
 
-const Input = ({ className, ...props }) => (
+const Input = ({
+  className,
+  ...props
+}: InputHTMLAttributes<HTMLInputElement>) => (
   <input
     className={`w-full px-3 py-2 rounded-md border focus:outline-none focus:ring-2 ${className}`}
     {...props}
   />
 );
 
-const Label = ({ children, htmlFor, className }) => (
+
+const Label = ({
+  children,
+  htmlFor,
+  className
+}: {
+  children: ReactNode;
+  htmlFor?: string;
+  className?: string;
+}) => (
   <label htmlFor={htmlFor} className={`block text-sm font-medium ${className}`}>
     {children}
   </label>
 );
 
-const Link = ({ href, children, className }) => (
-  <a href={href} className={className} onClick={(e) => e.preventDefault()}>
+
+const Link = ({
+  href,
+  children,
+  className
+}: {
+  href: string;
+  children: ReactNode;
+  className?: string;
+}) => (
+  <a href={href} className={className}>
     {children}
   </a>
 );
 
-type PasswordStrength = "short" | "weak" | "medium" | "strong" | "high";
+// Password strength types
+type PasswordType = "" | "short" | "weak" | "medium" | "strong" | "high";
 
 interface ValidationErrors {
   username?: string;
@@ -43,173 +81,186 @@ interface ValidationErrors {
   general?: string;
 }
 
-function calculatePasswordStrength(password) {
-  if (password.length < 6) {
-    return { score: 1, label: "short", color: "#eab308" };
-  }
-
-  const tests = [/[a-z]/, /[A-Z]/, /\d/, /[@.#$!%^&*.?]/];
-  let score = tests.reduce((acc, rx) => acc + Number(rx.test(password)), 0);
-
-  if (score === 1) return { score: 1, label: "weak", color: "#ef4444" };
-  if (score === 2) return { score: 2, label: "medium", color: "#3b82f6" };
-  if (score === 3) return { score: 3, label: "strong", color: "#f97316" };
-  return { score: 4, label: "high", color: "#22c55e" };
-}
-
-export default function SignupDemo() {
+export default function Signup() {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const [iconFlipped, setIconFlipped] = useState(false);
-  const flipControls = useAnimation();
-
-  const [errors, setErrors] = useState({});
-  const [loading, setLoading] = useState(false);
-  const [uniqueUsername, setUniqueUsername] = useState(null);
+  const [passwordStrength, setPasswordStrength] = useState<PasswordType>("");
+  const [errors, setErrors] = useState<ValidationErrors>({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isFormValid, setIsFormValid] = useState(false);
+  const [uniqueUsername, setUniqueUsername] = useState<boolean | null>(null);
   const [usernameChecking, setUsernameChecking] = useState(false);
 
-  const [passwordStrength, setPasswordStrength] = useState({
-    score: 0,
-    label: "short",
-    color: "transparent"
-  });
-
-  // animated background 
-  const backgroundElements = [
-    { id: 1, delay: 0, duration: 8, x: [0, 60, 0], y: [0, -120, 0] },
-    { id: 2, delay: 1, duration: 6, x: [0, -40, 0], y: [0, -100, 0] },
-    { id: 3, delay: 2, duration: 7, x: [0, 50, 0], y: [0, -80, 0] },
-    { id: 4, delay: 0, duration: 15, x: [0, 120, 0], y: [0, -60, 0] },
-    { id: 5, delay: 7, duration: 18, x: [0, -100, 0], y: [0, 40, 0] }
-  ];
-
-  useEffect(() => {
-    setPasswordStrength(calculatePasswordStrength(password));
-  }, [password]);
-
+  // Validate form on every field change
   useEffect(() => {
     validateForm();
-  }, [username, email, password, passwordStrength.score]);
+  }, [username, email, password, passwordStrength]);
 
-  const validateForm = () => {
-    const newErrors = {};
-
-    if (!username.trim()) newErrors.username = "Username is required";
-    else if (username.length < 3) newErrors.username = "Must be at least 3 characters";
-    else if (!/^[\w\d_]+$/.test(username)) newErrors.username = "Only letters, numbers & underscore";
-
-    if (!email.trim()) newErrors.email = "Email is required";
-    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) newErrors.email = "Invalid email format";
-
-    if (!password) newErrors.password = "Password is required";
-    else if (passwordStrength.label === "short" || passwordStrength.label === "weak")
-      newErrors.password = "Include uppercase, lowercase, number & symbol";
-
-    setErrors(newErrors);
+  // Password strength logic
+  const validatePasswordStrength = (pwd: string) => {
+    if (pwd.length < 6) {
+      setPasswordStrength("short");
+      return;
+    }
+    const tests = [/[a-z]/, /[A-Z]/, /\d/, /[@.#$!%^&*.?]/];
+    let score = tests.reduce((acc, rx) => acc + Number(rx.test(pwd)), 0);
+    const levels: PasswordType[] = ["short", "weak", "medium", "strong", "high"];
+    setPasswordStrength(levels[Math.min(score, levels.length - 1)]);
   };
 
-  const isFormValid = 
-    username.trim() !== "" && 
-    email.trim() !== "" && 
-    password.trim() !== "" && 
-    Object.keys(errors).length === 0 &&
-    uniqueUsername !== false;
+  // Basic form validation & errors
+  const validateForm = () => {
+    const newErr: ValidationErrors = {};
 
-  const handleUsernameCheck = async (val) => {
+    if (!username.trim()) newErr.username = "Username is required";
+    else if (username.length < 3) newErr.username = "Must be at least 3 chars";
+    else if (!/^[\w\d_]+$/.test(username)) newErr.username = "Only letters, numbers & _";
+
+    if (!email.trim()) newErr.email = "Email is required";
+    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) newErr.email = "Invalid email";
+
+    if (!password) newErr.password = "Password is required";
+    else if (passwordStrength === "short" || passwordStrength === "weak")
+      newErr.password = "Include uppercase, lowercase, number & symbol";
+
+    setErrors(newErr);
+    setIsFormValid(
+      Object.keys(newErr).length === 0 &&
+      Boolean(username) &&
+      Boolean(email) &&
+      Boolean(password)
+    );
+  };
+
+  const handleSignup = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!isFormValid) return;
+    setIsSubmitting(true);
+    setErrors({});
+
+    try {
+      // Mock signup logic - replace with your actual implementation
+      await new Promise(resolve => setTimeout(resolve, 2000));
+      console.log("Account created successfully!");
+      // router.push("/feed");
+    } catch (err: any) {
+      setErrors({ general: "Signup failed. Please try again." });
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const signupWithProvider = async (providerName: string) => {
+    setIsSubmitting(true);
+    setErrors({});
+    try {
+      // Mock provider signup - replace with your actual implementation
+      await new Promise(resolve => setTimeout(resolve, 1500));
+      console.log(`${providerName} signup successful!`);
+    } catch {
+      setErrors({ general: `${providerName} signup failed. Try again.` });
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleUsernameCheck = async (val: string) => {
     setUsername(val);
     if (!val || val.length < 3) {
       setUniqueUsername(null);
       return;
     }
-    
     setUsernameChecking(true);
-    // simulate API call
-    setTimeout(() => {
-      const available = Math.random() > 0.3; 
+    try {
+      // Mock username check - replace with your actual API call
+      await new Promise(resolve => setTimeout(resolve, 800));
+      const available = Math.random() > 0.5; // Random for demo
       setUniqueUsername(available);
+    } catch {
+      setUniqueUsername(false);
+    } finally {
       setUsernameChecking(false);
-    }, 1000);
+    }
   };
 
-  const handleSignup = async (e) => {
-    e.preventDefault();
-    if (!isFormValid) return;
-    
-    setLoading(true);
-    setErrors({});
+  const strengthColor = {
+    short: "text-yellow-500",
+    weak: "text-red-500",
+    medium: "text-blue-500",
+    strong: "text-orange-500",
+    high: "text-green-500",
+    "": "",
+  }[passwordStrength];
 
-    // simulate signup
-    setTimeout(() => {
-      console.log("Account created successfully");
-      setLoading(false);
-      alert("Account created successfully");
-    }, 2000);
-  };
-
-  const handleSocialSignup = async (provider) => {
-    setErrors({});
-    setLoading(true);
-    
-    setTimeout(() => {
-      console.log(`${provider} signup successful`);
-      setLoading(false);
-      alert(`${provider} signup successful`);
-    }, 1500);
-  };
-
-  const handleEyeToggle = async () => {
-    await flipControls.start({ rotateY: 90, transition: { duration: 0.17 } });
-    setIconFlipped(f => !f);
-    setShowPassword(v => !v);
-    await flipControls.start({ rotateY: 0, transition: { duration: 0.17 } });
-  };
-
-  const strengthColors = {
-    short: "#eab308",
-    weak: "#ef4444",
-    medium: "#3b82f6", 
-    strong: "#f97316",
-    high: "#22c55e",
-  };
+  const outlineColor = {
+    short: "!border-yellow-500",
+    weak: "!border-red-500",
+    medium: "!border-blue-500",
+    strong: "!border-orange-500",
+    high: "!border-green-500",
+    "": "",
+  }[passwordStrength];
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-4 relative overflow-hidden">
-      {/* animated background effect */}
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-900 via-black to-gray-900 p-4 relative overflow-hidden">
+      {/* Animated Background Elements */}
       <div className="absolute inset-0 overflow-hidden">
-        {/* floating particles */}
-        {backgroundElements.slice(0, 3).map((element, index) => (
-          <motion.div 
-            key={element.id}
-            className={`absolute w-${index === 0 ? '4' : index === 1 ? '3' : '5'} h-${index === 0 ? '4' : index === 1 ? '3' : '5'} bg-blue-400/30 rounded-full`}
-            style={{
-              top: `${20 + index * 20}%`,
-              left: `${20 + index * 20}%`
-            }}
-            animate={{ 
-              y: element.y, 
-              x: element.x, 
-              opacity: [0, 1, 0], 
-              scale: [0, 1.2, 0] 
-            }}
-            transition={{ 
-              duration: element.duration, 
-              repeat: Infinity, 
-              ease: "easeInOut",
-              delay: element.delay
-            }} 
-          />
-        ))}
-        
-        {/* background blurs */}
         <motion.div 
-          className="absolute top-0 left-0 w-96 h-96 bg-gradient-to-r from-blue-500/10 to-blue-400/20 rounded-full blur-3xl"
+          className="absolute top-20 left-20 w-4 h-4 bg-white/30 rounded-full" 
+          animate={{ 
+            y: [0, -120, 0], 
+            x: [0, 60, 0], 
+            opacity: [0, 1, 0], 
+            scale: [0, 1.2, 0] 
+          }}
+          transition={{ 
+            duration: 8, 
+            repeat: Infinity, 
+            ease: "easeInOut" 
+          }} 
+        />
+        
+        <motion.div 
+          className="absolute top-40 right-32 w-3 h-3 bg-white/40 rounded-full"
+          animate={{ 
+            y: [0, -100, 0], 
+            x: [0, -40, 0], 
+            opacity: [0, 1, 0], 
+            scale: [0, 1.5, 0] 
+          }}
+          transition={{ 
+            duration: 6, 
+            repeat: Infinity, 
+            ease: "easeInOut", 
+            delay: 1 
+          }} 
+        />
+        
+        <motion.div 
+          className="absolute bottom-32 left-40 w-5 h-5 bg-white/25 rounded-full"
+          animate={{ 
+            y: [0, -80, 0], 
+            x: [0, 50, 0], 
+            opacity: [0, 1, 0], 
+            scale: [0, 1.3, 0] 
+          }}
+          transition={{ 
+            duration: 7, 
+            repeat: Infinity, 
+            ease: "easeInOut", 
+            delay: 2 
+          }} 
+        />
+
+        <motion.div 
+          className="absolute top-0 left-0 w-96 h-96 bg-gradient-to-r from-white/5 to-white/10 rounded-full blur-3xl"
           animate={{ 
             x: [0, 120, 0], 
             y: [0, -60, 0], 
             scale: [1, 1.3, 1], 
-            opacity: [0.1, 0.3, 0.1] 
+            opacity: [0.2, 0.5, 0.2] 
           }}
           transition={{ 
             duration: 15, 
@@ -219,12 +270,12 @@ export default function SignupDemo() {
         />
         
         <motion.div 
-          className="absolute bottom-0 right-0 w-80 h-80 bg-gradient-to-l from-slate-600/10 to-blue-500/15 rounded-full blur-3xl"
+          className="absolute bottom-0 right-0 w-80 h-80 bg-gradient-to-l from-white/5 to-white/8 rounded-full blur-3xl"
           animate={{ 
             x: [0, -100, 0], 
             y: [0, 40, 0], 
             scale: [1.2, 1, 1.2], 
-            opacity: [0.2, 0.4, 0.2] 
+            opacity: [0.3, 0.6, 0.3] 
           }}
           transition={{ 
             duration: 18, 
@@ -233,83 +284,91 @@ export default function SignupDemo() {
             delay: 7 
           }} 
         />
-
-        <div className="absolute inset-0">
-          {[...Array(8)].map((_, i) => (
-            <motion.div
-              key={i}
-              className="absolute bg-blue-400/20"
-              style={{
-                width: '2px',
-                height: `${Math.random() * 200 + 100}px`,
-                top: `${Math.random() * 80}%`,
-                left: `${Math.random() * 90}%`,
-                transform: `rotate(${Math.random() * 360}deg)`
-              }}
-              animate={{
-                opacity: [0, 0.6, 0],
-                scale: [0.5, 1, 0.5]
-              }}
-              transition={{
-                duration: 4 + Math.random() * 4,
-                repeat: Infinity,
-                delay: Math.random() * 3
-              }}
-            />
-          ))}
-        </div>
       </div>
 
+      {/* Main Form */}
       <motion.div
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 0.3 }}
-        className="
-          relative z-20 w-full max-w-md p-8 space-y-6 
-          bg-white/10 backdrop-blur-xl
-          rounded-2xl 
-          shadow-xl shadow-black/20
-          border border-white/20
-          hover:bg-white/15 hover:border-white/30 
-          transition-all duration-500
-        "
+        transition={{ 
+          duration: 0.8, 
+          ease: "easeOut",
+          type: "spring",
+          stiffness: 100,
+          damping: 15
+        }}
+        className="w-full max-w-md p-8 space-y-6 backdrop-blur-xl bg-white/5 rounded-3xl shadow-2xl border border-white/10 relative z-10 hover:bg-white/8 hover:border-white/20 transition-all duration-500 hover:shadow-white/5 hover:shadow-2xl"
       >
-        <motion.div
-          initial={{ opacity: 0, scale: 0.8 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 2, ease: "easeOut" }}
-          className="text-center"
+        <motion.div 
+          className="space-y-2 text-center"
+          initial={{ opacity: 0, y: -30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.3, duration: 0.6, type: "spring" }}
         >
-          <h1 className="text-3xl font-bold text-white">Create Account</h1>
-          <p className="text-sm text-white/70 mt-2">Join the community and share your journey</p>
+          <motion.h1 
+            className="text-3xl font-bold text-white"
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ 
+              delay: 0.5, 
+              duration: 0.8,
+              type: "spring",
+              stiffness: 200,
+              damping: 15
+            }}
+          >
+            Create Account
+          </motion.h1>
+          <p className="text-white/70">Join the community and share your journey</p>
         </motion.div>
 
         {errors.general && (
-          <div className="flex items-center gap-2 bg-red-500/20 text-red-300 border border-red-500/30 rounded px-3 py-2">
-            <AlertCircle className="w-4 h-4 shrink-0" />
+          <motion.div 
+            className="flex items-center gap-2 p-3 text-red-300 bg-red-500/20 border border-red-500/30 rounded-lg"
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.3 }}
+          >
+            <AlertCircle className="w-4 h-4" />
             <span className="text-sm">{errors.general}</span>
-          </div>
+          </motion.div>
         )}
 
-        <div className="space-y-4">
-          <div className="space-y-2">
-            <Label htmlFor="username" className="text-white/90">
-              username
+        <motion.form 
+          onSubmit={handleSignup} 
+          className="space-y-4"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.4, duration: 0.6 }}
+        >
+          {/* Username Field */}
+          <motion.div 
+            className="space-y-2"
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.6, duration: 0.5 }}
+          >
+            <Label htmlFor="username" className="font-medium text-white/90">
+              Username
             </Label>
-            <div className="relative">
+            <div className="relative group">
               <Input
                 id="username"
                 type="text"
-                placeholder="Enter username"
-                className="bg-white/10 border-white/20 text-white placeholder:text-white/50 focus:border-blue-400 focus:ring-2 focus:ring-blue-400/50 hover:bg-white/15 hover:border-white/30 transition-all duration-300 pr-10"
+                placeholder="Enter Username"
                 value={username}
-                onChange={(e) => handleUsernameCheck(e.target.value)}
+                onChange={e => handleUsernameCheck(e.target.value)}
+                disabled={isSubmitting}
+                className="bg-white/10 border-white/20 text-white placeholder:text-white/50 focus:ring-2 focus:ring-white/50 focus:border-white/60 hover:bg-white/15 hover:border-white/30 transition-all duration-300 focus:shadow-lg focus:shadow-white/20 backdrop-blur-sm"
                 required
-                disabled={loading}
               />
-              
+              <motion.div
+                className="absolute inset-0 rounded-md bg-gradient-to-r from-white/10 to-white/20 opacity-0 group-focus-within:opacity-100 transition-opacity duration-300 pointer-events-none"
+                initial={false}
+              />
+
               {usernameChecking && (
-                <Loader2 className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 animate-spin text-white/60" />
+                <Loader2 className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 animate-spin text-white/60" />
               )}
               {uniqueUsername && !usernameChecking && !errors.username && (
                 <CheckCircle className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-green-400"/>
@@ -317,14 +376,14 @@ export default function SignupDemo() {
             </div>
             
             {!usernameChecking && uniqueUsername && !errors.username && (
-              <motion.p 
-                className="text-sm text-green-400"
-                initial={{ opacity: 0, x: -10 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.3 }}
+              <motion.div 
+                className="text-green-400 text-sm"
+                initial={{ opacity: 0, x: -10, scale: 0.8 }}
+                animate={{ opacity: 1, x: 0, scale: 1 }}
+                transition={{ duration: 0.4, type: "spring" }}
               >
-                username is available
-              </motion.p>
+                Username is available
+              </motion.div>
             )}
             {errors.username && (
               <p className="text-sm text-red-400 flex items-center gap-1">
@@ -333,169 +392,228 @@ export default function SignupDemo() {
               </p>
             )}
             {uniqueUsername === false && !errors.username && !usernameChecking && (
-              <p className="text-sm text-red-400">Username is already taken</p>
+              <p className="text-sm text-red-400">Username is taken</p>
             )}
-          </div>
+          </motion.div>
 
-          <div className="space-y-2">
-            <Label htmlFor="email" className="text-white/90">
+          {/* Email Field */}
+          <motion.div 
+            className="space-y-2"
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.7, duration: 0.5 }}
+          >
+            <Label htmlFor="email" className="font-medium text-white/90">
               Email
             </Label>
-            <Input
-              id="email"
-              type="email"
-              placeholder="user@example.com"
-              className="bg-white/10 border-white/20 text-white placeholder:text-white/50 focus:border-blue-400 focus:ring-2 focus:ring-blue-400/50 hover:bg-white/15 hover:border-white/30 transition-all duration-300"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-              disabled={loading}
-            />
+            <div className="relative group">
+              <Input
+                id="email"
+                type="email"
+                placeholder="user@example.com"
+                value={email}
+                onChange={e => setEmail(e.target.value)}
+                disabled={isSubmitting}
+                className="bg-white/10 border-white/20 text-white placeholder:text-white/50 focus:ring-2 focus:ring-white/50 focus:border-white/60 hover:bg-white/15 hover:border-white/30 transition-all duration-300 focus:shadow-lg focus:shadow-white/20 backdrop-blur-sm"
+                required
+              />
+              <motion.div
+                className="absolute inset-0 rounded-md bg-gradient-to-r from-white/10 to-white/20 opacity-0 group-focus-within:opacity-100 transition-opacity duration-300 pointer-events-none"
+                initial={false}
+              />
+            </div>
             {errors.email && (
               <p className="text-sm text-red-400 flex items-center gap-1">
                 <AlertCircle className="w-3 h-3"/>
                 {errors.email}
               </p>
             )}
-          </div>
+          </motion.div>
 
-          <div className="space-y-2 relative">
-            <Label htmlFor="password" className="text-white/90">
+          {/* Password Field */}
+          <motion.div 
+            className="space-y-2"
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.8, duration: 0.5 }}
+          >
+            <Label htmlFor="password" className="font-medium text-white/90">
               Password
             </Label>
-            <div className="relative">
+            <div className="relative group">
               <Input
                 id="password"
                 type={showPassword ? "text" : "password"}
                 placeholder="Create a strong password"
-                className="bg-white/10 border-white/20 text-white placeholder:text-white/50 pr-12 focus:border-blue-400 focus:ring-2 focus:ring-blue-400/50 hover:bg-white/15 hover:border-white/30 transition-all duration-300"
                 value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                onChange={(e) => {
+                  setPassword(e.target.value);
+                  validatePasswordStrength(e.target.value);
+                }}
+                disabled={isSubmitting}
+                className={`pr-12 bg-white/10 border-white/20 text-white placeholder:text-white/50 focus:ring-2 focus:ring-white/50 focus:border-white/60 hover:bg-white/15 hover:border-white/30 transition-all duration-300 focus:shadow-lg focus:shadow-white/20 backdrop-blur-sm ${outlineColor}`}
                 required
-                disabled={loading}
               />
-              
+              <motion.div
+                className="absolute inset-0 rounded-md bg-gradient-to-r from-white/10 to-white/20 opacity-0 group-focus-within:opacity-100 transition-opacity duration-300 pointer-events-none"
+                initial={false}
+              />
+
               <button
                 type="button"
-                onClick={handleEyeToggle}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-white/60 hover:text-white/90 z-10 transition-colors duration-200 p-1 rounded"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-white/60 hover:text-white/90 z-10 transition-colors duration-200 focus:outline-none focus:text-white/90 p-1 rounded"
               >
-                <motion.span animate={flipControls} initial={{ rotateY: 0 }} style={{ display: "inline-flex", perspective: 400 }}>
-                  {iconFlipped ? (
-                    <EyeOff className="w-5 h-5" />
-                  ) : (
-                    <Eye className="w-5 h-5" />
-                  )}
-                </motion.span>
+                {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
               </button>
             </div>
-
-            {password.length > 0 && (
-              <div className="mt-1">
-                <div className="flex gap-1 mb-1">
+            
+            {password && (
+              <div>
+                <div className={`text-sm font-medium ${strengthColor}`}>
+                  Strength: {passwordStrength}
+                </div>
+                <div className="flex gap-1 mt-1">
                   {[1,2,3,4].map(idx => (
                     <div key={idx}
-                      className={`h-1 flex-1 rounded-full transition-all duration-300`}
-                      style={{
-                        backgroundColor: passwordStrength.score >= idx ? strengthColors[passwordStrength.label] : 'rgba(255,255,255,0.2)'
-                      }}
-                    />
+                      className={`h-1 flex-1 rounded-full ${
+                        (passwordStrength === "high" && idx <= 4) ||
+                        (passwordStrength === "strong" && idx <= 3) ||
+                        (passwordStrength === "medium" && idx <= 2) ||
+                        (passwordStrength === "weak" && idx <= 1) ?
+                        {
+                          high: "bg-green-500", strong: "bg-orange-500",
+                          medium: "bg-blue-500", weak: "bg-red-500",
+                        }[passwordStrength] : "bg-white/20"}`
+                      }/>
                   ))}
                 </div>
-                <p 
-                  className="text-xs font-medium select-none"
-                  style={{ color: strengthColors[passwordStrength.label] }}
-                >
-                  Password strength: {passwordStrength.label}
-                </p>
               </div>
             )}
-            
             {errors.password && (
               <p className="text-sm text-red-400 flex items-center gap-1">
                 <AlertCircle className="w-3 h-3"/>
                 {errors.password}
               </p>
             )}
-          </div>
-
-          <motion.div
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
-          >
-            <Button
-              type="button"
-              onClick={handleSignup}
-              disabled={!isFormValid || loading}
-              className={`w-full py-3 font-semibold transition-all duration-200 rounded-lg shadow-lg ${
-                isFormValid && !loading 
-                  ? "bg-blue-600 hover:bg-blue-700 text-white hover:shadow-xl" 
-                  : "bg-gray-500/50 text-gray-300 cursor-not-allowed"
-              }`}
-            >
-              {loading ? (
-                <span className="flex items-center gap-2">
-                  <Loader2 className="animate-spin h-4 w-4" />
-                  Creating Account...
-                </span>
-              ) : (
-                "Create Account"
-              )}
-            </Button>
           </motion.div>
-        </div>
 
-        <div className="relative">
+          {/* Submit Button */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.9, duration: 0.5 }}
+          >
+            <motion.div
+              whileHover={{ scale: 1.02, y: -2 }}
+              whileTap={{ scale: 0.98 }}
+              transition={{ type: "spring", stiffness: 300, damping: 20 }}
+            >
+              <Button 
+                type="submit" 
+                disabled={!isFormValid || isSubmitting}
+                className={`w-full py-3 font-semibold shadow-lg hover:shadow-xl transition-all duration-300 ${
+                  isFormValid && !isSubmitting 
+                    ? "bg-gradient-to-r from-white to-gray-100 hover:from-gray-100 hover:to-white text-black hover:shadow-white/25" 
+                    : "bg-gray-500/50 text-gray-300 cursor-not-allowed"
+                }`}
+              >
+                {isSubmitting ? (
+                  <div className="flex items-center gap-2 justify-center">
+                    <Loader2 className="animate-spin h-5 w-5" />
+                    Creating Account...
+                  </div>
+                ) : (
+                  "Create Account"
+                )}
+              </Button>
+            </motion.div>
+          </motion.div>
+        </motion.form>
+
+        {/* Forgot Password Link */}
+        <motion.div 
+          className="text-center text-sm"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 1.0, duration: 0.5 }}
+        >
+          <Link 
+            href="/forgot-password" 
+            className="text-white/80 hover:text-white hover:underline transition-all duration-200 hover:scale-105 inline-block"
+          >
+            Forgot your password?
+          </Link>
+        </motion.div>
+
+        {/* Divider */}
+        <motion.div 
+          className="relative"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 1.1, duration: 0.5 }}
+        >
           <div className="absolute inset-0 flex items-center">
-            <div className="w-full border-t border-white/20" />
+            <div className="w-full border-t border-white/20"/>
           </div>
           <div className="relative flex justify-center text-xs uppercase">
-            <span className="bg-slate-800 px-2 text-white/60">Or continue with</span>
+            <span className="bg-gray-900 px-2 text-white/60">Or continue with</span>
           </div>
-        </div>
+        </motion.div>
 
-        <div className="grid grid-cols-2 gap-4">
-          <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+        {/* Social Login Buttons */}
+        <motion.div 
+          className="grid grid-cols-2 gap-4"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 1.2, duration: 0.5 }}
+        >
+          <motion.div
+            whileHover={{ scale: 1.05, y: -2 }}
+            whileTap={{ scale: 0.95 }}
+            transition={{ type: "spring", stiffness: 300, damping: 20 }}
+          >
             <Button 
-              type="button"
-              onClick={() => handleSocialSignup("Google")}
-              disabled={loading}
-              className="w-full bg-white/10 border border-white/20 text-white hover:bg-white/20 hover:border-white/30 transition-all duration-300 flex items-center justify-center gap-2"
+              type="button" 
+              onClick={() => signupWithProvider("Google")}
+              disabled={isSubmitting}
+              className="w-full bg-white/10 border border-white/20 text-white hover:bg-white/20 hover:border-white/30 transition-all duration-300 hover:shadow-lg backdrop-blur-sm"
             >
-              <svg viewBox="0 0 24 24" width="18" height="18">
-                <path
-                  fill="currentColor"
-                  d="M12.24 10.29v3.52h6.21c-.3.86-.87 1.88-1.74 2.54-.87.66-2.15 1.15-3.66 1.15-3.35 0-6.07-2.72-6.07-6.07s2.72-6.07 6.07-6.07c1.51 0 2.82.43 3.87 1.34l2.87-2.87C17.58 2.96 15.02 2 12.24 2 6.64 2 2 6.64 2 12s4.64 10 10.24 10c6.01 0 9.87-4.14 9.87-10.14 0-.69-.06-1.35-.16-1.97H12.24z"
-                />
-              </svg>
               Google
             </Button>
           </motion.div>
           
-          <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-            <Button
-              type="button"
-              onClick={() => handleSocialSignup("GitHub")}
-              disabled={loading}
-              className="w-full bg-white/10 border border-white/20 text-white hover:bg-white/20 hover:border-white/30 transition-all duration-300 flex items-center justify-center gap-2"
+          <motion.div
+            whileHover={{ scale: 1.05, y: -2 }}
+            whileTap={{ scale: 0.95 }}
+            transition={{ type: "spring", stiffness: 300, damping: 20 }}
+          >
+            <Button 
+              type="button" 
+              onClick={() => signupWithProvider("GitHub")}
+              disabled={isSubmitting}
+              className="w-full bg-white/10 border border-white/20 text-white hover:bg-white/20 hover:border-white/30 transition-all duration-300 hover:shadow-lg backdrop-blur-sm"
             >
-              <svg viewBox="0 0 24 24" width="18" height="18">
-                <path
-                  fill="currentColor"
-                  d="M12 0a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2.1c-3.3.7-4-1.6-4-1.6-.5-1.3-1.3-1.7-1.3-1.7-1.1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1.1 1.8 2.9 1.3 3.6 1 .1-.8.4-1.3.8-1.6-2.8-.3-5.7-1.4-5.7-6.2 0-1.4.5-2.6 1.3-3.5-.1-.3-.6-1.7.1-3.5 0 0 1-.3 3.4 1.3a11.9 11.9 0 0 1 6 0c2.4-1.6 3.4-1.3 3.4-1.3.7 1.8.2 3.2.1 3.5.9.9 1.3 2.1 1.3 3.5 0 4.8-2.9 5.9-5.7 6.2.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6A12 12 0 0 0 12 0z"
-                />
-              </svg>
               GitHub
             </Button>
           </motion.div>
-        </div>
+        </motion.div>
 
-        <p className="text-center text-sm text-white/70">
+        {/* Login Link */}
+        <motion.p 
+          className="text-center text-sm text-white/70"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 1.3, duration: 0.5 }}
+        >
           Already have an account?{" "}
-          <Link href="/login" className="text-blue-400 hover:text-blue-300 hover:underline transition-all duration-200 font-medium">
+          <Link 
+            href="/login" 
+            className="text-white/80 hover:text-white hover:underline transition-all duration-200 font-medium hover:scale-105 inline-block"
+          >
             Sign In
           </Link>
-        </p>
+        </motion.p>
       </motion.div>
     </div>
   );
