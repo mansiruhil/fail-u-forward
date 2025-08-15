@@ -88,9 +88,9 @@ const StoryPage = () => {
 
         {/* Footer */}
         <div className="max-w-4xl mx-auto text-center w-full">
-          <p className="text-base sm:text-lg font-semibold mb-4 text-white font-bold">
-            Find more about Fail U Forward on
-          </p>
+          {/* <p className="text-base sm:text-lg font-semibold mb-4 text-white font-bold">
+            Contacts
+          </p> */}
           <div className="flex justify-center gap-4 sm:gap-6 text-xl sm:text-2xl mb-2">
             
               <Github size={24} className="text-black" />
