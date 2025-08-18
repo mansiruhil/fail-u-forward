@@ -1,4 +1,4 @@
-It's a community driven platform where failure is not something to hide but something to celebrate .
+ ### It's a community driven platform where failure is not something to hide but something to celebrate .
 It’s designed to share honest stories of setbacks and rejections and lessons learned: all the stuff LinkedIn filters out .
 
 **features:**
