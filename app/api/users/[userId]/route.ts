@@ -1,43 +1,25 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { doc, getDoc } from 'firebase/firestore';
-import { db } from '@/lib/firebase';
+// app/api/users/[userId]/route.ts
+import { NextRequest, NextResponse } from "next/server";
+import { getUserById } from "@/services/users";
+
+function response(data: any = null, error: string | null = null, status = 200) {
+    return NextResponse.json({ success: !error, data, error }, { status });
+}
 
 export async function GET(
-  request: NextRequest,
-  { params }: { params: { userId: string } }
+    req: NextRequest,
+    { params }: { params: { userId: string } }
 ) {
-  try {
-    const { userId } = params;
-    
-    const userDoc = doc(db, 'users', userId);
-    const userSnap = await getDoc(userDoc);
-    
-    if (!userSnap.exists()) {
-      return NextResponse.json({ error: 'User not found' }, { status: 404 });
+    try {
+        const user = await getUserById(params.userId);
+
+        if (!user) {
+            return response(null, "User not found", 404);
+        }
+
+        return response(user);
+    } catch (err) {
+        console.error("Error fetching user:", err);
+        return response(null, "Internal server error", 500);
     }
-
-    const userData = userSnap.data();
-    
-    // Return public user data (exclude sensitive information)
-    const publicUserData = {
-      id: userId,
-      username: userData.username,
-      email: userData.email,
-      bio: userData.bio,
-      location: userData.location,
-      profilepic: userData.profilepic,
-      failedExperience: userData.failedExperience || [],
-      misEducation: userData.misEducation || [],
-      failureHighlights: userData.failureHighlights || [],
-      followers: userData.followers || [],
-      following: userData.following || [],
-      followerCount: userData.followers?.length || 0,
-      followingCount: userData.following?.length || 0
-    };
-
-    return NextResponse.json(publicUserData);
-  } catch (error) {
-    console.error('Get user error:', error);
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
-  }
 }
