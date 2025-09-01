@@ -75,7 +75,7 @@ const StoryPage = () => {
           <h2 className="text-3xl sm:text-4xl font-extrabold mb-10 text-center text-white tracking-wide drop-shadow-lg">
             Features
           </h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 sm:gap-8 max-w-6xl mx-auto">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 gap-6 sm:gap-8 max-w-6xl mx-auto">
             {devComments.map((dev, index) => (
               <div
                 key={index}
