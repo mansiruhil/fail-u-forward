@@ -33,7 +33,10 @@ export default function Home() {
   }, []);
 
   return (
-    <div id="vanta-bg" className="min-h-screen w-full flex flex-col items-center justify-center relative">
+    <div
+      id="vanta-bg"
+      className="min-h-screen w-full flex flex-col items-center justify-center relative"
+    >
       <div className="absolute inset-0 bg-black opacity-70 z-0"></div>
 
       {/* MAIN SECTION with Flex Layout */}
@@ -101,37 +104,44 @@ export default function Home() {
           initial={{ opacity: 0, y: 40 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.2 }}
-          className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 sm:gap-8 mt-12 sm:mt-auto"
+          className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 sm:gap-8 mt-12"
         >
-          <div className="p-4 sm:p-6 rounded-lg border bg-card bg-gradient-to-r from-slate-400 via-slate-200 to-slate-600">
-            <div className="flex items-center gap-2">
-              <ThumbsDown className="h-10 w-10 sm:h-12 sm:w-12 text-primary mb-2" />
-              <h3 className="text-lg sm:text-xl font-bold mb-2 relative z-10 mb-4">
-                Professional Setbacks
+          {[
+            {
+              icon: (
+                <ThumbsDown className="h-12 w-12 text-primary text-black" />
+              ),
+              title: "Professional Setbacks",
+              desc: "Share your rejected applications and celebrate career mishaps",
+            },
+            {
+              icon: <Users className="h-12 w-12 text-primary text-black" />,
+              title: "Network",
+              desc: "Connect with others",
+            },
+            {
+              icon: <Coffee className="h-12 w-12 text-primary text-black" />,
+              title: "Daily Disappointments",
+              desc: "Share your daily struggles and workplace disasters",
+            },
+          ].map((card, idx) => (
+            <div
+              key={idx}
+              className="p-6 rounded-2xl shadow-lg border bg-gradient-to-bl from-slate-300 via-slate-400 to-slate-500 flex flex-col items-center text-center hover:scale-105 transition-transform shadow-lg hover:shadow-indigo-400/40 hover:border-indigo-400"
+            >
+              
+              <div className="mb-4">{card.icon}</div>
+              <div>
+              <h3 className="text-xl font-bold text-black mb-2">
+                {card.title}
               </h3>
+           
+              <p className="text-sm sm:text-base font-medium text-gray-800">
+                {card.desc}
+              </p>
+              </div>
             </div>
-            <p className="text-black font-bold text-sm sm:text-base">
-              Share your rejected applications and celebrate career mishaps
-            </p>
-          </div>
-
-          <div className="p-4 sm:p-6 rounded-lg border bg-card bg-gradient-to-r from-slate-400 via-slate-200 to-slate-600">
-            <div className="flex items-center gap-2">
-              <Users className="h-10 w-10 sm:h-12 sm:w-12 text-primary mb-2" />
-              <h3 className="text-lg sm:text-xl font-semibold mb-2">Network</h3>
-            </div>
-            <p className="text-black font-bold text-sm sm:text-base">Connect with others</p>
-          </div>
-
-          <div className="p-4 sm:p-6 rounded-lg border bg-card bg-gradient-to-r from-slate-400 via-slate-200 to-slate-600">
-            <div className="flex items-center gap-2">
-              <Coffee className="h-10 w-10 sm:h-12 sm:w-12 text-primary mb-2" />
-              <h3 className="text-lg sm:text-xl font-semibold mb-2">Daily Disappointments</h3>
-            </div>
-            <p className="text-black font-bold text-sm sm:text-base">
-              Share your daily struggles and workplace disasters
-            </p>
-          </div>
+          ))}
         </motion.div>
       </main>
     </div>
