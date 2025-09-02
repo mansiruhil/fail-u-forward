@@ -89,7 +89,7 @@ const StoryPage = () => {
 
         {/* Footer */}
         <div className="max-w-4xl mx-auto text-center w-full">
-          <p className="text-base sm:text-lg font-semibold mb-4 text-white font-bold">
+          <p className="text-base sm:text-lg sm:font-semibold mb-4 text-white font-bold">
             find more on 
           </p>
           <div className="flex justify-center gap-4 sm:gap-6 text-xl sm:text-2xl mb-2">

@@ -221,7 +221,7 @@ export default function Signup() {
             ease: "easeInOut" 
           }} 
         />
-        
+         
         <motion.div 
           className="absolute top-40 right-32 w-3 h-3 bg-white/40 rounded-full"
           animate={{ 
@@ -335,6 +335,7 @@ export default function Signup() {
         )}
 
         <motion.form 
+          dir="ltr"
           onSubmit={handleSignup} 
           className="space-y-4"
           initial={{ opacity: 0 }}
@@ -462,7 +463,7 @@ export default function Signup() {
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-white/60 hover:text-white/90 z-10 transition-colors duration-200 focus:outline-none focus:text-white/90 p-1 rounded"
+                className="absolute right-1 top-1/2 -translate-y-1/2 text-white/60 hover:text-white/90 z-10 transition-colors duration-200 focus:outline-none focus:text-white/90 p-1 rounded"
               >
                 {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
               </button>
@@ -542,7 +543,7 @@ export default function Signup() {
             href="/forgot-password" 
             className="text-white/80 hover:text-white hover:underline transition-all duration-200 hover:scale-105 inline-block"
           >
-            Forgot your password?
+            ?Forgot your password
           </Link>
         </motion.div>
 
@@ -575,21 +576,6 @@ export default function Signup() {
           >
             <Button 
               type="button" 
-              onClick={() => signupWithProvider("Google")}
-              disabled={isSubmitting}
-              className="w-full bg-white/10 border border-white/20 text-white hover:bg-white/20 hover:border-white/30 transition-all duration-300 hover:shadow-lg backdrop-blur-sm"
-            >
-              Google
-            </Button>
-          </motion.div>
-          
-          <motion.div
-            whileHover={{ scale: 1.05, y: -2 }}
-            whileTap={{ scale: 0.95 }}
-            transition={{ type: "spring", stiffness: 300, damping: 20 }}
-          >
-            <Button 
-              type="button" 
               onClick={() => signupWithProvider("GitHub")}
               disabled={isSubmitting}
               className="w-full bg-white/10 border border-white/20 text-white hover:bg-white/20 hover:border-white/30 transition-all duration-300 hover:shadow-lg backdrop-blur-sm"
@@ -597,10 +583,26 @@ export default function Signup() {
               GitHub
             </Button>
           </motion.div>
+
+          <motion.div
+            whileHover={{ scale: 1.05, y: -2 }}
+            whileTap={{ scale: 0.95 }}
+            transition={{ type: "spring", stiffness: 300, damping: 20 }}
+          >
+            <Button 
+              type="button" 
+              onClick={() => signupWithProvider("Google")}
+              disabled={isSubmitting}
+              className="w-full bg-white/10 border border-white/20 text-white hover:bg-white/20 hover:border-white/30 transition-all duration-300 hover:shadow-lg backdrop-blur-sm"
+            >
+              Google
+            </Button>
+          </motion.div>
         </motion.div>
 
         {/* Login Link */}
         <motion.p 
+          dir="ltr"
           className="text-center text-sm text-white/70"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
