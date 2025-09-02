@@ -184,9 +184,9 @@ export default function Login() {
 
     <div
       ref={vantaRef}
-      className="relative min-h-screen w-full flex items-center justify-center bg-black"
+      className="relative min-h-screen w-full flex items-center justify-center bg-gradient-to-br from-gray-900 via-black to-gray-900 p-4 overflow-hidden"
     >
-      <div className="absolute inset-0 bg-black opacity-70 pointer-events-none z-10" />
+      <div className="absolute inset-0 pointer-events-none z-10" />
       <main role="main">
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
@@ -222,7 +222,7 @@ export default function Login() {
           </div>
         )}
 
-        <form onSubmit={handleLogin} className="space-y-4" noValidate>
+        <form dir="ltr" onSubmit={handleLogin} className="space-y-4" noValidate>
           <div className="space-y-2">
             <Label htmlFor="email" className="text-gray-800 dark:text-gray-200">
               Email
@@ -271,7 +271,7 @@ export default function Login() {
               onClick={handleEyeToggle}
               tabIndex={-1}
               disabled={loading}
-              className="absolute right-3 top-7 p-1 rounded focus:outline-none focus:ring-0 transition"
+              className="absolute right-1.5 top-6.5 p-1 rounded focus:outline-none focus:ring-0 transition"
             >
               <motion.span animate={flipControls} initial={{ rotateY: 0 }} style={{ display: "inline-flex", perspective: 400 }} className="flex items-center">
                 {iconFlipped ? (
@@ -319,7 +319,7 @@ export default function Login() {
             type="submit"
             disabled={!isFormValid || loading}
             size="lg"
-            className={`w-full font-semibold py-2 transition-all duration-200 rounded-lg bg-blue-600 hover:bg-blue-700 focus:bg-blue-700 text-white dark:bg-blue-500 dark:hover:bg-blue-600 dark:focus:bg-blue-600 shadow-md hover:shadow-lg focus:shadow-lg disabled:bg-gray-300 dark:disabled:bg-zinc-700 disabled:text-gray-500 disabled:cursor-not-allowed ${!isFormValid || loading ? "pointer-events-none" : ""}`}
+            className={`w-full font-semibold py-2 transition-all duration-200 rounded-lg bg-blue-600 hover:bg-blue-700 focus:bg-blue-700 text-white dark:bg-blue-500 dark:hover:bg-blue-600 dark:focus:bg-blue-600 shadow-md hover:shadow-lg focus:shadow-lg disabled:bg-gray-300 dark:disabled:bg-zinc-700 disabled:text-gray-300 disabled:cursor-not-allowed ${!isFormValid || loading ? "pointer-events-none" : ""}`}
           >
             {loading ? (
               <span className="flex items-center gap-2">
@@ -334,7 +334,7 @@ export default function Login() {
 
         <div className="text-center text-sm">
           <Link href="/forgot-password" className="text-primary hover:underline dark:text-blue-400">
-            Forgot your password?
+            ?Forgot your password
           </Link>
         </div>
 
@@ -353,7 +353,7 @@ export default function Login() {
          <Button 
           type="button"
           variant="outline"
-          className="hover:bg-gray-50 dark:bg-zinc-900 dark:hover:bg-zinc-800 dark:border-zinc-700 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+          className="order-1 sm:order-2 hover:bg-gray-50 dark:bg-zinc-900 dark:hover:bg-zinc-800 dark:border-zinc-700 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
           onClick={handleGoogleSignIn}
           disabled={loading}
           aria-describedby="google-signin-description"
@@ -380,7 +380,7 @@ export default function Login() {
             variant="outline"
             onClick={handleGitHubSignIn}
             disabled={loading}
-            className="flex items-center justify-center space-x-2 w-full hover:bg-gray-50 dark:bg-zinc-900 dark:hover:bg-zinc-800 dark:border-zinc-700 text-sm px-1 py-1 text-white transition rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+            className="order-2 sm:order-1 flex items-center justify-center space-x-2 w-full hover:bg-gray-50 dark:bg-zinc-900 dark:hover:bg-zinc-800 dark:border-zinc-700 text-sm px-1 py-1 text-white transition rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
             aria-describedby="github-signin-description"
           >
             <svg
