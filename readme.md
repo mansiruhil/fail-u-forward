@@ -9,7 +9,7 @@
 - <a href="#technology-stack"> Technology Stack </a>
 - <a href="#setup-instructions"> Setup Instructions </a>
 - <a href="#local-development"> Local Development </a>
-- <a href="#what-next"> What's Next: </a>
+- <a href="#what-next"> What's Next </a>
 - <a href="#acknowledgments">Acknowledgments</a>
 - <a href="#contact">Contact</a>
 - <a href="#how-to-contribute">How to Contribute</a>
@@ -193,7 +193,7 @@ Report bugs and issues or propose improvements through our GitHub repository's "
 
 ## Contribution Guidelines 📑
 
-- Firstly Star(⭐) the Repository
+- Firstly Star (⭐) the Repository
 - Fork the Repository and create a new branch for any updates/changes/issue you are working on.
 - Start Coding and do changes.
 - Commit your changes
@@ -241,7 +241,7 @@ We love contributions from the community! Whether it's a bug report, a new featu
 
 ***Found a Bug?***
 
--   Check the [issue tracker](https://github.com/eccentriccoder01/Venturalink/issues) to see if the bug has already been reported.
+-   Check the [issue tracker](https://github.com/mansiruhil/fail-u-forward/issues) to see if the bug has already been reported.
 -   If not, open a new issue and provide as much detail as possible.
 
 ***Have a Feature Idea?***
@@ -357,7 +357,7 @@ This project is licensed under the MIT License - see the [`License`](https://git
 
 <img src="https://user-images.githubusercontent.com/73097560/115834477-dbab4500-a447-11eb-908a-139a6edaec5c.gif" width="100%">
 
-<h2 align="center">👨‍🏫Mentors – fail-u-forward (GSSoC'25)</h2>
+<h2 align="center">👨‍🏫 Mentors – fail-u-forward (GSSoC'25)</h2>
 
 | Role          | Name               | GitHub Profile                                      | LinkedIn Profile                                                        |
 | ------------- | ------------------ | --------------------------------------------------- | ----------------------------------------------------------------------- |
