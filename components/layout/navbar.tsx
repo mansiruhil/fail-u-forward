@@ -54,13 +54,30 @@ export function Navbar() {
     return null;
   }
   return (
-    <nav className="bg-gradient-to-r from-gray-800 via-gray-900 to-gray-700 w-full">
-      <div className="container mx-auto px-4 flex h-14 justify-between items-center">
+    <nav className="relative w-full backdrop-blur-sm bg-black/20 border-b border-white/5">
+      {/* Subtle background overlay */}
+      <div className="absolute inset-0 bg-gradient-to-r from-gray-900/30 via-black/40 to-gray-900/30"></div>
+      
+      <div className="relative container mx-auto px-4 flex h-16 justify-between items-center">
         {/* Logo */}
         <div className="flex items-center">
-          <Link href="/" className="flex items-center space-x-2">
-            <span className="font-bold text-2xl text-white">Fail U Forward</span>
-          </Link>
+          <motion.div
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            transition={{ type: "spring", stiffness: 400, damping: 17 }}
+          >
+            <Link href="/" className="flex items-center space-x-3 group">
+              <div className="relative">
+                <div className="absolute inset-0 bg-white/10 rounded-lg blur opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                <div className="relative bg-white/10 p-2 rounded-lg border border-white/20">
+                  <Briefcase className="h-6 w-6 text-white" />
+                </div>
+              </div>
+              <span className="font-bold text-2xl text-white group-hover:text-gray-200 transition-colors duration-300">
+                Fail U Forward
+              </span>
+            </Link>
+          </motion.div>
         </div>
 
         {/* Desktop Navigation */}
@@ -138,16 +155,38 @@ export function Navbar() {
             </>
           ) : (
             <>
-              <Link href="/login">
-                <Button size="sm" title="Login" className="text-white bg-gray-900 hover:bg-white hover:text-black">
-                  <MdLogin className="mr-1" /> Login
-                </Button>
-              </Link>
-              <Link href="/register">
-                <Button size="sm" className="text-white bg-gray-900 hover:bg-white hover:text-black">
-                  Sign Up
-                </Button>
-              </Link>
+              <motion.div
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                transition={{ type: "spring", stiffness: 400, damping: 17 }}
+              >
+                <Link href="/login">
+                  <Button 
+                    size="sm" 
+                    title="Login" 
+                    className="relative overflow-hidden bg-white/10 hover:bg-white/20 text-white border border-white/20 hover:border-white/30 shadow-lg hover:shadow-xl transition-all duration-300 group"
+                  >
+                    <div className="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                    <MdLogin className="mr-2 relative z-10" />
+                    <span className="relative z-10 font-semibold">Login</span>
+                  </Button>
+                </Link>
+              </motion.div>
+              <motion.div
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                transition={{ type: "spring", stiffness: 400, damping: 17 }}
+              >
+                <Link href="/register">
+                  <Button 
+                    size="sm" 
+                    className="relative overflow-hidden bg-white/15 hover:bg-white/25 text-white border border-white/30 hover:border-white/40 shadow-lg hover:shadow-xl transition-all duration-300 group"
+                  >
+                    <div className="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                    <span className="relative z-10 font-semibold">Sign Up</span>
+                  </Button>
+                </Link>
+              </motion.div>
             </>
           )}
         </div>
@@ -167,14 +206,35 @@ export function Navbar() {
             </motion.button>
           ) : (
             <>
-              <Link href="/login">
-                <Button size="sm" className="text-white bg-gray-800 hover:bg-gray-700">Login</Button>
-              </Link>
-              <Link href="/register">
-                <Button size="sm" className="text-white bg-gray-800 hover:bg-gray-700">Sign Up</Button>
-              </Link>
+              <motion.div
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                transition={{ type: "spring", stiffness: 400, damping: 17 }}
+              >
+                <Link href="/login">
+                  <Button 
+                    size="sm" 
+                    className="bg-white/10 hover:bg-white/20 text-white border border-white/20 hover:border-white/30 shadow-lg hover:shadow-xl transition-all duration-300"
+                  >
+                    Login
+                  </Button>
+                </Link>
+              </motion.div>
+              <motion.div
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                transition={{ type: "spring", stiffness: 400, damping: 17 }}
+              >
+                <Link href="/register">
+                  <Button 
+                    size="sm" 
+                    className="bg-white/15 hover:bg-white/25 text-white border border-white/30 hover:border-white/40 shadow-lg hover:shadow-xl transition-all duration-300"
+                  >
+                    Sign Up
+                  </Button>
+                </Link>
+              </motion.div>
             </>
-
           )}
         </div>
       </div>
@@ -186,14 +246,16 @@ export function Navbar() {
       
       {/* Mobile Dropdown Menu */}
       <div
-        className={`fixed top-0 left-0 z-50 w-[80vw] max-w-xs h-screen bg-white text-black transform transition-transform duration-500 ease-in-out shadow-lg ${isMenuOpen ? "translate-x-0" : "-translate-x-full"
+        className={`fixed top-0 left-0 z-50 w-[80vw] max-w-xs h-screen backdrop-blur-xl bg-white/95 dark:bg-gray-900/95 text-black dark:text-white border-r border-white/20 dark:border-gray-700/50 transform transition-transform duration-500 ease-in-out shadow-2xl ${isMenuOpen ? "translate-x-0" : "-translate-x-full"
           } md:hidden`}
       >
-        <div className="flex justify-between items-center px-4 py-4 border-b border-gray-200">
-          <h2 className="text-xl font-bold tracking-wide">Fail U Forward</h2>
+        <div className="flex justify-between items-center px-4 py-4 border-b border-gray-200/50 dark:border-gray-700/50">
+          <h2 className="text-xl font-bold tracking-wide text-white">
+            Fail U Forward
+          </h2>
           <button
             onClick={() => setIsMenuOpen(false)}
-            className="text-black hover:text-gray-500 transition"
+            className="text-black dark:text-white hover:text-gray-500 dark:hover:text-gray-400 transition-colors duration-200 p-1 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800"
           >
             <X size={24} />
           </button>
