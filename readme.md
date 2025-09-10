@@ -49,17 +49,6 @@ Experience fail-u-forward live here:
 
 <img src="https://user-images.githubusercontent.com/73097560/115834477-dbab4500-a447-11eb-908a-139a6edaec5c.gif" width="100%">
 
-[![Open Source Love svg1](https://badges.frapsoft.com/os/v1/open-source.svg?v=103)](https://github.com/ellerbrock/open-source-badges/)
-![PRs Welcome](https://img.shields.io/badge/PRs-Welcome-brightgreen.svg?style=flat)
-![Built with Love](https://img.shields.io/badge/Built%20with-%E2%9D%A4-red?style=for-the-badge)
-![Visitors](https://api.visitorbadge.io/api/Visitors?path=mansiruhil%2Ffail-u-forward%20&countColor=%23263759&style=flat)
-![GitHub Contributors](https://img.shields.io/github/contributors/mansiruhil/fail-u-forward)
-![GitHub Last Commit](https://img.shields.io/github/last-commit/mansiruhil/fail-u-forward)
-![GitHub Repo Size](https://img.shields.io/github/repo-size/mansiruhil/fail-u-forward)
-![Github](https://img.shields.io/github/license/mansiruhil/fail-u-forward)
-
-<img src="https://user-images.githubusercontent.com/73097560/115834477-dbab4500-a447-11eb-908a-139a6edaec5c.gif" width="100%">
-
 <h2> 🌟 Features </h2>
 
 - 📢 Post your rejections, failures and real lessons learned
@@ -69,25 +58,6 @@ Experience fail-u-forward live here:
   - `Project Chaos`
   - and more coming soon
 - 🖥️ Smart AI validation for respectful, safe and constructive content
-
-<img src="https://user-images.githubusercontent.com/73097560/115834477-dbab4500-a447-11eb-908a-139a6edaec5c.gif" width="100%">
-
-![GSSoC Logo](/fail-u-forward/gssoc%20logo.png)
-
-🌟 **Exciting News...**
-
-🚀 This project is now an official part of GirlScript Summer of Code – GSSoC'25! 💃🎉💻 We're thrilled to welcome contributors from all over India and beyond to collaborate, build, and grow *fail-u-forward!* Let’s make learning and career development smarter – together! 🌟👨‍💻👩‍💻
-
-👩‍💻 GSSoC is one of India’s **largest 3-month-long open-source programs** that encourages developers of all levels to contribute to real-world projects 🌍 while learning, collaborating, and growing together. 🌱
-
-🌈 With **mentorship, community support**, and **collaborative coding**, it's the perfect platform for developers to:
-
-- ✨ Improve their skills
-- 🤝 Contribute to impactful projects
-- 🏆 Get recognized for their work
-- 📜 Receive certificates and swag!
-
-🎉 **I can’t wait to welcome new contributors** from GSSoC 2025 to this fail-u-forward project family! Let's build, learn, and grow together — one commit at a time. 🔥👨‍💻👩‍💻
 
 <img src="https://user-images.githubusercontent.com/73097560/115834477-dbab4500-a447-11eb-908a-139a6edaec5c.gif" width="100%">
 
