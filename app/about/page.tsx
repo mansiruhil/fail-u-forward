@@ -1,9 +1,8 @@
 "use client";
-
 import React, { useEffect, useRef } from "react";
 import { Github } from "lucide-react";
 import * as THREE from "three";
-import { FaDiscord } from "react-icons/fa";
+import { FaDiscord, FaLinkedin } from "react-icons/fa";
 import NET from "vanta/dist/vanta.net.min";
 
 const StoryPage = () => {
@@ -47,14 +46,13 @@ const StoryPage = () => {
     <div ref={vantaRef} className="relative min-h-screen w-full text-primary overflow-hidden">
       {/* Overlay */}
       <div className="absolute inset-0 bg-black opacity-70 pointer-events-none z-10"></div>
-
       {/* Page Content */}
       <div className="relative z-20">
         <section className="py-16 px-4 sm:px-6 md:px-8 text-base">
           <h2 className="text-3xl sm:text-4xl font-extrabold mb-10 text-center text-white tracking-wide drop-shadow-lg">
             About Fail U Forward
           </h2>
-          
+
           {[
             "The idea for Fail U Forward came from scrolling through LinkedIn where everyone’s success stories looked flawless but real growth happens through failure. I wanted to create a space that shows the messy, unfiltered side of the journey that LinkedIn rarely highlights.",
             "This platform is your no judgment zone to share your rejections, epic fails and the lessons you actually learned because failure is the ultimate teacher. Whether you flopped a project, bombed an interview or just had a bad day, Fail U Forward turns those moments into badges of honor.",
@@ -69,7 +67,6 @@ const StoryPage = () => {
             </p>
           ))}
         </section>
-
         {/* Features */}
         <section className="bg-black py-16 px-4 sm:px-6 md:px-8">
           <h2 className="text-3xl sm:text-4xl font-extrabold mb-10 text-center text-white tracking-wide drop-shadow-lg">
@@ -86,14 +83,12 @@ const StoryPage = () => {
             ))}
           </div>
         </section>
-
         {/* Footer */}
         <div className="max-w-4xl mx-auto text-center w-full">
           <p className="text-base sm:text-lg sm:font-semibold mb-4 text-white font-bold">
-            find more on 
+            find more on
           </p>
           <div className="flex justify-center gap-4 sm:gap-6 text-xl sm:text-2xl mb-2">
-            
             <a
               href="https://github.com/mansiruhil/fail-u-forward"
               target="_blank"
@@ -109,8 +104,15 @@ const StoryPage = () => {
               className="p-2 sm:p-3 rounded-full bg-white hover:bg-gray-300 shadow transition duration-300 transform hover:-translate-y-1"
             >
               <FaDiscord size={24} className="text-black" />
-
-              
+            </a>
+            {/* Add LinkedIn icon here */}
+            <a
+              href="https://www.linkedin.com/in/yourusername/"  // Replace with the actual LinkedIn URL
+              target="_blank"
+              rel="noopener noreferrer"
+              className="p-2 sm:p-3 rounded-full bg-white hover:bg-gray-300 shadow transition duration-300 transform hover:-translate-y-1"
+            >
+              <FaLinkedin size={24} className="text-black" />
             </a>
           </div>
         </div>
@@ -118,6 +120,5 @@ const StoryPage = () => {
     </div>
   );
 };
-
 
 export default StoryPage;
