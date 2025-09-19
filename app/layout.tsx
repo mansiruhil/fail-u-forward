@@ -35,12 +35,33 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <head>
-        <title>failuforward</title>
+        <meta charSet="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Fail U Forward</title>
         <link rel="icon" href="/favicon.ico" />
-        <meta
-          name="description"
-          content="failuforward: Share and engage with posts"
-        />
+        <link rel="canonical" href="https://failuforward.vercel.app/" />
+
+        {/* Primary SEO */}
+        <meta name="description" content="Fail U Forward is a community to share failures, learn from setbacks, and connect with others. fail. learn. connect." />
+        <meta name="keywords" content="fail, failure, learn from failure, community, setbacks, resilience, growth" />
+        <meta name="robots" content="index, follow" />
+        <meta name="theme-color" content="#000000" />
+
+        {/* Open Graph / Facebook */}
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://failuforward.vercel.app/" />
+        <meta property="og:title" content="Fail U Forward" />
+        <meta property="og:description" content="Share setbacks, celebrate learning, and connect with a like‑minded community." />
+        <meta property="og:site_name" content="Fail U Forward" />
+        <meta property="og:image" content="https://failuforward.vercel.app/og-image.png" />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
+
+        {/* Twitter */}
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Fail U Forward" />
+        <meta name="twitter:description" content="Share setbacks, celebrate learning, and connect with a like‑minded community." />
+        <meta name="twitter:image" content="https://failuforward.vercel.app/og-image.png" />
       </head>
 
       <body className={inter.className}>
