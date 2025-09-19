@@ -53,7 +53,7 @@ export default function RootLayout({
         <meta property="og:title" content="Fail U Forward" />
         <meta property="og:description" content="Share setbacks, celebrate learning, and connect with a like‑minded community." />
         <meta property="og:site_name" content="Fail U Forward" />
-        <meta property="og:image" content="https://fail-u-forward-h1vw2icrz-rudrasinghdev.vercel.app/og-image.png" />
+        <meta property="og:image" content="https://fail-u-forward-git-seo-optimisation-rudrasinghdev.vercel.app/og-image.png" />
         <meta property="og:image:width" content="1200" />
         <meta property="og:image:height" content="630" />
 
@@ -61,7 +61,7 @@ export default function RootLayout({
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content="Fail U Forward" />
         <meta name="twitter:description" content="Share setbacks, celebrate learning, and connect with a like‑minded community." />
-        <meta name="twitter:image" content="https://fail-u-forward-h1vw2icrz-rudrasinghdev.vercel.app/og-image.png" />
+        <meta name="twitter:image" content="https://fail-u-forward-git-seo-optimisation-rudrasinghdev.vercel.app/og-image.png" />
       </head>
 
       <body className={inter.className}>

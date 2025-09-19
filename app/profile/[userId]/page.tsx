@@ -108,7 +108,7 @@ export default function PublicProfile({ params }: { params: { userId: string } }
         />
         <meta property="og:title" content={userData ? `${userData.username} — Fail U Forward` : "Profile — Fail U Forward"} />
         <meta property="og:description" content={userData ? (userData.bio || "Discover their journey of learning from setbacks.") : "View community profiles on Fail U Forward."} />
-        <meta property="og:image" content={userData?.profilepic || "https://fail-u-forward-h1vw2icrz-rudrasinghdev.vercel.app/og-image.png"} />
+        <meta property="og:image" content={userData?.profilepic || "https://fail-u-forward-git-seo-optimisation-rudrasinghdev.vercel.app/og-image.png"} />
         <meta name="twitter:card" content="summary_large_image" />
       </Head>
       <div className="max-w-4xl mx-auto space-y-8">
