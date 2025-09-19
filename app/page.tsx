@@ -46,7 +46,7 @@ export default function Home() {
         />
         <meta property="og:title" content="Fail U Forward — Share setbacks, learn, and connect" />
         <meta property="og:description" content="Share failures, learn from setbacks, and connect with others." />
-        <meta property="og:image" content="https://failuforward.vercel.app/og-image.png" />
+        <meta property="og:image" content="https://fail-u-forward-h1vw2icrz-rudrasinghdev.vercel.app/og-image.png" />
         <meta property="og:url" content="https://failuforward.vercel.app/" />
         <meta name="twitter:card" content="summary_large_image" />
       </Head>

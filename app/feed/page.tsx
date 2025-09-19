@@ -47,7 +47,7 @@ export default function Feed() {
         <meta name="description" content="Explore the latest stories of setbacks and learning from the Fail U Forward community." />
         <meta property="og:title" content="Feed — Fail U Forward" />
         <meta property="og:description" content="Explore the latest stories of setbacks and learning." />
-        <meta property="og:image" content="https://failuforward.vercel.app/og-image.png" />
+        <meta property="og:image" content="https://fail-u-forward-h1vw2icrz-rudrasinghdev.vercel.app/og-image.png" />
         <meta name="twitter:card" content="summary_large_image" />
       </Head>
       <div className="hidden lg:block">
