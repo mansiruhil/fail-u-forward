@@ -38,7 +38,15 @@ export default function RootLayout({
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <title>Fail U Forward</title>
-        <link rel="icon" href="/favicon.ico" />
+        {/* Favicon and App Icons */}
+        <link rel="icon" href="/favicon.png" type="image/png" />
+        <link rel="apple-touch-icon" href="/favicon.png" />
+        <link rel="apple-touch-icon" sizes="180x180" href="/favicon.png" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon.png" />
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon.png" />
+        <link rel="manifest" href="/site.webmanifest" />
+        <meta name="msapplication-TileColor" content="#000000" />
+        <meta name="msapplication-config" content="/browserconfig.xml" />
         <link rel="canonical" href="https://failuforward.vercel.app/" />
 
         {/* Primary SEO */}
@@ -90,3 +98,4 @@ export default function RootLayout({
     </html>
   );
 }
+
