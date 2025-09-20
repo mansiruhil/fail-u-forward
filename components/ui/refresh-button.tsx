@@ -8,7 +8,7 @@ import { cn } from "@/lib/utils";
 interface RefreshButtonProps {
   onRefresh: () => void | Promise<void>;
   className?: string;
-  size?: "sm" | "md" | "lg";
+  size?: "default" | "sm" | "lg" | "icon";
   variant?: "default" | "outline" | "ghost" | "secondary";
   showText?: boolean;
 }
@@ -16,7 +16,7 @@ interface RefreshButtonProps {
 export function RefreshButton({
   onRefresh,
   className,
-  size = "md",
+  size = "default",
   variant = "outline",
   showText = true,
 }: RefreshButtonProps) {
@@ -34,15 +34,17 @@ export function RefreshButton({
   };
 
   const sizeClasses = {
+    default: "h-10 px-3",
     sm: "h-8 px-2",
-    md: "h-10 px-3",
     lg: "h-12 px-4",
+    icon: "h-10 w-10",
   };
 
   const iconSizes = {
+    default: "h-4 w-4",
     sm: "h-3 w-3",
-    md: "h-4 w-4",
     lg: "h-5 w-5",
+    icon: "h-4 w-4",
   };
 
   return (
