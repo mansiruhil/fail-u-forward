@@ -9,6 +9,7 @@ import * as THREE from "three";
 import NET from "vanta/dist/vanta.net.min";
 import Link from "next/link";
 import { useTranslation } from "react-i18next";
+import Head from "next/head";
 
 export default function Home() {
   useEffect(() => {
@@ -37,6 +38,18 @@ export default function Home() {
       id="vanta-bg"
       className="min-h-screen w-full flex flex-col items-center justify-center relative"
     >
+      <Head>
+        <title>Fail U Forward — Share setbacks, learn, and connect</title>
+        <meta
+          name="description"
+          content="Fail U Forward helps you share failures, learn from them, and connect with a supportive community."
+        />
+        <meta property="og:title" content="Fail U Forward — Share setbacks, learn, and connect" />
+        <meta property="og:description" content="Share failures, learn from setbacks, and connect with others." />
+        <meta property="og:image" content="https://fail-u-forward.vercel.app/og-image.png" />
+        <meta property="og:url" content="https://failuforward.vercel.app/" />
+        <meta name="twitter:card" content="summary_large_image" />
+      </Head>
       <div className="absolute inset-0 bg-black opacity-70 z-0"></div>
 
       {/* MAIN SECTION with Flex Layout */}

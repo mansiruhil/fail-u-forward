@@ -9,6 +9,7 @@ import { firebaseApp } from "@/lib/firebase";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { Spinner } from "@heroui/spinner";
 import { toast } from "react-toastify";
+import Head from "next/head";
 
 export default function Feed() {
   const router = useRouter();
@@ -41,6 +42,14 @@ export default function Feed() {
 
   return (
     <div className="bg-background container max-h-screen mx-auto px-4 py-8">
+      <Head>
+        <title>Feed — Fail U Forward</title>
+        <meta name="description" content="Explore the latest stories of setbacks and learning from the Fail U Forward community." />
+        <meta property="og:title" content="Feed — Fail U Forward" />
+        <meta property="og:description" content="Explore the latest stories of setbacks and learning." />
+        <meta property="og:image" content="https://fail-u-forward.vercel.app/og-image.png" />
+        <meta name="twitter:card" content="summary_large_image" />
+      </Head>
       <div className="hidden lg:block">
         <LeftSidebar />
       </div>
