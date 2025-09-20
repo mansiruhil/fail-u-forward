@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Eye, EyeOff, AlertCircle, CheckCircle, Loader2 } from "lucide-react";
+import { RefreshButton } from "@/components/ui/refresh-button";
 import type { ReactNode, ButtonHTMLAttributes, InputHTMLAttributes, LabelHTMLAttributes } from "react";
 
 // mock components 
@@ -92,6 +93,11 @@ export default function Signup() {
   const [isFormValid, setIsFormValid] = useState(false);
   const [uniqueUsername, setUniqueUsername] = useState<boolean | null>(null);
   const [usernameChecking, setUsernameChecking] = useState(false);
+
+  const handleRefresh = async () => {
+    // Force a page refresh to reload all data
+    window.location.reload();
+  };
 
   // Validate form on every field change
   useEffect(() => {
@@ -205,6 +211,9 @@ export default function Signup() {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-900 via-black to-gray-900 p-4 relative overflow-hidden">
+      <div className="absolute top-4 right-4 z-30">
+        <RefreshButton onRefresh={handleRefresh} size="sm" />
+      </div>
       {/* Animated Background Elements */}
       <div className="absolute inset-0 overflow-hidden">
         <motion.div 
