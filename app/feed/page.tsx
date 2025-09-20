@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { CreatePost } from "@/components/post/create-post";
 import { LeftSidebar } from "@/components/sidebar/leftsidebar";
 import { RightSidebar } from "@/components/sidebar/rightsidebar";
+import { RefreshButton } from "@/components/ui/refresh-button";
 import { useRouter } from "next/navigation";
 import { firebaseApp } from "@/lib/firebase";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
@@ -14,6 +15,11 @@ import Head from "next/head";
 export default function Feed() {
   const router = useRouter();
   const [loading, setLoading] = useState(true);
+
+  const handleRefresh = async () => {
+    // Force a page refresh to reload all data
+    window.location.reload();
+  };
 
   useEffect(() => {
     const auth = getAuth(firebaseApp);
@@ -55,6 +61,9 @@ export default function Feed() {
       </div>
 
       <main className="flex-1 h-screen overflow-y-auto max-h-[calc(100vh-120px)] scrollbar-hide max-w-2xl no-scrollbar md:mx-[28%]">
+        <div className="flex justify-end p-4">
+          <RefreshButton onRefresh={handleRefresh} size="sm" />
+        </div>
         <CreatePost />
       </main>
 

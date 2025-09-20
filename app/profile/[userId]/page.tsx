@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { RefreshButton } from "@/components/ui/refresh-button";
 import { motion } from "framer-motion";
 import { MapPin, Building2, GraduationCap, ThumbsDown, Camera } from "lucide-react";
 import { FollowButton } from "@/components/ui/follow-button";
@@ -36,6 +37,11 @@ export default function PublicProfile({ params }: { params: { userId: string } }
   const [isFollowing, setIsFollowing] = useState(false);
   const [followerCount, setFollowerCount] = useState(0);
   const { currentUser } = useAuth();
+
+  const handleRefresh = async () => {
+    // Force a page refresh to reload all data
+    window.location.reload();
+  };
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -100,6 +106,9 @@ export default function PublicProfile({ params }: { params: { userId: string } }
 
   return (
     <div className="container mx-auto px-6 py-10">
+      <div className="flex justify-end mb-4">
+        <RefreshButton onRefresh={handleRefresh} size="sm" />
+      </div>
       <Head>
         <title>{userData ? `${userData.username} — Fail U Forward` : "Profile — Fail U Forward"}</title>
         <meta
