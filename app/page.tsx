@@ -1,6 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import { RefreshButton } from "@/components/ui/refresh-button";
 import { motion } from "framer-motion";
 import { ArrowRight, ThumbsDown, Users, Coffee } from "lucide-react";
 import { useEffect } from "react";
@@ -9,8 +10,14 @@ import * as THREE from "three";
 import NET from "vanta/dist/vanta.net.min";
 import Link from "next/link";
 import { useTranslation } from "react-i18next";
+import Head from "next/head";
 
 export default function Home() {
+  const handleRefresh = async () => {
+    // Force a page refresh to reload all data
+    window.location.reload();
+  };
+
   useEffect(() => {
     const vantaEffect = NET({
       el: "#vanta-bg",
@@ -37,10 +44,25 @@ export default function Home() {
       id="vanta-bg"
       className="min-h-screen w-full flex flex-col items-center justify-center relative"
     >
+      <Head>
+        <title>Fail U Forward — Share setbacks, learn, and connect</title>
+        <meta
+          name="description"
+          content="Fail U Forward helps you share failures, learn from them, and connect with a supportive community."
+        />
+        <meta property="og:title" content="Fail U Forward — Share setbacks, learn, and connect" />
+        <meta property="og:description" content="Share failures, learn from setbacks, and connect with others." />
+        <meta property="og:image" content="https://fail-u-forward.vercel.app/og-image.png" />
+        <meta property="og:url" content="https://failuforward.vercel.app/" />
+        <meta name="twitter:card" content="summary_large_image" />
+      </Head>
       <div className="absolute inset-0 bg-black opacity-70 z-0"></div>
 
       {/* MAIN SECTION with Flex Layout */}
       <main className="container mx-auto px-4 sm:px-6 md:px-8 py-12 sm:py-16 flex flex-col min-h-screen relative z-10">
+        <div className="absolute top-4 right-4 z-20">
+          <RefreshButton onRefresh={handleRefresh} size="sm" />
+        </div>
         {/* All content above cards */}
         <div className="flex-grow mt-16 sm:mt-20">
           <div className="text-center space-y-6 px-2">

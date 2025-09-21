@@ -4,15 +4,22 @@ import { useEffect, useState } from "react";
 import { CreatePost } from "@/components/post/create-post";
 import { LeftSidebar } from "@/components/sidebar/leftsidebar";
 import { RightSidebar } from "@/components/sidebar/rightsidebar";
+import { RefreshButton } from "@/components/ui/refresh-button";
 import { useRouter } from "next/navigation";
 import { firebaseApp } from "@/lib/firebase";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { Spinner } from "@heroui/spinner";
 import { toast } from "react-toastify";
+import Head from "next/head";
 
 export default function Feed() {
   const router = useRouter();
   const [loading, setLoading] = useState(true);
+
+  const handleRefresh = async () => {
+    // Force a page refresh to reload all data
+    window.location.reload();
+  };
 
   useEffect(() => {
     const auth = getAuth(firebaseApp);
@@ -41,11 +48,22 @@ export default function Feed() {
 
   return (
     <div className="bg-background container max-h-screen mx-auto px-4 py-8">
+      <Head>
+        <title>Feed — Fail U Forward</title>
+        <meta name="description" content="Explore the latest stories of setbacks and learning from the Fail U Forward community." />
+        <meta property="og:title" content="Feed — Fail U Forward" />
+        <meta property="og:description" content="Explore the latest stories of setbacks and learning." />
+        <meta property="og:image" content="https://fail-u-forward.vercel.app/og-image.png" />
+        <meta name="twitter:card" content="summary_large_image" />
+      </Head>
       <div className="hidden lg:block">
         <LeftSidebar />
       </div>
 
       <main className="flex-1 h-screen overflow-y-auto max-h-[calc(100vh-120px)] scrollbar-hide max-w-2xl no-scrollbar md:mx-[28%]">
+        <div className="flex justify-end p-4">
+          <RefreshButton onRefresh={handleRefresh} size="sm" />
+        </div>
         <CreatePost />
       </main>
 

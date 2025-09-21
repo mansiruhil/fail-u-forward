@@ -3,6 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { RefreshButton } from "@/components/ui/refresh-button";
 import { motion, useAnimation } from "framer-motion";
 import Link from "next/link";
 import { useState, useEffect, useRef } from "react";
@@ -83,6 +84,11 @@ export default function Login() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const router = useRouter();
+
+  const handleRefresh = async () => {
+    // Force a page refresh to reload all data
+    window.location.reload();
+  };
 
   const [passwordStrength, setPasswordStrength] = useState({
     score: 0,
@@ -187,6 +193,9 @@ export default function Login() {
       className="relative min-h-screen w-full flex items-center justify-center bg-gradient-to-br from-gray-900 via-black to-gray-900 p-4 overflow-hidden"
     >
       <div className="absolute inset-0 pointer-events-none z-10" />
+      <div className="absolute top-4 right-4 z-30">
+        <RefreshButton onRefresh={handleRefresh} size="sm" />
+      </div>
       <main role="main">
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }}

@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { RefreshButton } from "@/components/ui/refresh-button";
 import { motion } from "framer-motion";
 import { Send } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -15,6 +16,12 @@ import { toast } from "react-toastify";
 export default function Messages() {
   const router =useRouter()
   const [loading, setLoading] = useState(true);
+
+  const handleRefresh = async () => {
+    // Force a page refresh to reload all data
+    window.location.reload();
+  };
+
   useEffect(() => {
     try {
     const auth = getAuth(firebaseApp)
@@ -39,6 +46,9 @@ export default function Messages() {
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="max-w-4xl mx-auto">
+        <div className="flex justify-end mb-4">
+          <RefreshButton onRefresh={handleRefresh} size="sm" />
+        </div>
         <Card className="grid grid-cols-3 min-h-[600px]">
           <div className="border-r">
             <div className="p-4">
