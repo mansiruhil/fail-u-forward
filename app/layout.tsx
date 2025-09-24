@@ -1,4 +1,3 @@
-// app/layout.tsx
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
@@ -20,7 +19,16 @@ export const metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
+      <head>
+        <title>failuforward</title>
+        <link rel="icon" href="/favicon.ico" />
+        <meta
+          name="description"
+          content="failuforward: Share and engage with posts"
+        />
+      </head>
+
       <body className={inter.className}>
         <a href="#main-content" className="skip-to-main">
           skip to main content

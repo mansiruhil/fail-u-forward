@@ -1,6 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import { RefreshButton } from "@/components/ui/refresh-button";
 import { motion } from "framer-motion";
 import { ArrowRight, ThumbsDown, Users, Coffee } from "lucide-react";
 import { useEffect } from "react";
@@ -9,9 +10,15 @@ import * as THREE from "three";
 import NET from "vanta/dist/vanta.net.min";
 import Link from "next/link";
 import { useTranslation } from "react-i18next";
+import Head from "next/head";
 
-export default function Page() {
+export default function Home() {
   const { t } = useTranslation();
+
+  const handleRefresh = async () => {
+    // Force a page refresh to reload all data
+    window.location.reload();
+  };
 
   useEffect(() => {
     const vantaEffect = NET({
@@ -39,10 +46,27 @@ export default function Page() {
       id="vanta-bg"
       className="min-h-screen w-full flex flex-col items-center justify-center relative"
     >
+      <Head>
+        <title>Fail U Forward — Share setbacks, learn, and connect</title>
+        <meta
+          name="description"
+          content="Fail U Forward helps you share failures, learn from them, and connect with a supportive community."
+        />
+        <meta property="og:title" content="Fail U Forward — Share setbacks, learn, and connect" />
+        <meta property="og:description" content="Share failures, learn from setbacks, and connect with others." />
+        <meta property="og:image" content="https://fail-u-forward.vercel.app/og-image.png" />
+        <meta property="og:url" content="https://failuforward.vercel.app/" />
+        <meta name="twitter:card" content="summary_large_image" />
+      </Head>
       <div className="absolute inset-0 bg-black opacity-70 z-0"></div>
 
       {/* MAIN SECTION */}
       <main className="container mx-auto px-4 sm:px-6 md:px-8 py-12 sm:py-16 flex flex-col min-h-screen relative z-10">
+        <div className="absolute top-4 right-4 z-20">
+          <RefreshButton onRefresh={handleRefresh} size="sm" />
+        </div>
+
+        {/* Hero content */}
         <div className="flex-grow mt-16 sm:mt-20">
           <div className="text-center space-y-6 px-2">
             <h1 className="text-3xl md:text-6xl font-bold tracking-tight">
@@ -62,6 +86,7 @@ export default function Page() {
             </p>
           </motion.div>
 
+          {/* Buttons */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center mt-6 sm:mt-8 px-2">
             <motion.div
               whileHover={{ scale: 1.02 }}
@@ -109,19 +134,17 @@ export default function Page() {
         >
           {[
             {
-              icon: (
-                <ThumbsDown className="h-12 w-12 text-primary text-black" />
-              ),
+              icon: <ThumbsDown className="h-12 w-12 text-black" />,
               title: t("card1_title"),
               desc: t("card1_desc"),
             },
             {
-              icon: <Users className="h-12 w-12 text-primary text-black" />,
+              icon: <Users className="h-12 w-12 text-black" />,
               title: t("card2_title"),
               desc: t("card2_desc"),
             },
             {
-              icon: <Coffee className="h-12 w-12 text-primary text-black" />,
+              icon: <Coffee className="h-12 w-12 text-black" />,
               title: t("card3_title"),
               desc: t("card3_desc"),
             },

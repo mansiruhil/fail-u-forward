@@ -1,4 +1,4 @@
-<h4> It's a community driven platform where failure is not something to hide but something to celebrate. It’s designed to share honest stories of setbacks and rejections and lessons learned: all the stuff LinkedIn filters out. </h4>
+<h4> It’s a community driven platform where failure is not something to hide but something to celebrate. It's designed to share honest stories of setbacks and rejections and lessons learned: all the stuff LinkedIn filters out. </h4>
 
 <h2>📝 Project Insights </h2>
 
@@ -48,6 +48,111 @@
 - **Backend:** Next.js API routes  
 - **Database & Auth:** Firebase  
 - **AI Validation:** Gemini 
+
+<h2>📁 Project Structure</h2>
+
+```
+fail-u-forward/
+├──  app/                          # Next.js App Router directory
+│   ├──  api/                      # API routes and endpoints
+│   │   ├──  chatbot/              # AI chatbot API endpoints
+│   │   ├──  follow/               # User follow/unfollow functionality
+│   │   ├── 📁 news/                 # News and updates API
+│   │   ├── 📁 post/                 # Post management API
+│   │   ├── 📁 upload/               # File upload handling
+│   │   ├── 📁 users/                # User management API
+│   │   └── 📁 validate/             # Content validation API
+│   ├── 📁 about/                    # About page
+│   ├── 📁 feed/                     # Main feed page
+│   ├── 📁 jobs/                     # Job-related pages
+│   ├── 📁 login/                    # Authentication pages
+│   ├── 📁 messages/                 # Messaging system
+│   ├── 📁 network/                  # Network/social features
+│   ├── 📁 networkpost/              # Network post management
+│   ├── 📁 notifications/            # Notification system
+│   ├──  post/                     # Individual post pages
+│   ├── 📁 profile/                  # User profile pages
+│   ├──  register/                 # User registration
+│   ├── 📁 sad/                      # Failure story pages
+│   ├── 📁 technews/                 # Technology news section
+│   ├──  topic/                    # Topic-based categorization
+│   ├── 📄 globals.css               # Global styles
+│   ├──  layout.tsx                # Root layout component
+│   ├── 📄 page.tsx                  # Home page
+│   └── 📄 storyPage.tsx             # Story display page
+├──  components/                   # Reusable UI components
+│   ├── 📁 ui/                       # Basic UI components
+│   ├── 📁 sidebar/                  # Sidebar components
+│   ├──  theme/                    # Theme-related components
+│   ├──  feed/                     # Feed-specific components
+│   ├── 📁 layout/                   # Layout components
+│   ├── 📁 post/                     # Post-related components
+│   ├── 📁 profile/                  # Profile components
+│   ├── 📄 chatbot.tsx               # AI chatbot component
+│   ├── 📄 theme-provider.tsx        # Theme context provider
+│   └── 📄 theme-toggle.tsx          # Dark/light mode toggle
+├── 📁 contexts/                     # React Context providers
+│   ├── 📄 AuthContext.tsx           # Authentication context
+│   └── 📄 AuthProvider.tsx          # Auth context provider
+├── 📁 hooks/                        # Custom React hooks
+│   └── 📄 use-toast.ts              # Toast notification hook
+├── 📁 lib/                          # Utility libraries and configurations
+│   ├── 📄 firebase.tsx              # Firebase client configuration
+│   ├──  firebaseAdmin.tsx         # Firebase admin configuration
+│   └──  utils.ts                  # General utility functions
+├── 📁 public/                       # Static assets
+│   └── 📁 locales/                  # Internationalization files
+├── 📁 services/                     # Business logic and API services
+│   ├──  ai.ts                     # AI/ML service integrations
+│   ├──  firebase.client.ts        # Firebase client services
+│   ├── 📄 follow.ts                 # Follow/unfollow functionality
+│   ├──  news.ts                   # News service
+│   ├──  posts.ts                  # Post management services
+│   ├──  users.ts                  # User management services
+│   ├── 📄 username.ts               # Username validation
+│   └── 📄 validation.ts             # Content validation services
+├── 📁 scripts/                      # Build and utility scripts
+│   └──  accessibility-test.js     # Accessibility testing script
+├── 📁 __tests__/                    # Test files
+├── 📁 .github/                      # GitHub workflows and templates
+├──  .vscode/                      # VS Code configuration
+├──  .util/                        # Utility files
+├── 📄 .eslintrc.json                # ESLint configuration
+├── 📄 .firebaserc                   # Firebase project configuration
+├──  .gitignore                    # Git ignore rules
+├── 📄 .npmrc                        # NPM configuration
+├──  ACCESSIBILITY.md              # Accessibility guidelines
+├── 📄 ACCESSIBILITY_CHECKLIST.md    # Accessibility checklist
+├── 📄 CODE_OF_CONDUCT.md            # Code of conduct
+├── 📄 Contributing.md               # Contribution guidelines
+├──  components.json               # UI components configuration
+├── 📄 firebase.json                 # Firebase hosting configuration
+├──  i18n.ts                       # Internationalization setup
+├──  jest.config.js                # Jest testing configuration
+├── 📄 jest.setup.js                 # Jest setup file
+├── 📄 LICENSE                       # MIT License
+├──  next.config.js                # Next.js configuration
+├──  next-i18next.config.js        # Next.js i18n configuration
+├── 📄 package.json                  # Project dependencies and scripts
+├──  postcss.config.js             # PostCSS configuration
+├──  README.md                     # Project documentation
+├──  route.ts                      # API route handler
+├── 📄 SECURITY.md                   # Security guidelines
+├──  tailwind.config.ts            # Tailwind CSS configuration
+├──  tsconfig.json                 # TypeScript configuration
+└── 📄 vanta.d.ts                    # Vanta.js type definitions
+```
+
+**Directory Descriptions:**
+
+- **`app/`** - Next.js 13+ App Router directory containing all pages and API routes
+- **`components/`** - Reusable React components organized by feature
+- **`contexts/`** - React Context providers for global state management
+- **`hooks/`** - Custom React hooks for shared logic
+- **`lib/`** - Utility libraries, configurations, and shared constants
+- **`public/`** - Static assets like images, icons, and localization files
+- **`services/`** - Business logic layer for API calls and data management
+- **`scripts/`** - Build tools, testing scripts, and automation utilities
 
 <h2> ⚙️ Setup Instructions </h2>
 

@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { FiPaperclip, FiSend, FiEyeOff, FiTrendingUp, FiUsers, FiBookmark } from 'react-icons/fi';
 import { useTheme } from 'next-themes';
+import { RefreshButton } from "@/components/ui/refresh-button";
 
 export default function StartupFailureStories() {
   const { theme } = useTheme();
@@ -10,6 +11,11 @@ export default function StartupFailureStories() {
   const [postContent, setPostContent] = useState('');
   const [isAnonymous, setIsAnonymous] = useState(true);
   const [selectedProof, setSelectedProof] = useState('');
+
+  const handleRefresh = async () => {
+    // Force a page refresh to reload all data
+    window.location.reload();
+  };
 
   const trendingFailures = [
     { title: "Startup Fails Stories", count: "1,234 people sharing" },
@@ -41,12 +47,17 @@ export default function StartupFailureStories() {
       <div className="max-w-4xl mx-auto px-4 py-8">
         {/* Header */}
         <header className="mb-8">
-          <h1 className={`text-3xl font-bold mb-2 ${isDark ? 'text-white' : 'text-gray-900'}`}>
-            FailU Forward
-          </h1>
-          <p className={`${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
-            Learning from every mess.
-          </p>
+          <div className="flex justify-between items-start">
+            <div>
+              <h1 className={`text-3xl font-bold mb-2 ${isDark ? 'text-white' : 'text-gray-900'}`}>
+                FailU Forward
+              </h1>
+              <p className={`${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
+                Learning from every mess.
+              </p>
+            </div>
+            <RefreshButton onRefresh={handleRefresh} size="sm" />
+          </div>
         </header>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
