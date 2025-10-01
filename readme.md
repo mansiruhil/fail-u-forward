@@ -1,4 +1,16 @@
+
+<h2 align="center">🎯 Open Source Programmes ⭐</h2>
+<p align="center">
+  <b>This project is now OFFICIALLY accepted for:</b>
+</p>
+<p align="center">
+  <img src="public/assets/gssoc-banner.png" alt="GSSoC Banner" />
+</p>
+
+<h4> It's a community driven platform where failure is not something to hide but something to celebrate. It’s designed to share honest stories of setbacks and rejections and lessons learned: all the stuff LinkedIn filters out. </h4>
+
 <h4> It’s a community driven platform where failure is not something to hide but something to celebrate. It's designed to share honest stories of setbacks and rejections and lessons learned: all the stuff LinkedIn filters out. </h4>
+
 
 <h2>📝 Project Insights </h2>
 
