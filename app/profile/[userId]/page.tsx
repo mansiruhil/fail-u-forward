@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { RefreshButton } from "@/components/ui/refresh-button";
 import { motion } from "framer-motion";
 import { MapPin, Building2, GraduationCap, ThumbsDown, Camera } from "lucide-react";
 import { FollowButton } from "@/components/ui/follow-button";
@@ -12,6 +13,7 @@ import { doc, getDoc } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { HashLoader } from "react-spinners";
 import { toast } from "react-toastify";
+import Head from "next/head";
 
 interface PublicUserData {
   id: string;
@@ -35,6 +37,11 @@ export default function PublicProfile({ params }: { params: { userId: string } }
   const [isFollowing, setIsFollowing] = useState(false);
   const [followerCount, setFollowerCount] = useState(0);
   const { currentUser } = useAuth();
+
+  const handleRefresh = async () => {
+    // Force a page refresh to reload all data
+    window.location.reload();
+  };
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -99,6 +106,20 @@ export default function PublicProfile({ params }: { params: { userId: string } }
 
   return (
     <div className="container mx-auto px-6 py-10">
+      <div className="flex justify-end mb-4">
+        <RefreshButton onRefresh={handleRefresh} size="sm" />
+      </div>
+      <Head>
+        <title>{userData ? `${userData.username} — Fail U Forward` : "Profile — Fail U Forward"}</title>
+        <meta
+          name="description"
+          content={userData ? `${userData.username}'s profile on Fail U Forward. ${userData.bio || "Discover their journey of learning from setbacks."}` : "View community profiles on Fail U Forward."}
+        />
+        <meta property="og:title" content={userData ? `${userData.username} — Fail U Forward` : "Profile — Fail U Forward"} />
+        <meta property="og:description" content={userData ? (userData.bio || "Discover their journey of learning from setbacks.") : "View community profiles on Fail U Forward."} />
+        <meta property="og:image" content={userData?.profilepic || "https://fail-u-forward.vercel.app/og-image.png"} />
+        <meta name="twitter:card" content="summary_large_image" />
+      </Head>
       <div className="max-w-4xl mx-auto space-y-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}

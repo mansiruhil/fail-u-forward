@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
 import { getFirestore, doc, getDoc, collection, query, where, getDocs } from 'firebase/firestore';
 import { firebaseApp } from '@/lib/firebase';
+import { RefreshButton } from "@/components/ui/refresh-button";
 
 const db = getFirestore(firebaseApp);
 
@@ -24,6 +25,11 @@ const NetworkPost = () => {
   const [user, setUser] = useState<User | null>(null);
   const [posts, setPosts] = useState<Post[]>([]);
   const { id } = useParams();
+
+  const handleRefresh = async () => {
+    // Force a page refresh to reload all data
+    window.location.reload();
+  };
 
   useEffect(() => {
     if (!id) return;
@@ -73,6 +79,9 @@ const NetworkPost = () => {
   return (
     <div className="min-h-screen bg-black text-white">
       <div className="max-w-4xl mx-auto py-8 px-4">
+        <div className="flex justify-end mb-4">
+          <RefreshButton onRefresh={handleRefresh} size="sm" />
+        </div>
         {/* User Details */}
         <div className="mb-8 p-6 bg-black border border-white rounded-lg flex items-center gap-4">
           {user.profilepic ? (

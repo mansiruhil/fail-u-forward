@@ -107,15 +107,38 @@ const Chatbot = () => {
 
   return (
     <div>
-      {/* Floating Button */}
+      {/* Floating Button + Tooltip (accessible) */}
       {!isChatOpen && (
-        <button
-          onClick={toggleChat}
-          className="fixed bottom-6 right-6 p-4 bg-gradient-to-r from-gray-950 to-black text-white rounded-full shadow-2xl z-50 hover:scale-110 transition-all duration-300 hover:shadow-lg border border-gray-800"
+        <div
+          className="fixed bottom-6 right-6 z-50 group"
           style={{ animation: "bounce 2s infinite" }}
         >
-          <MessageCircle className="h-6 w-6" />
-        </button>
+          <button
+            onClick={toggleChat}
+            type="button"
+            aria-label="Open chat"
+            aria-describedby="chat-launcher-tooltip"
+            className="p-4 bg-gradient-to-r from-gray-950 to-black text-white rounded-full shadow-2xl hover:scale-110 transition-all duration-300 hover:shadow-lg border border-gray-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-gray-600"
+          >
+            <MessageCircle className="h-6 w-6" />
+          </button>
+
+          {/* Tooltip */}
+          <div
+            id="chat-launcher-tooltip"
+            role="tooltip"
+            className="
+              pointer-events-none absolute right-0 -top-2 -translate-y-full
+              whitespace-nowrap rounded-md border border-gray-700 bg-gray-900/95 text-gray-200
+              px-3 py-1 text-xs shadow-lg
+              opacity-0 scale-95 transition
+              group-hover:opacity-100 group-hover:scale-100
+              group-focus-within:opacity-100 group-focus-within:scale-100
+            "
+          >
+            Message
+          </div>
+        </div>
       )}
 
       {/* Chat Window */}
@@ -271,7 +294,6 @@ const Chatbot = () => {
           <div className="hidden sm:flex justify-end pr-3 pb-1 text-xs text-gray-500 select-none">
             ⤡ Drag to resize
           </div>
-
         </div>
       )}
 

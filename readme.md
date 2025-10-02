@@ -1,29 +1,20 @@
-<h1 align="center">fail-u-forward</h1>
+<p align="center">
+  <img src="public/assets/gssoc-banner.png" alt="GSSoC Banner" />
+</p>
 
-<h4> This is a community driven platform where failure is not something to hide but something to celebrate. </h4>
+<h4> It's a community driven platform where failure is not something to hide but something to celebrate. It’s designed to share honest stories of setbacks and rejections and lessons learned: all the stuff LinkedIn filters out. </h4>
 
-> It’s designed to share honest stories of setbacks and rejections and lessons learned: all the stuff LinkedIn filters out .
-
-<img src="https://user-images.githubusercontent.com/73097560/115834477-dbab4500-a447-11eb-908a-139a6edaec5c.gif" width="100%">
-
-<div align="center">
-  <img src="https://readme-typing-svg.herokuapp.com?font=Fira+Code&weight=600&size=24&duration=3000&pause=1000&color=00C853&center=true&vCenter=true&width=900&lines=Thanks+for+visiting+fail-u-forward!+🙌;Start+the+repo+✅;Share+it+with+others+🌍;Contribute+and+grow+🛠️;Happy+Coding+✨!" alt="Thanks Banner Typing SVG" />
-</div>
-
-<img src="https://user-images.githubusercontent.com/73097560/115834477-dbab4500-a447-11eb-908a-139a6edaec5c.gif" width="100%">
-
-<h2>📊 Project Insights</h2>
+<h2>📝 Project Insights </h2>
 
 <table align="center">
     <thead align="center">
         <tr>
-            <td><b>🌟 Stars</b></td>
-            <td><b>🍴 Forks</b></td>
-            <td><b>🐛 Issues</b></td>
-            <td><b>🔔 Open PRs</b></td>
-            <td><b>🔕 Closed PRs</b></td>
-            <td><b>🛠️ Languages</b></td>
-            <td><b>👥 Contributors</b></td>
+            <td><b>Stars</b></td>
+            <td><b>Forks</b></td>
+            <td><b>Issues</b></td>
+            <td><b>Open PRs</b></td>
+            <td><b>Closed PRs</b></td>
+            <td><b>Languages</b></td>
         </tr>
      </thead>
     <tbody>
@@ -34,22 +25,11 @@
             <td><img alt="Open PRs" src="https://img.shields.io/github/issues-pr/mansiruhil/fail-u-forward?style=flat&logo=github"/></td>
             <td><img alt="Closed PRs" src="https://img.shields.io/github/issues-pr-closed/mansiruhil/fail-u-forward?style=flat&color=critical&logo=github"/></td>
             <td><img alt="Languages Count" src="https://img.shields.io/github/languages/count/mansiruhil/fail-u-forward?style=flat&color=green&logo=github"></td>
-            <td><img alt="Contributors Count" src="https://img.shields.io/github/contributors/mansiruhil/fail-u-forward?style=flat&color=blue&logo=github"/></td>
         </tr>
     </tbody>
 </table>
 
-<img src="https://user-images.githubusercontent.com/73097560/115834477-dbab4500-a447-11eb-908a-139a6edaec5c.gif" width="100%">
-
-<h2>🚀 Live Demo</h2>
-
-Experience fail-u-forward live here: 
-<br>
-👉 [![**fail-u-forward**](https://img.shields.io/badge/View-Live%20Demo-orange?style=for-the-badge)](https://fail-u-forward.vercel.app/)
-
-<img src="https://user-images.githubusercontent.com/73097560/115834477-dbab4500-a447-11eb-908a-139a6edaec5c.gif" width="100%">
-
-<h2> 🌟 Features </h2>
+<h2> 📂 Features </h2>
 
 - 📢 Post your rejections, failures and real lessons learned
 - 🔍 Browse stories by category:
@@ -58,8 +38,6 @@ Experience fail-u-forward live here:
   - `Project Chaos`
   - and more coming soon
 - 🖥️ Smart AI validation for respectful, safe and constructive content
-
-<img src="https://user-images.githubusercontent.com/73097560/115834477-dbab4500-a447-11eb-908a-139a6edaec5c.gif" width="100%">
 
 <h2>🛠️ Technology Stack</h2>
 
@@ -75,7 +53,110 @@ Experience fail-u-forward live here:
 - **Database & Auth:** Firebase  
 - **AI Validation:** Gemini 
 
-<img src="https://user-images.githubusercontent.com/73097560/115834477-dbab4500-a447-11eb-908a-139a6edaec5c.gif" width="100%">
+<h2>📁 Project Structure</h2>
+
+```
+fail-u-forward/
+├──  app/                          # Next.js App Router directory
+│   ├──  api/                      # API routes and endpoints
+│   │   ├──  chatbot/              # AI chatbot API endpoints
+│   │   ├──  follow/               # User follow/unfollow functionality
+│   │   ├── 📁 news/                 # News and updates API
+│   │   ├── 📁 post/                 # Post management API
+│   │   ├── 📁 upload/               # File upload handling
+│   │   ├── 📁 users/                # User management API
+│   │   └── 📁 validate/             # Content validation API
+│   ├── 📁 about/                    # About page
+│   ├── 📁 feed/                     # Main feed page
+│   ├── 📁 jobs/                     # Job-related pages
+│   ├── 📁 login/                    # Authentication pages
+│   ├── 📁 messages/                 # Messaging system
+│   ├── 📁 network/                  # Network/social features
+│   ├── 📁 networkpost/              # Network post management
+│   ├── 📁 notifications/            # Notification system
+│   ├──  post/                     # Individual post pages
+│   ├── 📁 profile/                  # User profile pages
+│   ├──  register/                 # User registration
+│   ├── 📁 sad/                      # Failure story pages
+│   ├── 📁 technews/                 # Technology news section
+│   ├──  topic/                    # Topic-based categorization
+│   ├── 📄 globals.css               # Global styles
+│   ├──  layout.tsx                # Root layout component
+│   ├── 📄 page.tsx                  # Home page
+│   └── 📄 storyPage.tsx             # Story display page
+├──  components/                   # Reusable UI components
+│   ├── 📁 ui/                       # Basic UI components
+│   ├── 📁 sidebar/                  # Sidebar components
+│   ├──  theme/                    # Theme-related components
+│   ├──  feed/                     # Feed-specific components
+│   ├── 📁 layout/                   # Layout components
+│   ├── 📁 post/                     # Post-related components
+│   ├── 📁 profile/                  # Profile components
+│   ├── 📄 chatbot.tsx               # AI chatbot component
+│   ├── 📄 theme-provider.tsx        # Theme context provider
+│   └── 📄 theme-toggle.tsx          # Dark/light mode toggle
+├── 📁 contexts/                     # React Context providers
+│   ├── 📄 AuthContext.tsx           # Authentication context
+│   └── 📄 AuthProvider.tsx          # Auth context provider
+├── 📁 hooks/                        # Custom React hooks
+│   └── 📄 use-toast.ts              # Toast notification hook
+├── 📁 lib/                          # Utility libraries and configurations
+│   ├── 📄 firebase.tsx              # Firebase client configuration
+│   ├──  firebaseAdmin.tsx         # Firebase admin configuration
+│   └──  utils.ts                  # General utility functions
+├── 📁 public/                       # Static assets
+│   └── 📁 locales/                  # Internationalization files
+├── 📁 services/                     # Business logic and API services
+│   ├──  ai.ts                     # AI/ML service integrations
+│   ├──  firebase.client.ts        # Firebase client services
+│   ├── 📄 follow.ts                 # Follow/unfollow functionality
+│   ├──  news.ts                   # News service
+│   ├──  posts.ts                  # Post management services
+│   ├──  users.ts                  # User management services
+│   ├── 📄 username.ts               # Username validation
+│   └── 📄 validation.ts             # Content validation services
+├── 📁 scripts/                      # Build and utility scripts
+│   └──  accessibility-test.js     # Accessibility testing script
+├── 📁 __tests__/                    # Test files
+├── 📁 .github/                      # GitHub workflows and templates
+├──  .vscode/                      # VS Code configuration
+├──  .util/                        # Utility files
+├── 📄 .eslintrc.json                # ESLint configuration
+├── 📄 .firebaserc                   # Firebase project configuration
+├──  .gitignore                    # Git ignore rules
+├── 📄 .npmrc                        # NPM configuration
+├──  ACCESSIBILITY.md              # Accessibility guidelines
+├── 📄 ACCESSIBILITY_CHECKLIST.md    # Accessibility checklist
+├── 📄 CODE_OF_CONDUCT.md            # Code of conduct
+├── 📄 Contributing.md               # Contribution guidelines
+├──  components.json               # UI components configuration
+├── 📄 firebase.json                 # Firebase hosting configuration
+├──  i18n.ts                       # Internationalization setup
+├──  jest.config.js                # Jest testing configuration
+├── 📄 jest.setup.js                 # Jest setup file
+├── 📄 LICENSE                       # MIT License
+├──  next.config.js                # Next.js configuration
+├──  next-i18next.config.js        # Next.js i18n configuration
+├── 📄 package.json                  # Project dependencies and scripts
+├──  postcss.config.js             # PostCSS configuration
+├──  README.md                     # Project documentation
+├──  route.ts                      # API route handler
+├── 📄 SECURITY.md                   # Security guidelines
+├──  tailwind.config.ts            # Tailwind CSS configuration
+├──  tsconfig.json                 # TypeScript configuration
+└── 📄 vanta.d.ts                    # Vanta.js type definitions
+```
+
+**Directory Descriptions:**
+
+- **`app/`** - Next.js 13+ App Router directory containing all pages and API routes
+- **`components/`** - Reusable React components organized by feature
+- **`contexts/`** - React Context providers for global state management
+- **`hooks/`** - Custom React hooks for shared logic
+- **`lib/`** - Utility libraries, configurations, and shared constants
+- **`public/`** - Static assets like images, icons, and localization files
+- **`services/`** - Business logic layer for API calls and data management
+- **`scripts/`** - Build tools, testing scripts, and automation utilities
 
 <h2> ⚙️ Setup Instructions </h2>
 
@@ -91,8 +172,6 @@ Experience fail-u-forward live here:
 **NOTE: *📦 project manager***
 
 previously used **pnpm** but the project now runs entirely on npm !!
-
-<img src="https://user-images.githubusercontent.com/73097560/115834477-dbab4500-a447-11eb-908a-139a6edaec5c.gif" width="100%">
 
 <h3> Local Development:  </h3>
 
@@ -120,15 +199,12 @@ npm install
 npm run dev
 ```
 
-<img src="https://user-images.githubusercontent.com/73097560/115834477-dbab4500-a447-11eb-908a-139a6edaec5c.gif" width="100%">
-
 <h2> 🛣️ What's Next: </h2>
 
 - anonymous posting support
 - filters by topic (eg career, academics, personal)  
 - voice/video storytelling support 
-
-<img src="https://user-images.githubusercontent.com/73097560/115834477-dbab4500-a447-11eb-908a-139a6edaec5c.gif" width="100%">
+  follow feature to allow users to follow each other
 
 <h2>📩 Contact</h2>
 
@@ -136,18 +212,6 @@ npm run dev
 - **LinkedIn:** [mansiruhil](https://www.linkedin.com/in/mansi-ruhil-7a00a0228)
 - **Discord:** [failuforward](https://discord.gg/4kk8bkcz)
 
-*Feel free to reach out with any questions or feedback!*
-
-<img src="https://user-images.githubusercontent.com/73097560/115834477-dbab4500-a447-11eb-908a-139a6edaec5c.gif" width="100%">
-
 **📄 license:**
 
 this project is licensed under the [MIT License](LICENSE) 
-
-<img src="https://capsule-render.vercel.app/api?type=waving&color=gradient&height=65&section=footer"/>
-
-<p align="center">
-  <a href="#top" style="font-size: 18px; padding: 8px 16px; display: inline-block; border: 1px solid #ccc; border-radius: 6px; text-decoration: none;">
-    ⬆️ Back to Top
-  </a>
-</p>

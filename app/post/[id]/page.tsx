@@ -10,6 +10,7 @@ import Image from "next/image";
 import { HashLoader } from "react-spinners";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
+import { RefreshButton } from "@/components/ui/refresh-button";
 import { toast } from "react-toastify";
 import { motion } from "framer-motion";
 import { MessageCircle, ThumbsDown, Link2 } from "lucide-react";
@@ -27,6 +28,11 @@ const PostPage = () => {
   const [isDisliked, setIsDisliked] = useState(false);
   const [dislikesCount, setDislikesCount] = useState(0);
   const [sharesCount, setSharesCount] = useState(0);
+
+  const handleRefresh = async () => {
+    // Force a page refresh to reload all data
+    window.location.reload();
+  };
 
   useEffect(() => {
     if (!id) return;
@@ -220,6 +226,9 @@ const PostPage = () => {
     <div className="p-4">
       <LeftSidebar/>
       <div className="w-full max-w-2xl mx-auto">
+        <div className="flex justify-end mb-4">
+          <RefreshButton onRefresh={handleRefresh} size="sm" />
+        </div>
         <Card className="p-4 mb-4">
           <div className="flex gap-4">
             <Avatar className="w-12 h-12 ring-1 ring-border">
