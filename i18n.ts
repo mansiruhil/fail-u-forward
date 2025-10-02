@@ -1,15 +1,23 @@
-import { dir } from 'i18next';
-import { languages } from './next-i18next.config';
+// i18n.ts
+import i18n from "i18next";
+import { initReactI18next } from "react-i18next";
 
-export function getOptions(locale = 'en') {
-  return {
-    supportedLngs: languages,
-    fallbackLng: 'en',
-    lng: locale,
-    defaultNS: 'common',
-  };
-}
+import en from "./locales/en.json";
+import hi from "./locales/hi.json";
+import fr from "./locales/fr.json";
+import es from "./locales/es.json";
 
-export function getDirection(locale = 'en') {
-  return dir(locale);
-}
+i18n.use(initReactI18next).init({
+  resources: {
+    en: { translation: en },
+    hi: { translation: hi },
+    fr: { translation: fr },
+    es: { translation: es },
+  },
+  lng: "en",
+  fallbackLng: "en",
+  interpolation: { escapeValue: false },
+  react: { useSuspense: false },
+});
+
+export default i18n;
