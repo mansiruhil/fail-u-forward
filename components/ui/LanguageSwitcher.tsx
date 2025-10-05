@@ -1,29 +1,33 @@
-"use client";
+"use client"; // must be first
 
-import { useRouter } from "next/router";
-import { useTranslation } from "next-i18next";
-import { useState } from "react";
+import "../../i18n"; // safe in client
+import { useTranslation } from "react-i18next";
+
+const languages = [
+  { code: "en", label: "English" },
+  { code: "hi", label: "हिन्दी" },
+  { code: "fr", label: "Français" },
+  { code: "es", label: "Español" },
+];
 
 export default function LanguageSwitcher() {
-  const router = useRouter();
   const { i18n } = useTranslation();
-  const [lang, setLang] = useState(i18n.language || "en");
 
-  const changeLanguage = (newLang: string) => {
-    setLang(newLang);
-
-    router.push(router.asPath, router.asPath, { locale: newLang });
+  const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    i18n.changeLanguage(e.target.value); // updates language globally
   };
 
   return (
     <select
-      value={lang}
-      onChange={(e) => changeLanguage(e.target.value)}
-      className="border rounded px-2 py-1 bg-white text-black"
+      value={i18n.language}
+      onChange={handleChange}
+      className="border px-2 py-1 rounded"
     >
-      <option value="en">English</option>
-      <option value="hi">हिन्दी</option>
-      <option value="fr">Spanish</option>
+      {languages.map((lang) => (
+        <option key={lang.code} value={lang.code}>
+          {lang.label}
+        </option>
+      ))}
     </select>
   );
 }
