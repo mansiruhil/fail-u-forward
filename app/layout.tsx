@@ -44,8 +44,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <AuthProvider>
               <Navbar />
 
-              {/* Language Switcher (client component) */}
-              <div className="fixed top-4 right-4 z-50">
+              {/* Language Switcher & Refresh Button */}
+              <div className="fixed top-4 right-4 z-50 flex items-center space-x-2">
+               
                 <LanguageSwitcher />
               </div>
 

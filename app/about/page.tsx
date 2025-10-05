@@ -1,52 +1,81 @@
-"use client";
-import React, { useEffect, useRef } from "react";
-import { Github } from "lucide-react";
-import { RefreshButton } from "@/components/ui/refresh-button";
-import * as THREE from "three";
-import { FaDiscord, FaLinkedin } from "react-icons/fa";
-import NET from "vanta/dist/vanta.net.min";
+'use client';
 
-const StoryPage = () => {
+import { useState, useRef, useEffect } from 'react';
+import NET from 'vanta/dist/vanta.net.min';
+import * as THREE from 'three';
+import { motion } from 'framer-motion';
+import { ArrowLeft } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { useRouter } from 'next/navigation';
+
+const cardVariants = {
+  hidden: { opacity: 0, y: 50 },
+  visible: (i: number) => ({
+    opacity: 1,
+    y: 0,
+    transition: {
+      delay: i * 0.15,
+      duration: 0.5,
+      ease: 'easeOut',
+    },
+  }),
+};
+
+const teamMembers = [
+  {
+    name: 'Sukhman Singh',
+    role: 'Full Stack Developer',
+    avatar: '/sukhman.jpeg',
+  },
+  {
+    name: 'Lovepreet Singh',
+    role: 'UI/UX Designer',
+    avatar: '/lovepreet.jpeg',
+  },
+  {
+    name: 'Gursimran Singh',
+    role: 'Marketing Head',
+    avatar: '/gursimran.jpeg',
+  },
+];
+
+export default function AboutPage() {
+  const [vantaEffect, setVantaEffect] = useState<any>(null);
   const vantaRef = useRef(null);
-  const vantaEffect = useRef<any>(null);
-
-  const handleRefresh = async () => {
-    // Force a page refresh to reload all data
-    window.location.reload();
-  };
+  const router = useRouter();
 
   useEffect(() => {
-    if (!vantaEffect.current && vantaRef.current) {
-      vantaEffect.current = NET({
-        el: vantaRef.current,
-        THREE: THREE,
-        mouseControls: true,
-        touchControls: true,
-        gyroControls: false,
-        minHeight: 200.0,
-        minWidth: 200.0,
-        scale: 1.0,
-        scaleMobile: 1.0,
-        color: 0xffffff,
-        backgroundColor: 0x000000,
-        points: 20.0,
-        maxDistance: 12.0,
-      });
+    if (!vantaEffect) {
+      setVantaEffect(
+        NET({
+          el: vantaRef.current,
+          THREE: THREE,
+          mouseControls: true,
+          touchControls: true,
+          gyroControls: false,
+          minHeight: 200.0,
+          minWidth: 200.0,
+          scale: 1.0,
+          scaleMobile: 1.0,
+          color: 0x4d4d4d, // Darker gray color for the net
+          backgroundColor: 0x0, // Black background
+          points: 12.0, // Number of points
+          maxDistance: 25.0, // Max distance between points
+          spacing: 20.0, // Spacing between points
+        })
+      );
     }
     return () => {
-      if (vantaEffect.current) {
-        vantaEffect.current.destroy();
-        vantaEffect.current = null;
-      }
+      if (vantaEffect) vantaEffect.destroy();
     };
-  }, []);
+  }, [vantaEffect]);
 
-  const devComments = [
-    { comment: "Users can share their rejections, flops and failures from college rejections to startup shutdowns." },
-    { comment: "Every post becomes a learning moment. Whether it's a resume that got ignored or a pitch that bombed, users can reflect, discuss and grow from real life experiences." },
-    { comment: "The platform curates a custom feed based on your interests tech fails, career rejections, entrepreneurial setbacks so you’re always learning what not to do in your journey." },
-    { comment: "A Raw & Real Community: It’s a judgment free zone where every rejection is a rite of passage." },
-  ];
+  const handleRefresh = () => {
+    if (vantaEffect) {
+      vantaEffect.destroy();
+      setVantaEffect(null);
+    }
+  };
 
   return (
     <div ref={vantaRef} className="relative min-h-screen w-full text-primary overflow-hidden">
@@ -54,80 +83,51 @@ const StoryPage = () => {
       <div className="absolute inset-0 bg-black opacity-70 pointer-events-none z-10"></div>
       {/* Page Content */}
       <div className="relative z-20">
-        <div className="absolute top-4 right-4 z-30">
-          <RefreshButton onRefresh={handleRefresh} size="sm" />
-        </div>
         <section className="py-16 px-4 sm:px-6 md:px-8 text-base">
           <h2 className="text-3xl sm:text-4xl font-extrabold mb-10 text-center text-white tracking-wide drop-shadow-lg">
             About Fail U Forward
           </h2>
-
-          {[
-            "The idea for Fail U Forward came from scrolling through LinkedIn where everyone’s success stories looked flawless but real growth happens through failure. I wanted to create a space that shows the messy, unfiltered side of the journey that LinkedIn rarely highlights.",
-            "This platform is your no judgment zone to share your rejections, epic fails and the lessons you actually learned because failure is the ultimate teacher. Whether you flopped a project, bombed an interview or just had a bad day, Fail U Forward turns those moments into badges of honor.",
-            "This platform is your no judgment zone to share your rejections, epic fails and the lessons you actually learned because failure is the ultimate teacher. Whether you flopped a project, bombed an interview or just had a bad day, Fail U Forward turns those moments into badges of honor.",
-            "We’re here to normalize setbacks, build a community of real talk and remind everyone that every failure is just a stepping stone to something bigger. Because growth isn’t about never falling, it’s about getting up and sharing the story.",
-          ].map((text, i) => (
-            <p
-              key={i}
-              className="max-w-4xl mx-auto mb-5 md:mb-7 leading-7 sm:leading-8 text-base sm:text-lg text-gray-200 font-medium shadow-inner bg-white dark:bg-zinc-900 border border-gray-500 px-4 py-3 rounded-xl"
-            >
-              {text}
-            </p>
-          ))}
-        </section>
-        {/* Features */}
-        <section className="bg-black py-16 px-4 sm:px-6 md:px-8">
-          <h2 className="text-3xl sm:text-4xl font-extrabold mb-10 text-center text-white tracking-wide drop-shadow-lg">
-            Features
-          </h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 gap-6 sm:gap-8 max-w-6xl mx-auto">
-            {devComments.map((dev, index) => (
-              <div
-                key={index}
-                className="flex flex-col items-center text-center bg-white dark:bg-zinc-900 border border-gray-500 shadow-lg rounded-xl p-4 sm:p-6 hover:scale-105 transition-transform duration-300 hover:bg-gray-800"
+          <motion.div
+            initial="hidden"
+            animate="visible"
+            variants={{ visible: { transition: { staggerChildren: 0.2 } } }}
+            className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-10 max-w-6xl mx-auto"
+          >
+            {teamMembers.map((member, i) => (
+              <motion.div
+                key={member.name}
+                variants={cardVariants}
+                custom={i}
+                className="bg-white/10 backdrop-blur-md rounded-xl shadow-lg overflow-hidden transform hover:scale-105 transition-transform duration-300"
               >
-                <p className="text-gray-200 font-medium text-base sm:text-lg">{dev.comment}</p>
-              </div>
+                <div className="p-6 text-center">
+                  <img
+                    src={member.avatar}
+                    alt={member.name}
+                    className="w-32 h-32 rounded-full mx-auto border-4 border-white/20 shadow-md"
+                  />
+                  <h3 className="mt-5 text-xl font-semibold text-white">{member.name}</h3>
+                  <p className="mt-2 text-sm text-gray-300">{member.role}</p>
+                </div>
+              </motion.div>
             ))}
-          </div>
+          </motion.div>
         </section>
-        {/* Footer */}
-        <div className="max-w-4xl mx-auto text-center w-full">
-          <p className="text-base sm:text-lg sm:font-semibold mb-4 text-white font-bold">
-            find more on
-          </p>
-          <div className="flex justify-center gap-4 sm:gap-6 text-xl sm:text-2xl mb-2">
-            <a
-              href="https://github.com/mansiruhil/fail-u-forward"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="p-2 sm:p-3 rounded-full bg-white hover:bg-gray-300 shadow transition duration-300 transform hover:-translate-y-1"
-            >
-              <Github size={24} className="text-black" />
-            </a>
-            <a
-              href="https://discord.gg/ZEspWbV6"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="p-2 sm:p-3 rounded-full bg-white hover:bg-gray-300 shadow transition duration-300 transform hover:-translate-y-1"
-            >
-              <FaDiscord size={24} className="text-black" />
-            </a>
-            {/* Add LinkedIn icon here */}
-            <a
-              href="https://www.linkedin.com/in/yourusername/"  // Replace with the actual LinkedIn URL
-              target="_blank"
-              rel="noopener noreferrer"
-              className="p-2 sm:p-3 rounded-full bg-white hover:bg-gray-300 shadow transition duration-300 transform hover:-translate-y-1"
-            >
-              <FaLinkedin size={24} className="text-black" />
-            </a>
-          </div>
-        </div>
+
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1, transition: { delay: 0.5, duration: 0.5 } }}
+          className="text-center mt-12"
+        >
+          <Button
+            onClick={() => router.back()}
+            className="bg-white/10 backdrop-blur-md text-white font-semibold py-3 px-6 rounded-lg shadow-lg hover:bg-white/20 transition-all duration-300 flex items-center gap-2 mx-auto"
+          >
+            <ArrowLeft size={20} />
+            <span>Go Back</span>
+          </Button>
+        </motion.div>
       </div>
     </div>
   );
-};
-
-export default StoryPage;
+}

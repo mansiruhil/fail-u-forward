@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { Briefcase, Search, Bell, UserCircle } from 'lucide-react';
 import { useState } from 'react';
 import LanguageSwitcher from '@/components/ui/LanguageSwitcher';
+import { ThemeToggle } from '@/components/theme-toggle';
 
 export function Header() {
   const [searchQuery, setSearchQuery] = useState('');
@@ -60,6 +61,7 @@ export function Header() {
           {/* Right Side Actions */}
           <nav className="flex items-center space-x-4" role="navigation" aria-label="User actions">
             <LanguageSwitcher /> {/* Language dropdown here */}
+            <ThemeToggle />
             <button 
               className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2" 
               aria-label="View notifications"
