@@ -1,12 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { RefreshCw } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useTheme } from "next-themes";
 
 interface RefreshButtonProps {
-  onRefresh: () => void | Promise<void>;
   className?: string;
   size?: "default" | "sm" | "lg" | "icon";
   variant?: "default" | "outline" | "ghost" | "secondary";
@@ -14,18 +14,23 @@ interface RefreshButtonProps {
 }
 
 export function RefreshButton({
-  onRefresh,
   className,
   size = "default",
   variant = "outline",
   showText = true,
 }: RefreshButtonProps) {
   const [isRefreshing, setIsRefreshing] = useState(false);
+  const [mounted, setMounted] = useState(false);
+  const { theme } = useTheme();
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const handleRefresh = async () => {
     setIsRefreshing(true);
     try {
-      await onRefresh();
+      window.location.reload();
     } catch (error) {
       console.error("Refresh failed:", error);
     } finally {
@@ -47,6 +52,10 @@ export function RefreshButton({
     icon: "h-4 w-4",
   };
 
+  if (!mounted) {
+    return null;
+  }
+
   return (
     <Button
       onClick={handleRefresh}
@@ -55,6 +64,9 @@ export function RefreshButton({
       size={size}
       className={cn(
         "gap-2 transition-all duration-200",
+        theme === 'dark' 
+          ? 'bg-gray-800 text-white border-gray-600 hover:bg-gray-700' 
+          : 'bg-white text-black border-gray-300 hover:bg-gray-100',
         sizeClasses[size],
         className
       )}

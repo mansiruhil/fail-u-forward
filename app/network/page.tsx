@@ -5,7 +5,6 @@ import Image from "next/image";
 import { collection, getDocs } from "firebase/firestore";
 import { Card } from "@/components/ui/card";
 import { Avatar } from "@/components/ui/avatar";
-import { RefreshButton } from "@/components/ui/refresh-button";
 import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
 import { firebaseApp } from "@/lib/firebase";
@@ -26,11 +25,6 @@ export default function NetworkPage() {
   const [loading, setLoading] = useState(true);
   const router = useRouter();
   const defaultAvatar = "/default-avatar.png"; // Path to your placeholder avatar image
-
-  const handleRefresh = async () => {
-    // Force a page refresh to reload all data
-    window.location.reload();
-  };
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -78,7 +72,6 @@ export default function NetworkPage() {
     <div className="container mx-auto px-4 py-8">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-3xl font-bold">Network</h1>
-        <RefreshButton onRefresh={handleRefresh} size="sm" />
       </div>
 
       {/* Search Input */}

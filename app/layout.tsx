@@ -8,7 +8,8 @@ import { SpeedInsights } from "@vercel/speed-insights/next";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-import LanguageSwitcher from "@/components/ui/LanguageSwitcher"; // client component
+import LanguageSwitcher from "@/components/ui/LanguageSwitcher";
+import { RefreshButton } from "@/components/ui/refresh-button";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -44,9 +45,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <AuthProvider>
               <Navbar />
 
-              {/* Language Switcher (client component) */}
-              <div className="fixed top-4 right-4 z-50">
+              {/* Language Switcher & Refresh Button */}
+              <div className="fixed top-4 right-8 z-50 flex items-center gap-3">
                 <LanguageSwitcher />
+                <RefreshButton size="sm" />
               </div>
 
               <ToastContainer position="top-right" autoClose={3000} />

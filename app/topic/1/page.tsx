@@ -3,7 +3,6 @@
 import { useState } from 'react';
 import { FiPaperclip, FiSend, FiEyeOff, FiTrendingUp, FiUsers, FiBookmark } from 'react-icons/fi';
 import { useTheme } from 'next-themes';
-import { RefreshButton } from "@/components/ui/refresh-button";
 
 export default function StartupFailureStories() {
   const { theme } = useTheme();
@@ -11,11 +10,6 @@ export default function StartupFailureStories() {
   const [postContent, setPostContent] = useState('');
   const [isAnonymous, setIsAnonymous] = useState(true);
   const [selectedProof, setSelectedProof] = useState('');
-
-  const handleRefresh = async () => {
-    // Force a page refresh to reload all data
-    window.location.reload();
-  };
 
   const trendingFailures = [
     { title: "Startup Fails Stories", count: "1,234 people sharing" },
@@ -56,7 +50,6 @@ export default function StartupFailureStories() {
                 Learning from every mess.
               </p>
             </div>
-            <RefreshButton onRefresh={handleRefresh} size="sm" />
           </div>
         </header>
 

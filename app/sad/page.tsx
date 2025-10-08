@@ -1,6 +1,5 @@
 "use client"
 import { useState } from 'react';
-import { RefreshButton } from "@/components/ui/refresh-button";
 
 const SadnessChecker = () => {
   const [post, setPost] = useState('');
@@ -9,10 +8,6 @@ const SadnessChecker = () => {
   const [errorMessage, setErrorMessage] = useState('');
   const [val, setVal] = useState<string>("");
 
-  const handleRefresh = async () => {
-    // Force a page refresh to reload all data
-    window.location.reload();
-  };
   const analyzePost = async () => {
     setLoading(true);
     setIsSad(null); // Reset the result

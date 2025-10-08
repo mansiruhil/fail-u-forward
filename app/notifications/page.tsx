@@ -3,7 +3,6 @@
 import { useEffect,useState } from "react";
 import { Avatar } from "@/components/ui/avatar";
 import { Card } from "@/components/ui/card";
-import { RefreshButton } from "@/components/ui/refresh-button";
 import { motion } from "framer-motion";
 import { ThumbsDown, MessageCircle, UserPlus } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -14,11 +13,6 @@ import { toast } from "react-toastify";
 export default function Notifications() {
   const router =useRouter()
   const [loading, setLoading] = useState(true);
-
-  const handleRefresh = async () => {
-    // Force a page refresh to reload all data
-    window.location.reload();
-  };
 
   useEffect(() => {
     try {
@@ -76,7 +70,6 @@ export default function Notifications() {
       <div className="max-w-2xl mx-auto">
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-2xl font-bold">Notifications</h2>
-          <RefreshButton onRefresh={handleRefresh} size="sm" />
         </div>
         <div className="space-y-4">
           {notifications.map((notification, index) => (

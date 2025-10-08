@@ -6,7 +6,6 @@ import Image from "next/image";
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { RefreshButton } from "@/components/ui/refresh-button";
 import { motion, AnimatePresence } from "framer-motion";
 import { Pencil, MapPin, Building2, GraduationCap, ThumbsDown, LogOut, User, Trash2, X, Camera } from "lucide-react";
 import { doc, getDoc, collection, query, getDocs, updateDoc, onSnapshot } from "firebase/firestore";
@@ -61,11 +60,6 @@ export default function Profile() {
   const [avatarSrc, setAvatarSrc] = useState<string>("");
   const [isImageLoading, setIsImageLoading] = useState(true);
   const router = useRouter();
-
-  const handleRefresh = async () => {
-    // Force a page refresh to reload all data
-    window.location.reload();
-  };
   
   const fetchUserData = useCallback(async (): Promise<(() => void) | undefined> => {
     const auth = getAuth(firebaseApp);
@@ -405,9 +399,6 @@ export default function Profile() {
   return (
     <div className="container mx-auto px-6 py-10">
       <div className="max-w-4xl mx-auto space-y-8">
-        <div className="flex justify-end">
-          <RefreshButton onRefresh={handleRefresh} size="sm" />
-        </div>
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
