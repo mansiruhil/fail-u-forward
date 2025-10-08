@@ -12,6 +12,8 @@ import Link from "next/link";
 import Head from "next/head";
 
 export default function Home() {
+  const { t } = useTranslation();
+
   const handleRefresh = async () => {
     window.location.reload();
   };
@@ -52,6 +54,7 @@ export default function Home() {
         <meta name="twitter:card" content="summary_large_image" />
       </Head>
 
+
       <div
         id="vanta-bg"
         className="min-h-screen w-full flex flex-col items-center justify-center relative"
@@ -82,8 +85,19 @@ export default function Home() {
 
           {/* Hero */}
           <div className="flex-grow mt-16 sm:mt-20 text-center space-y-6 px-2">
+
+      {/* MAIN SECTION */}
+      <main className="container mx-auto px-4 sm:px-6 md:px-8 py-12 sm:py-16 flex flex-col min-h-screen relative z-10">
+        <div className="absolute top-4 right-4 z-20">
+          <RefreshButton onRefresh={handleRefresh} size="sm" />
+        </div>
+
+        {/* Hero content */}
+        <div className="flex-grow mt-16 sm:mt-20">
+          <div className="text-center space-y-6 px-2">
+
             <h1 className="text-3xl md:text-6xl font-bold tracking-tight">
-              <TextGenerateEffect words={"Welcome To Fail U Forward"} />
+              <TextGenerateEffect words={t("welcome")} />
             </h1>
 
             <motion.p
@@ -113,6 +127,7 @@ export default function Home() {
             transition={{ duration: 0.8, delay: 0.2 }}
             className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 sm:gap-8 mt-12"
           >
+
             {[
               { icon: <ThumbsDown className="h-12 w-12 text-black" />, title: "Professional Setbacks", desc: "Share your rejected applications and celebrate career mishaps" },
               { icon: <Users className="h-12 w-12 text-black" />, title: "Network", desc: "Connect with others and build meaningful relationships" },
@@ -151,5 +166,94 @@ export default function Home() {
         </footer>
       </div>
     </>
+
+            <br />
+            <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto">
+              {t("tagline")}
+            </p>
+          </motion.div>
+
+          {/* Buttons */}
+          <div className="flex flex-col sm:flex-row gap-4 justify-center mt-6 sm:mt-8 px-2">
+            <motion.div
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.9 }}
+              initial={{ opacity: 0, x: 40 }}
+              animate={{ opacity: 1, x: 0, transition: { delay: 2 } }}
+            >
+              <Link href="/feed">
+                <Button
+                  variant="outline"
+                  size="lg"
+                  className="bg-black text-white border-black font-bold hover:bg-gray-800 hover:border-gray-800 text-xs sm:text-s"
+                >
+                  {t("explore")}
+                  <ArrowRight className="h-4 w-4 ml-2" />
+                </Button>
+              </Link>
+            </motion.div>
+
+            <motion.div
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.9 }}
+              initial={{ opacity: 0, x: -40 }}
+              animate={{ opacity: 1, x: 0, transition: { delay: 2 } }}
+            >
+              <Link href="/about">
+                <Button
+                  variant="outline"
+                  size="lg"
+                  className="bg-white text-black border-gray-300 font-bold hover:bg-gray-50 hover:border-gray-400 text-xs sm:text-s"
+                >
+                  {t("about")}
+                </Button>
+              </Link>
+            </motion.div>
+          </div>
+        </div>
+
+        {/* Cards */}
+        <motion.div
+          initial={{ opacity: 0, y: 40 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.2 }}
+          className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 sm:gap-8 mt-12 sm:mt-10 lg:mt-10"
+        >
+          {[
+            {
+              icon: <ThumbsDown className="h-12 w-12 text-black" />,
+              title: t("card1_title"),
+              desc: t("card1_desc"),
+            },
+            {
+              icon: <Users className="h-12 w-12 text-black" />,
+              title: t("card2_title"),
+              desc: t("card2_desc"),
+            },
+            {
+              icon: <Coffee className="h-12 w-12 text-black" />,
+              title: t("card3_title"),
+              desc: t("card3_desc"),
+            },
+          ].map((card, idx) => (
+            <div
+              key={idx}
+              className="p-6 rounded-2xl shadow-lg border bg-gradient-to-bl from-slate-300 via-slate-400 to-slate-500 flex flex-col items-center text-center hover:scale-105 transition-transform hover:shadow-indigo-400/40 hover:border-indigo-400"
+            >
+              <div className="mb-4">{card.icon}</div>
+              <div>
+                <h3 className="text-xl font-bold text-black mb-2">
+                  {card.title}
+                </h3>
+                <p className="text-sm sm:text-base font-medium text-gray-800">
+                  {card.desc}
+                </p>
+              </div>
+            </div>
+          ))}
+        </motion.div>
+      </main>
+    </div>
+
   );
 }

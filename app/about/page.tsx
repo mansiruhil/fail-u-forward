@@ -10,11 +10,6 @@ const StoryPage = () => {
   const vantaRef = useRef(null);
   const vantaEffect = useRef<any>(null);
 
-  const handleRefresh = async () => {
-    // Force a page refresh to reload all data
-    window.location.reload();
-  };
-
   useEffect(() => {
     if (!vantaEffect.current && vantaRef.current) {
       vantaEffect.current = NET({
@@ -55,7 +50,7 @@ const StoryPage = () => {
       {/* Page Content */}
       <div className="relative z-20">
         <div className="absolute top-4 right-4 z-30">
-          <RefreshButton onRefresh={handleRefresh} size="sm" />
+          <RefreshButton />
         </div>
         <section className="py-16 px-4 sm:px-6 md:px-8 text-base">
           <h2 className="text-3xl sm:text-4xl font-extrabold mb-10 text-center text-white tracking-wide drop-shadow-lg">
@@ -65,12 +60,11 @@ const StoryPage = () => {
           {[
             "The idea for Fail U Forward came from scrolling through LinkedIn where everyone’s success stories looked flawless but real growth happens through failure. I wanted to create a space that shows the messy, unfiltered side of the journey that LinkedIn rarely highlights.",
             "This platform is your no judgment zone to share your rejections, epic fails and the lessons you actually learned because failure is the ultimate teacher. Whether you flopped a project, bombed an interview or just had a bad day, Fail U Forward turns those moments into badges of honor.",
-            "This platform is your no judgment zone to share your rejections, epic fails and the lessons you actually learned because failure is the ultimate teacher. Whether you flopped a project, bombed an interview or just had a bad day, Fail U Forward turns those moments into badges of honor.",
             "We’re here to normalize setbacks, build a community of real talk and remind everyone that every failure is just a stepping stone to something bigger. Because growth isn’t about never falling, it’s about getting up and sharing the story.",
           ].map((text, i) => (
             <p
               key={i}
-              className="max-w-4xl mx-auto mb-5 md:mb-7 leading-7 sm:leading-8 text-base sm:text-lg text-gray-200 font-medium shadow-inner bg-white dark:bg-zinc-900 border border-gray-500 px-4 py-3 rounded-xl"
+              className="max-w-4xl mx-auto mb-5 md:mb-7 leading-7 sm:leading-8 text-base sm:text-lg text-gray-200 font-medium shadow-inner bg-white dark:bg-zinc-900 border border-gray-500 px-4 py-3 rounded-xl transition-all duration-300 ease-in-out hover:scale-102 hover:shadow-xl hover:bg-white/20"
             >
               {text}
             </p>
@@ -85,7 +79,7 @@ const StoryPage = () => {
             {devComments.map((dev, index) => (
               <div
                 key={index}
-                className="flex flex-col items-center text-center bg-white dark:bg-zinc-900 border border-gray-500 shadow-lg rounded-xl p-4 sm:p-6 hover:scale-105 transition-transform duration-300 hover:bg-gray-800"
+                className="flex flex-col items-center text-center bg-white dark:bg-zinc-900 border border-gray-500 shadow-lg rounded-xl p-4 sm:p-6 transition-all duration-300 ease-in-out hover:scale-102 hover:shadow-xl hover:bg-white/20"
               >
                 <p className="text-gray-200 font-medium text-base sm:text-lg">{dev.comment}</p>
               </div>
