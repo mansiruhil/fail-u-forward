@@ -126,20 +126,6 @@ export default function Home() {
             ))}
           </motion.div>
 
-          {/* CTA */}
-          <section className="mt-20 text-center">
-            <h2 className="text-2xl md:text-4xl font-bold mb-6 text-white">Why Fail U Forward?</h2>
-            <p className="max-w-2xl mx-auto text-gray-300">
-              We believe failure is not the end but the first step to growth.
-              Share your journey, learn from others and connect with people
-              who’ve been there too.
-            </p>
-            <Button size="lg" className="mt-8 bg-indigo-600 text-white cursor-not-allowed">
-              Join Now
-            </Button>
-          </section>
-        </main>
-
         {/* FOOTER */}
         <footer className="w-full bg-black bg-opacity-90 text-gray-400 py-6 text-center border-t border-gray-700 relative z-10">
           <p>© {new Date().getFullYear()} Fail U Forward. All rights reserved.</p>
