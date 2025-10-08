@@ -1,6 +1,6 @@
-"use client"; // must be first
+"use client";
 
-import "../../i18n"; // safe in client
+import "../../i18n";
 import { useTranslation } from "react-i18next";
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
@@ -22,7 +22,7 @@ export default function LanguageSwitcher() {
   }, []);
 
   const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    i18n.changeLanguage(e.target.value); // updates language globally
+    i18n.changeLanguage(e.target.value);
   };
 
   if (!mounted) {
@@ -33,16 +33,21 @@ export default function LanguageSwitcher() {
     <select
       value={i18n.language}
       onChange={handleChange}
-      className={`px-2 py-1 rounded border ${
-        theme === "dark" ? "bg-gray-800 text-white border-gray-800"
-        : "bg-white text-black border-gray-300"
-      }`}
-      
+      className="px-2 py-1 rounded border"
+      style={{
+        backgroundColor: theme === 'dark' ? '#1f2937' : '#ffffff',
+        color: theme === 'dark' ? '#ffffff' : '#000000',
+        border: `1px solid ${theme === 'dark' ? '#374151' : '#d1d5db'}`
+      }}
     >
       {languages.map((lang) => (
         <option 
           key={lang.code} 
           value={lang.code}
+          style={{
+            backgroundColor: theme === 'dark' ? '#1f2937' : '#ffffff',
+            color: theme === 'dark' ? '#ffffff' : '#000000'
+          }}
         >
           {lang.label}
         </option>
