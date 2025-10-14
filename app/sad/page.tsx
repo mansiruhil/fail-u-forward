@@ -47,7 +47,6 @@ const SadnessChecker = () => {
     <div style={{ padding: '20px', fontFamily: 'Arial, sans-serif' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
         <h1>Sadness Checker</h1>
-        <RefreshButton onRefresh={handleRefresh} size="sm" />
       </div>
       <textarea
         value={post}
