@@ -1,7 +1,6 @@
 "use client";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { RefreshButton } from "@/components/ui/refresh-button";
 import Link from "next/link";
 
 export default function FailedJobs() {
@@ -13,16 +12,8 @@ export default function FailedJobs() {
     { id: 5, title: "The Office Worker Who Sent a Personal Email to The Whole Company", description: "I accidentally emailed a meme about cats to the CEO. He's a dog person.", image: "/failed-email.jpg" },
   ]);
 
-  const handleRefresh = async () => {
-    // Force a page refresh to reload all data
-    window.location.reload();
-  };
-
   return (
     <div className="container mx-auto px-4 py-8">
-      <div className="flex justify-end mb-4">
-        <RefreshButton onRefresh={handleRefresh} size="sm" />
-      </div>
       {/* Hero Section */}
       <div className="text-center my-20">
         <h1 className="text-4xl font-bold text-primary">Failed Jobs: Where Things Go Hilariously Wrong</h1>

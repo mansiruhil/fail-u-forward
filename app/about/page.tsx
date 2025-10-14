@@ -1,7 +1,6 @@
 "use client";
 import React, { useEffect, useRef } from "react";
 import { Github } from "lucide-react";
-import { RefreshButton } from "@/components/ui/refresh-button";
 import * as THREE from "three";
 import { FaDiscord, FaLinkedin } from "react-icons/fa";
 import NET from "vanta/dist/vanta.net.min";
@@ -49,9 +48,6 @@ const StoryPage = () => {
       <div className="absolute inset-0 bg-black opacity-70 pointer-events-none z-10"></div>
       {/* Page Content */}
       <div className="relative z-20">
-        <div className="absolute top-4 right-4 z-30">
-          <RefreshButton />
-        </div>
         <section className="py-16 px-4 sm:px-6 md:px-8 text-base">
           <h2 className="text-3xl sm:text-4xl font-extrabold mb-10 text-center text-white tracking-wide drop-shadow-lg">
             About Fail U Forward

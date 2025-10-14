@@ -17,6 +17,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { ThemeToggle } from "@/components/theme/theme-toggle";
 
 export function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -94,6 +95,7 @@ export function Navbar() {
                   <DropdownMenuItem className={dropdownItemClasses} onClick={handleLogout}><LogOut className="mr-2 h-4 w-4" /><span>Log out</span></DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
+              <ThemeToggle />
             </div>
           ) : (
             <div className="flex items-center space-x-2">

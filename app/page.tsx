@@ -1,7 +1,6 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { RefreshButton } from "@/components/ui/refresh-button";
 import { motion } from "framer-motion";
 import { ArrowRight, ThumbsDown, Users, Coffee } from "lucide-react";
 import { useEffect } from "react";
@@ -14,11 +13,6 @@ import Head from "next/head";
 
 export default function Home() {
   const { t } = useTranslation();
-
-  const handleRefresh = async () => {
-    // Force a page refresh to reload all data
-    window.location.reload();
-  };
 
   useEffect(() => {
     const vantaEffect = NET({
@@ -62,10 +56,6 @@ export default function Home() {
 
       {/* MAIN SECTION */}
       <main className="container mx-auto px-4 sm:px-6 md:px-8 py-12 sm:py-16 flex flex-col min-h-screen relative z-10">
-        <div className="absolute top-4 right-4 z-20">
-          <RefreshButton onRefresh={handleRefresh} size="sm" />
-        </div>
-
         {/* Hero content */}
         <div className="flex-grow mt-16 sm:mt-20">
           <div className="text-center space-y-6 px-2">

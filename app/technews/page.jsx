@@ -2,16 +2,10 @@
 
 import React, { useEffect, useState } from "react";
 import Sentiment from "sentiment";
-import { RefreshButton } from "@/components/ui/refresh-button";
 
 const SadRejectionNews = () => {
   const [news, setNews] = useState([]);
   const [loading, setLoading] = useState(true);
-
-  const handleRefresh = async () => {
-    // Force a page refresh to reload all data
-    window.location.reload();
-  };
 
   useEffect(() => {
     const fetchNews = async () => {
@@ -46,7 +40,6 @@ const SadRejectionNews = () => {
     <div className="max-w-6xl mx-auto p-6">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-3xl font-bold">Sad Rejection News</h1>
-        <RefreshButton onRefresh={handleRefresh} size="sm" />
       </div>
       {news.length > 0 ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
