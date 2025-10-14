@@ -211,7 +211,7 @@ export default function Signup() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-900 via-black to-gray-900 p-4 relative overflow-hidden">
       <div className="absolute top-4 right-4 z-30">
-        <RefreshButton onRefresh={handleRefresh} size="sm" />
+        <RefreshButton size="sm" />
       </div>
       {/* Animated Background Elements */}
       <div className="absolute inset-0 overflow-hidden">
