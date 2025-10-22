@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Eye, EyeOff, AlertCircle, CheckCircle, Loader2 } from "lucide-react";
 import type { ReactNode, ButtonHTMLAttributes, InputHTMLAttributes, LabelHTMLAttributes } from "react";
+import { useRouter } from "next/navigation";
 
 // mock components 
 const Button = ({
@@ -92,6 +93,7 @@ export default function Signup() {
   const [isFormValid, setIsFormValid] = useState(false);
   const [uniqueUsername, setUniqueUsername] = useState<boolean | null>(null);
   const [usernameChecking, setUsernameChecking] = useState(false);
+  const router = useRouter();
 
   const handleRefresh = async () => {
     // Force a page refresh to reload all data
@@ -150,6 +152,7 @@ export default function Signup() {
       await new Promise(resolve => setTimeout(resolve, 2000));
       console.log("Account created successfully!");
       // router.push("/feed");
+       router.push("/login");
     } catch (err: any) {
       setErrors({ general: "Signup failed. Please try again." });
     } finally {
