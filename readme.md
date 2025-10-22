@@ -6,6 +6,9 @@
 
 <h4> It's a community driven platform where failure is not something to hide but something to celebrate. It’s designed to share honest stories of setbacks and rejections and lessons learned: all the stuff LinkedIn filters out. </h4>
 
+---
+
+
 ## 📚 Table of Contents
 
 - [📝 Project Insights](#-project-insights)
@@ -18,7 +21,7 @@
 - [📩 Contact](#-contact)
 - [📄 License](#-license)
 
-
+---
 
 ## 📝 Project Insights 
 
@@ -45,6 +48,9 @@
     </tbody>
 </table>
 
+---
+
+
 ## 📂 Features 
 
 - 📢 Post your rejections, failures and real lessons learned
@@ -54,6 +60,9 @@
   - `Project Chaos`
   - and more coming soon
 - 🖥️ Smart AI validation for respectful, safe and constructive content
+
+---
+
 
 ## 🛠️ Technology Stack
 
@@ -68,6 +77,9 @@
 - **Backend:** Next.js API routes  
 - **Database & Auth:** Firebase  
 - **AI Validation:** Gemini 
+
+---
+
 
 ## 📁 Project Structure
 
@@ -174,6 +186,9 @@ fail-u-forward/
 - **`services/`** - Business logic layer for API calls and data management
 - **`scripts/`** - Build tools, testing scripts, and automation utilities
 
+---
+
+
 ## ⚙️ Setup Instructions 
 
 **📦 Scripts**
@@ -188,6 +203,9 @@ fail-u-forward/
 **NOTE: *📦 project manager***
 
 previously used **pnpm** but the project now runs entirely on npm !!
+
+---
+
 
 ## Local Development:  
 
@@ -215,6 +233,9 @@ npm install
 npm run dev
 ```
 
+---
+
+
 ## 🛣️ What's Next: 
 
 - anonymous posting support
@@ -222,11 +243,18 @@ npm run dev
 - voice/video storytelling support 
   follow feature to allow users to follow each other
 
+
+---
+
 ## 📩 Contact
 
 - **Github:** [mansiruhil](https://github.com/mansiruhil)
 - **LinkedIn:** [mansiruhil](https://www.linkedin.com/in/mansi-ruhil-7a00a0228)
 - **Discord:** [failuforward](https://discord.gg/4kk8bkcz)
+
+
+---
+
 
 ## 📄 license:
 
