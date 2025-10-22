@@ -2,9 +2,25 @@
   <img src="public/assets/gssoc-banner.png" alt="GSSoC Banner" />
 </p>
 
+# fail-u-forward
+
 <h4> It's a community driven platform where failure is not something to hide but something to celebrate. It’s designed to share honest stories of setbacks and rejections and lessons learned: all the stuff LinkedIn filters out. </h4>
 
-<h2>📝 Project Insights </h2>
+## 📚 Table of Contents
+
+- [📝 Project Insights](#-project-insights)
+- [📂 Features](#-features)
+- [🛠️ Technology Stack](#️-technology-stack)
+- [📁 Project Structure](#-project-structure)
+- [⚙️ Setup Instructions](#️-setup-instructions)
+- [💻 Local Development](#local-development)
+- [🛣️ What's Next](#️-whats-next)
+- [📩 Contact](#-contact)
+- [📄 License](#-license)
+
+
+
+## 📝 Project Insights 
 
 <table align="center">
     <thead align="center">
@@ -29,7 +45,7 @@
     </tbody>
 </table>
 
-<h2> 📂 Features </h2>
+## 📂 Features 
 
 - 📢 Post your rejections, failures and real lessons learned
 - 🔍 Browse stories by category:
@@ -39,7 +55,7 @@
   - and more coming soon
 - 🖥️ Smart AI validation for respectful, safe and constructive content
 
-<h2>🛠️ Technology Stack</h2>
+## 🛠️ Technology Stack
 
 <p float="left">
   <img src="https://img.shields.io/badge/Next.js-000000?style=for-the-badge&logo=nextdotjs&logoColor=white" height="28"/>
@@ -53,7 +69,7 @@
 - **Database & Auth:** Firebase  
 - **AI Validation:** Gemini 
 
-<h2>📁 Project Structure</h2>
+## 📁 Project Structure
 
 ```
 fail-u-forward/
@@ -158,7 +174,7 @@ fail-u-forward/
 - **`services/`** - Business logic layer for API calls and data management
 - **`scripts/`** - Build tools, testing scripts, and automation utilities
 
-<h2> ⚙️ Setup Instructions </h2>
+## ⚙️ Setup Instructions 
 
 **📦 Scripts**
 
@@ -173,7 +189,7 @@ fail-u-forward/
 
 previously used **pnpm** but the project now runs entirely on npm !!
 
-<h3> Local Development:  </h3>
+## Local Development:  
 
 **1. Clone the repository**
 
@@ -199,19 +215,23 @@ npm install
 npm run dev
 ```
 
-<h2> 🛣️ What's Next: </h2>
+## 🛣️ What's Next: 
 
 - anonymous posting support
 - filters by topic (eg career, academics, personal)  
 - voice/video storytelling support 
   follow feature to allow users to follow each other
 
-<h2>📩 Contact</h2>
+## 📩 Contact
 
 - **Github:** [mansiruhil](https://github.com/mansiruhil)
 - **LinkedIn:** [mansiruhil](https://www.linkedin.com/in/mansi-ruhil-7a00a0228)
 - **Discord:** [failuforward](https://discord.gg/4kk8bkcz)
 
-**📄 license:**
+## 📄 license:
 
 this project is licensed under the [MIT License](LICENSE) 
+
+
+[🔼 Back to Top](#fail-u-forward)
+
